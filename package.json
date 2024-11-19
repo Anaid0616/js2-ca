@@ -4,12 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "docs": "jsdoc -c ./conf.json -r",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest"
   },
   "devDependencies": {
+    "jsdoc": "^4.0.4",
     "vite": "^5.4.1",
     "vitest": "^2.1.3"
   }
