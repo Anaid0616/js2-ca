@@ -1,3 +1,4 @@
+import { API_AUTH_REGISTER } from "../constants";
 /**
  * Registers a new user with the provided details.
  *
@@ -18,12 +19,32 @@
  * @param {boolean} [data.venueManager] - Indicates if the user is a venue manager (optional, used for holidaze).
  * @returns {Promise<Object>} A promise that resolves to the user's registration response.
  */
-export async function register({
-  name,
-  email,
-  password,
-  bio,
-  avatar,
-  banner,
-  venueManager,
-}) {}
+
+export async function register({ name, email, password, bio, avatar, banner }) {
+  try {
+    const response = await fetch(API_AUTH_REGISTER, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        bio,
+        avatar,
+        banner,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Registration failed");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error during registration:", error);
+    throw error;
+  }
+}
