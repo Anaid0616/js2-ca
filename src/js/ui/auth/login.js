@@ -14,16 +14,41 @@ export async function onLogin(event) {
   };
 
   try {
+    // Call the API and get the response
     const response = await login(data);
 
-    // API response with the user's name
-    const userName = response.user?.name;
-    console.log("Login successful:", response);
+    // Check the structure of your response
+    console.log("Login API Response:", response);
 
-    // Show an alert message welcoming the user by name
+    // Save the access token and user data to local storage
+    const token = response.data.accessToken;
+    const user = {
+      name: response.data.name,
+      email: response.data.email,
+      avatar: response.data.avatar,
+      bio: response.data.bio,
+    };
+
+    if (token) {
+      localStorage.setItem("token", token); // Save the token
+    } else {
+      console.error("Token is missing from the API response");
+    }
+
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user)); // Save the user details
+    } else {
+      console.error("User data is missing from the API response");
+    }
+
+    // Extract the user's name for the alert
+    const userName = user.name || "User";
+
+    // Log success and show an alert
+    console.log("Login successful:", user);
     alert(`Login successful! Welcome ${userName}!`);
 
-    // Redirect to home
+    // Redirect to the home page
     window.location.href = "/";
   } catch (error) {
     console.error("Login failed:", error);

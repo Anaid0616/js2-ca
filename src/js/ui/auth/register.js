@@ -17,6 +17,10 @@ export async function onRegister(event) {
   try {
     const response = await register(data);
 
+    // Save the token and user data to localStorage
+    localStorage.setItem("token", response.token);
+    localStorage.setItem("user", JSON.stringify(response.user));
+
     // If registration is successful
     if (response) {
       console.log("Registration successful:", response); // Logs the server response
