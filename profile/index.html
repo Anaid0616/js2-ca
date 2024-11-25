@@ -9,10 +9,30 @@
     <script type="module" src="../src/app.js"></script>
   </head>
   <body>
-    <h1>Profile</h1>
+    <header></header>
+    <main>
+      <h1>Profile</h1>
 
-    <form name="updateProfile">
-      <button>Update Profile</button>
-    </form>
+      <form name="updateProfile">
+        <button>Update Profile</button>
+      </form>
+
+      <div id="user-info">
+        <h2>My Info</h2>
+        <p id="profile-avatar"></p>
+        <p id="profile-bio"></p>
+      </div>
+
+      <div id="user-posts">
+        <h2>My Posts</h2>
+        <div id="user-posts-container"></div>
+      </div>
+      <div id="pagination">
+        <button id="prev-page">Previous</button>
+        <span id="current-page">Page 1</span>
+        <button id="next-page">Next</button>
+      </div>
+    </main>
+    <footer></footer>
   </body>
 </html>

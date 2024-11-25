@@ -2,7 +2,11 @@ import { login } from "../../api/auth/login";
 /**
  * This function should pass data to the login function in api/auth and handle the response
  */
-
+/**
+ * Handles the login form submission.
+ * @param {event} event - The form submit event.
+ * @returns {Promise<void>} Resolves when the function completes.
+ */
 export async function onLogin(event) {
   event.preventDefault(); // Prevent default form submission behavior
 

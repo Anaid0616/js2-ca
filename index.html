@@ -10,13 +10,26 @@
   </head>
 
   <body>
-    <img src="./images/noroff-logo.png" alt="Noroff Logo" />
+    <header>
+      <a href="/"></a><img src="./images/noroff-logo.png" alt="Noroff Logo" /></a>
 
-    <h1>Home</h1>
+      <a href="./profile/">My Profile</a>
+      <a href="./auth/login/">Login</a>
+      <a href="./auth/register/">Register</a>
+      <button id="logout-button">Logout</button>
+    </header>
+    <main>
 
-    <a href="./profile/">My Profile</a>
-    <a href="./auth/login/">Login</a>
-    <a href="./auth/register/">Register</a>
-    <button id="logout-button">Logout</button>
+      <div id="posts-container">
+        <h2>All Posts</h2>
+      </div>
+      <div id="pagination">
+        <button id="prev-page">Previous</button>
+        <span id="current-page">Page 1</span>
+        <button id="next-page">Next</button>
+      </div>
+    </main>
+      <footer></footer>
+   
   </body>
 </html>
