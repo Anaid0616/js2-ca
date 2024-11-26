@@ -1,3 +1,6 @@
+import { API_SOCIAL_POSTS } from "../constants.js";
+import { API_KEY } from "../../api/constants";
+
 /**
  * Creates a new post by sending the data to the API.
  *
@@ -13,6 +16,7 @@
  */
 export async function createPost({ title, body = "", tags = [], media = {} }) {
   const token = localStorage.getItem("token"); // Retrieve the token for authentication
+  console.log("Token used for Authorization:", token);
 
   try {
     const response = await fetch(API_SOCIAL_POSTS, {
@@ -20,6 +24,7 @@ export async function createPost({ title, body = "", tags = [], media = {} }) {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`, // Add token for authorization
+        "X-Noroff-API-Key": API_KEY,
       },
       body: JSON.stringify({ title, body, tags, media }), // Pass the post data
     });

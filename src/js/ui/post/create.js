@@ -21,6 +21,8 @@ export async function onCreatePost(event) {
     };
 
     const newPost = await createPost(postData); // Call the createPost function
+    console.log("New Post Response:", newPost);
+
     alert("Post created successfully!");
     window.location.href = `/post/?id=${newPost.id}`; // Redirect to the new post page
   } catch (error) {

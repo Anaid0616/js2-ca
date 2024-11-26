@@ -13,11 +13,12 @@ export async function loadHTMLHeader() {
 
     // Manage link visibility
     const token = localStorage.getItem("token");
-    const loginLink = document.querySelector("a[href='./auth/login/']");
-    const registerLink = document.querySelector("a[href='./auth/register/']");
+    const loginLink = document.querySelector("a[href='/auth/login/']"); // Use absolute path
+    const registerLink = document.querySelector("a[href='/auth/register/']"); // Use absolute path
     const logoutButton = document.querySelector("#logout-button");
 
     if (token) {
+      // If the user is logged in
       if (loginLink) loginLink.style.display = "none";
       if (registerLink) registerLink.style.display = "none";
       if (logoutButton) {
@@ -25,6 +26,7 @@ export async function loadHTMLHeader() {
         logoutButton.addEventListener("click", logout);
       }
     } else {
+      // If the user is not logged in
       if (loginLink) loginLink.style.display = "block";
       if (registerLink) registerLink.style.display = "block";
       if (logoutButton) logoutButton.style.display = "none";
