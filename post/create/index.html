@@ -8,10 +8,34 @@
     <script type="module" src="../../src/app.js"></script>
   </head>
   <body>
-    <h1>Create Post</h1>
+    <header></header>
 
-    <form name="createPost">
-      <button>Create Post</button>
-    </form>
+    <main>
+      <h1>Create Post</h1>
+
+      <form name="createPost" id="create-post-form">
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" required />
+
+        <label for="body">Body</label>
+        <textarea id="body" name="body"></textarea>
+
+        <label for="tags">Tags (comma-separated)</label>
+        <input type="text" id="tags" name="tags" />
+
+        <label for="mediaUrl">Media URL</label>
+        <input type="text" id="mediaUrl" name="mediaUrl" />
+
+        <label for="mediaAlt">Media Alt Text</label>
+        <input type="text" id="mediaAlt" name="mediaAlt" />
+
+        <button type="submit">Create Post</button>
+      </form>
+    </main>
+    <footer></footer>
+    <script type="module">
+      import { loadHTMLHeader } from "@/js/ui/global/sharedHeader.js";
+      loadHTMLHeader();
+    </script>
   </body>
 </html>

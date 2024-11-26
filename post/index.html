@@ -8,13 +8,24 @@
     <link rel="stylesheet" href="../src/css/style.css" />
     <script type="module" src="../src/app.js"></script>
   </head>
-  <body>
-    <h1>Post Page</h1>
-    <div class="post">
-      <img src="image_url_here" alt="Post Image" />
-      <h2>Post Title</h2>
-      <p>Post Description</p>
-      <p><em>By: Author Name</em></p>
+
+  <body id="single-post-page">
+    <header>
+    </header>
+
+    <main>
+      <h1>Post Page</h1>
+      <div class="post">
+        <!-- Content dynamically inserted by post.js -->
+      </div>
     </div>
+    </main>
+
+    <footer></footer>
+    <script type="module">
+      import { loadHTMLHeader } from "@/js/ui/global/sharedHeader.js";
+      loadHTMLHeader();
+    </script>
+    
   </body>
 </html>

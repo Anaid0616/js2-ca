@@ -10,16 +10,9 @@
   </head>
 
   <body>
-    <header>
-      <a href="/"></a><img src="./images/noroff-logo.png" alt="Noroff Logo" /></a>
+    <header></header>
 
-      <a href="./profile/">My Profile</a>
-      <a href="./auth/login/">Login</a>
-      <a href="./auth/register/">Register</a>
-      <button id="logout-button">Logout</button>
-    </header>
     <main>
-
       <div id="posts-container">
         <h2>All Posts</h2>
       </div>
@@ -29,7 +22,11 @@
         <button id="next-page">Next</button>
       </div>
     </main>
-      <footer></footer>
-   
+
+    <footer></footer>
+    <script type="module">
+      import { loadHTMLHeader } from "@/js/ui/global/sharedHeader.js";
+      loadHTMLHeader();
+    </script>
   </body>
 </html>

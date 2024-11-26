@@ -27,3 +27,20 @@
   height: 400px;
   object-fit: cover;
 }
+
+/* post */
+#single-post-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+#single-post-page .post img {
+  width: 100%;
+  max-width: 800px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  margin-bottom: 15px;
+}
