@@ -14,14 +14,37 @@
     <main>
       <h1>Profile</h1>
 
-      <form name="updateProfile">
-        <button>Update Profile</button>
-      </form>
-
       <div id="user-info">
-        <h2>My Info</h2>
-        <p id="profile-avatar"></p>
-        <p id="profile-bio"></p>
+        <!-- This section will be populated dynamically -->
+      </div>
+
+      <div id="update-profile">
+        <form name="updateProfileForm">
+          <label for="avatar">Avatar URL:</label>
+          <input
+            type="text"
+            id="avatar"
+            name="avatar"
+            placeholder="Enter new avatar URL"
+          />
+
+          <label for="banner">Banner URL:</label>
+          <input
+            type="text"
+            id="banner"
+            name="banner"
+            placeholder="Enter new banner URL"
+          />
+
+          <label for="bio">Bio:</label>
+          <textarea
+            id="bio"
+            name="bio"
+            placeholder="Enter a short bio"
+          ></textarea>
+
+          <button type="submit">Update Profile</button>
+        </form>
       </div>
 
       <div id="user-posts">

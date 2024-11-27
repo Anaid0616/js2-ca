@@ -1,6 +1,37 @@
 import { authGuard } from "../../utilities/authGuard";
 import { readPostsByUser } from "../../api/post/read.js";
 import { loadHTMLHeader } from "../../ui/global/sharedHeader.js";
+import { onUpdateProfile } from "../../ui/profile/update.js";
+import { readProfile } from "../../api/profile/read.js";
+
+async function populateProfileForm() {
+  try {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const username = user?.name;
+
+    if (!username) {
+      console.error("No logged-in user found.");
+      return;
+    }
+
+    const profile = await readProfile(username);
+    console.log("Profile data:", profile);
+
+    const form = document.forms.updateProfileForm;
+    form.avatar.value = profile.avatar?.url || "";
+    form.banner.value = profile.banner?.url || "";
+    form.bio.value = profile.bio || "";
+  } catch (error) {
+    console.error("Error populating profile form:", error);
+  }
+}
+
+// Call this function when the profile page loads
+populateProfileForm();
+
+// Attach the event listener to the Update Profile form
+const updateProfileForm = document.forms.updateProfileForm;
+updateProfileForm.addEventListener("submit", onUpdateProfile);
 
 loadHTMLHeader();
 
@@ -40,6 +71,11 @@ async function fetchAndDisplayUserPosts(page = 1) {
     console.log("API Response:", response); // Debugging
 
     const posts = response.data;
+
+    // **Frontend Filter**: Filter posts by the logged-in user (if backend doesn't do it)
+    const filteredPosts = posts.filter(
+      (post) => post.author?.name === username
+    );
 
     // Filter out posts with invalid or missing image URLs
     const validPosts = [];

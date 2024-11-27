@@ -8,16 +8,18 @@
     <link rel="stylesheet" href="../src/css/style.css" />
     <script type="module" src="../src/app.js"></script>
   </head>
- 
+
   <body>
-    <header>
-    </header>
+    <header></header>
     <main id="single-post-page">
       <h1>Post Page</h1>
       <div class="post">
-        <!-- Content dynamically inserted by post.js -->
+        <!-- Post content dynamically inserted by post.js -->
       </div>
-    </div>
+      <div class="post-buttons">
+        <button id="edit-post-button">Edit Post</button>
+        <button id="delete-post-button">Delete Post</button>
+      </div>
     </main>
 
     <footer></footer>
@@ -25,6 +27,5 @@
       import { loadHTMLHeader } from "@/js/ui/global/sharedHeader.js";
       loadHTMLHeader();
     </script>
-    
   </body>
 </html>

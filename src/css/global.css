@@ -59,3 +59,18 @@ header img {
   object-fit: cover;
   margin-bottom: 15px;
 }
+
+form {
+  max-width: 600px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+form input,
+form textarea,
+form button {
+  padding: 0.5em;
+  font-size: 1em;
+}

@@ -1,5 +1,7 @@
 import { authGuard } from "../../utilities/authGuard";
-import { readPost } from "../../api/post/read"; // Fetch a single post by ID
+import { readPost } from "../../api/post/read";
+import { deletePost } from "../../api/post/delete";
+import { updatePost } from "../../api/post/update";
 
 // Ensure the user is authenticated
 authGuard();
@@ -36,7 +38,6 @@ export async function fetchAndRenderPost() {
       media?.url || "https://i.postimg.cc/j2K0443Z/placeholder.jpg"; // Placeholder for invalid image
     const mediaAlt = media?.alt || "Post Image";
     const authorName = author?.name || "Anonymous"; // Use author.name if it exists
-    console.log("Post data:", post);
 
     // Update the DOM with the post data
     postContainer.innerHTML = `
@@ -53,3 +54,53 @@ export async function fetchAndRenderPost() {
 
 // Execute the function to fetch and render the post
 fetchAndRenderPost();
+
+// Get the delete button
+const deleteButton = document.getElementById("delete-post-button");
+
+// Handle delete post
+deleteButton.addEventListener("click", async () => {
+  const confirmDelete = confirm("Are you sure you want to delete this post?");
+  if (!confirmDelete) return;
+
+  try {
+    // Call the deletePost API function
+    await deletePost(postId);
+    alert("Post deleted successfully!");
+    window.location.href = "/"; // Redirect to homepage after deletion
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    alert("Failed to delete post. Please try again.");
+  }
+});
+
+// Edit Post Button
+const editButton = document.getElementById("edit-post-button");
+
+// Redirect to edit.html with the post ID
+editButton.addEventListener("click", () => {
+  const postId = new URLSearchParams(window.location.search).get("id");
+  if (!postId) {
+    alert("No post ID found. Cannot edit post.");
+    return;
+  }
+  // Redirect to edit.html with the post ID in the URL
+  window.location.href = `/post/edit/?id=${postId}`;
+});
+
+// Delete Post Button
+document
+  .getElementById("delete-post-button")
+  .addEventListener("click", async () => {
+    const confirmDelete = confirm("Are you sure you want to delete this post?");
+    if (!confirmDelete) return;
+
+    try {
+      await deletePost(postId); // Call your API
+      alert("Post deleted successfully!");
+      window.location.href = "/profile/"; // Redirect to profile or another page after deletion
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      alert("Failed to delete post. Please try again.");
+    }
+  });
