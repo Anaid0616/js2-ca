@@ -24,27 +24,31 @@ let currentPage = 1; // Start with page 1
 
 async function fetchAndDisplayUserPosts(page = 1) {
   try {
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem("user")); // Get logged-in user
     if (!user) {
       alert("You must be logged in to view your posts.");
       window.location.href = "/auth/login/";
       return;
     }
 
-    const username = user.name;
+    const username = user.name; // Get username
+    console.log("Fetching posts for username:", username); // Debugging
+    console.log("Fetching page:", page); // Debugging
 
-    // Fetch more posts than needed to account for filtering
-    const response = await readPostsByUser(username, 24, page);
+    // Fetch posts by the logged-in user
+    const response = await readPostsByUser(username, 24, page); // Fetch posts with pagination
+    console.log("API Response:", response); // Debugging
+
     const posts = response.data;
 
-    // Filter out posts with missing or invalid image URLs
+    // Filter out posts with invalid or missing image URLs
     const validPosts = [];
     for (const post of posts) {
       if (post.media && post.media.url) {
         const isValid = await isValidImageUrl(post.media.url);
         if (isValid) validPosts.push(post);
       }
-      if (validPosts.length >= 12) break; // Stop after collecting 12 valid posts
+      if (validPosts.length >= 12) break; // Limit to 12 posts per page
     }
 
     // Handle cases where no valid posts are found
@@ -78,6 +82,7 @@ async function fetchAndDisplayUserPosts(page = 1) {
     currentPageDisplay.textContent = `Page ${page}`;
   } catch (error) {
     console.error("Error fetching user posts:", error);
+    userPostsContainer.innerHTML = `<p>Error loading posts. Please try again later.</p>`;
   }
 }
 

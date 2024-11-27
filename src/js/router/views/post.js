@@ -17,7 +17,7 @@ if (!postId) {
 }
 
 // Fetch and display the post
-async function fetchAndRenderPost() {
+export async function fetchAndRenderPost() {
   try {
     console.log("Fetching post with ID:", postId); // Debugging
 

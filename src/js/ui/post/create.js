@@ -1,6 +1,7 @@
 import { createPost } from "../../api/post/create";
+
 /**
- * Passes data to the createPost function in api/post and handles the response
+ * Passes data to the createPost function in api/post and handles the response.
  */
 export async function onCreatePost(event) {
   event.preventDefault(); // Prevent the form from reloading the page
@@ -23,9 +24,15 @@ export async function onCreatePost(event) {
     const newPost = await createPost(postData); // Call the createPost function
     console.log("New Post Response:", newPost);
 
-    alert("Post created successfully!");
-    window.location.href = `/post/?id=${newPost.id}`; // Redirect to the new post page
+    // Ensure ID exists in the response
+    if (newPost && newPost.data && newPost.data.id) {
+      alert("Post created successfully!");
+      window.location.href = `/post/?id=${newPost.data.id}`; // Redirect to the new post page
+    } else {
+      throw new Error("API Response does not contain post ID.");
+    }
   } catch (error) {
+    console.error("Error creating post:", error);
     alert("Error creating post. Please try again.");
   }
 }

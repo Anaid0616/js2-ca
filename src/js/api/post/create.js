@@ -17,7 +17,6 @@ import { API_KEY } from "../../api/constants";
 export async function createPost({ title, body = "", tags = [], media = {} }) {
   const token = localStorage.getItem("token"); // Retrieve the token for authentication
   console.log("Token used for Authorization:", token);
-
   try {
     const response = await fetch(API_SOCIAL_POSTS, {
       method: "POST",
@@ -33,9 +32,14 @@ export async function createPost({ title, body = "", tags = [], media = {} }) {
       throw new Error("Failed to create post");
     }
 
-    return await response.json(); // Return the created post
+    // Parse the response JSON
+    const jsonResponse = await response.json();
+    console.log("API Response from createPost:", jsonResponse);
+
+    // Return the JSON response if all checks pass
+    return jsonResponse;
   } catch (error) {
     console.error("Error creating post:", error);
-    throw error; // Re-throw error for the UI layer to handle
+    throw error; // Re-throw error for further handling
   }
 }
