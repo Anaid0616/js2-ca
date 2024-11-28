@@ -30,7 +30,7 @@ export async function updatePost(id, { title, body, tags, media }) {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${API_KEY}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ title, body, tags, media }),
     });
