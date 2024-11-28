@@ -46,7 +46,8 @@ async function fetchAndDisplayUserPosts() {
     userPostsContainer.innerHTML = posts
       .map((post) => {
         const mediaUrl =
-          post.media?.url || "https://i.postimg.cc/j2K0443Z/placeholder.jpg";
+          post.media?.url ||
+          "https://i.postimg.cc/FzLMcSCp/frede-langlois-W1fjs-X7vd-Xs-unsplash-kopiera.jpg";
         const mediaAlt = post.media?.alt || "Post Image";
         const postTitle = post.title || "Untitled Post";
         const postBody = post.body || "";

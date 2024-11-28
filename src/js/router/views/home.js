@@ -33,6 +33,10 @@ async function fetchAndDisplayPosts(page = 1) {
     const response = await readPosts(24, page);
     const posts = response.data;
 
+    // Fallback image URL
+    const fallbackImageUrl =
+      "https://i.postimg.cc/FzLMcSCp/frede-langlois-W1fjs-X7vd-Xs-unsplash-kopiera.jpg";
+
     // Filter out posts with missing or invalid image URLs
     const validPosts = [];
     for (const post of posts) {
@@ -53,7 +57,7 @@ async function fetchAndDisplayPosts(page = 1) {
     postsContainer.innerHTML = validPosts
       .slice(0, 12)
       .map((post) => {
-        const mediaUrl = post.media.url;
+        const mediaUrl = post.media?.url || fallbackImageUrl;
         const mediaAlt = post.media.alt || "Post Image";
         const postTitle = post.title || "Untitled Post";
         const postBody = post.body || "";
