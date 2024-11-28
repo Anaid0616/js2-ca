@@ -48,6 +48,13 @@ header img {
   margin: 20px;
 }
 
+#user-avatar {
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin: 10px;
+}
+
 /* post */
 #single-post-page {
   display: flex;

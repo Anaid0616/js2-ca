@@ -1,7 +1,8 @@
 import { authGuard } from "../../utilities/authGuard";
 import { loadHTMLHeader } from "../../ui/global/sharedHeader.js";
-import { API_KEY, API_SOCIAL_PROFILES } from "../../api/constants.js";
+import { API_SOCIAL_PROFILES } from "../../api/constants.js";
 import { headers } from "../../api/headers.js";
+import { fetchAndDisplayProfile } from "./profileUser.js";
 
 loadHTMLHeader();
 authGuard();
@@ -34,9 +35,7 @@ async function fetchAndDisplayUserPosts() {
     const profileData = await response.json();
     console.log("Profile Data:", profileData);
 
-    const posts = profileData.posts;
-
-    console.log("Fetched Posts:", posts);
+    const posts = profileData.data;
 
     if (!posts || posts.length === 0) {
       userPostsContainer.innerHTML = `<p>No posts available.</p>`;
@@ -86,4 +85,5 @@ updatePostButton.addEventListener("click", () => {
 });
 
 // Call the function when the page loads
+fetchAndDisplayProfile(); // Load user profile info
 fetchAndDisplayUserPosts();

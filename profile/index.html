@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Explore the profile page - showcase your unique collection of stunning visuals, creative posts, and personal stories. Connect, follow, and engage with others journey today!" />
     <title>Noroff FED2 JS2 CA</title>
     <link rel="stylesheet" href="../src/css/style.css" />
     <script type="module" src="../src/app.js"></script>
@@ -12,12 +13,14 @@
     <header></header>
 
     <main>
-      <h1>Profile</h1>
-
       <div id="user-info">
         <!-- This section will be populated dynamically -->
-        <p><strong>Name:</strong> <span id="user-name"></span></p>
-        <p><strong>Bio:</strong> <span id="user-bio"></span></p>
+          <!-- User Avatar -->
+          <img id="user-avatar" alt="User Avatar" width="150" height="150" />
+  <p>
+          <h1><span id="user-name"></span></h1>
+        </p>
+        <p><span id="user-bio"></span></p>
       </div>
 
       <!-- Add toggle button -->
@@ -71,5 +74,8 @@
       import { loadHTMLHeader } from "@/js/ui/global/sharedHeader.js";
       loadHTMLHeader();
     </script>
+    <script type="module" src="../src/js/api/profile/update.js"></script>
+
+
   </body>
 </html>

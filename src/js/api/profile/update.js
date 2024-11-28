@@ -1,5 +1,6 @@
 import { API_SOCIAL_PROFILES } from "../constants.js";
 import { headers } from "../headers.js";
+import { onUpdateProfile } from "../../ui/profile/update.js";
 
 /**
  * Update the profile information for a given user.
@@ -24,4 +25,14 @@ export async function updateProfile(username, data) {
     console.error("Error updating profile:", error);
     throw error; // Propagate the error to the UI layer
   }
+}
+
+const updateProfileForm = document.querySelector(
+  "form[name='updateProfileForm']"
+);
+
+if (updateProfileForm) {
+  updateProfileForm.addEventListener("submit", onUpdateProfile);
+} else {
+  console.error("Update profile form not found in DOM.");
 }
