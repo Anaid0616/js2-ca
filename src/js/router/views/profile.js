@@ -4,6 +4,38 @@ import { loadHTMLHeader } from "../../ui/global/sharedHeader.js";
 import { onUpdateProfile } from "../../ui/profile/update.js";
 import { readProfile } from "../../api/profile/read.js";
 
+loadHTMLHeader();
+authGuard();
+
+const userPostsContainer = document.getElementById("user-posts-container");
+const prevButton = document.getElementById("prev-page");
+const nextButton = document.getElementById("next-page");
+const currentPageDisplay = document.getElementById("current-page");
+const updateProfileForm = document.getElementById("update-profile");
+const toggleFormButton = document.createElement("button");
+
+// Create and configure the toggle button
+toggleFormButton.id = "toggle-form-button";
+toggleFormButton.textContent = "Edit Profile";
+document
+  .querySelector("main")
+  .insertBefore(toggleFormButton, updateProfileForm);
+
+// Hide the form initially
+updateProfileForm.style.display = "none";
+
+// Toggle the visibility of the form
+toggleFormButton.addEventListener("click", () => {
+  if (updateProfileForm.style.display === "none") {
+    updateProfileForm.style.display = "block";
+    toggleFormButton.textContent = "Cancel Editing";
+  } else {
+    updateProfileForm.style.display = "none";
+    toggleFormButton.textContent = "Edit Profile";
+  }
+});
+
+// Populate the profile form with existing user data
 async function populateProfileForm() {
   try {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -26,74 +58,60 @@ async function populateProfileForm() {
   }
 }
 
+// Attach the event listener to the Update Profile form
+const updateProfileFormElement = document.forms.updateProfileForm;
+updateProfileFormElement.addEventListener("submit", onUpdateProfile);
+
 // Call this function when the profile page loads
 populateProfileForm();
 
-// Attach the event listener to the Update Profile form
-const updateProfileForm = document.forms.updateProfileForm;
-updateProfileForm.addEventListener("submit", onUpdateProfile);
-
-loadHTMLHeader();
-
-authGuard();
-
-const userPostsContainer = document.getElementById("user-posts-container");
-const prevButton = document.getElementById("prev-page");
-const nextButton = document.getElementById("next-page");
-const currentPageDisplay = document.getElementById("current-page");
-
+// Pagination functionality remains the same
 function isValidImageUrl(url) {
   return new Promise((resolve) => {
     const img = new Image();
-    img.onload = () => resolve(true); // If the image loads, the URL is valid
-    img.onerror = () => resolve(false); // If an error occurs, the URL is invalid
-    img.src = url; // Start loading the image
+    img.onload = () => resolve(true);
+    img.onerror = () => resolve(false);
+    img.src = url;
   });
 }
 
-let currentPage = 1; // Start with page 1
+let currentPage = 1;
 
 async function fetchAndDisplayUserPosts(page = 1) {
   try {
-    const user = JSON.parse(localStorage.getItem("user")); // Get logged-in user
+    const user = JSON.parse(localStorage.getItem("user"));
     if (!user) {
       alert("You must be logged in to view your posts.");
       window.location.href = "/auth/login/";
       return;
     }
 
-    const username = user.name; // Get username
-    console.log("Fetching posts for username:", username); // Debugging
-    console.log("Fetching page:", page); // Debugging
+    const username = user.name;
+    console.log("Fetching posts for username:", username);
+    console.log("Fetching page:", page);
 
-    // Fetch posts by the logged-in user
-    const response = await readPostsByUser(username, 24, page); // Fetch posts with pagination
-    console.log("API Response:", response); // Debugging
+    const response = await readPostsByUser(username, 24, page);
+    console.log("API Response:", response);
 
     const posts = response.data;
-
-    // **Frontend Filter**: Filter posts by the logged-in user (if backend doesn't do it)
     const filteredPosts = posts.filter(
       (post) => post.author?.name === username
     );
 
-    // Filter out posts with invalid or missing image URLs
     const validPosts = [];
     for (const post of posts) {
       if (post.media && post.media.url) {
         const isValid = await isValidImageUrl(post.media.url);
         if (isValid) validPosts.push(post);
       }
-      if (validPosts.length >= 12) break; // Limit to 12 posts per page
+      if (validPosts.length >= 12) break;
     }
 
-    // Handle cases where no valid posts are found
     if (validPosts.length === 0) {
       userPostsContainer.innerHTML = `<p>No posts available.</p>`;
       return;
     }
 
-    // Render exactly 12 valid posts
     userPostsContainer.innerHTML = validPosts
       .slice(0, 12)
       .map((post) => {
@@ -114,7 +132,6 @@ async function fetchAndDisplayUserPosts(page = 1) {
       })
       .join("");
 
-    // Update pagination display
     currentPageDisplay.textContent = `Page ${page}`;
   } catch (error) {
     console.error("Error fetching user posts:", error);
@@ -122,7 +139,6 @@ async function fetchAndDisplayUserPosts(page = 1) {
   }
 }
 
-// Pagination controls
 prevButton.addEventListener("click", () => {
   if (currentPage > 1) {
     currentPage--;
@@ -135,5 +151,4 @@ nextButton.addEventListener("click", () => {
   fetchAndDisplayUserPosts(currentPage);
 });
 
-// Initial fetch
 fetchAndDisplayUserPosts(currentPage);

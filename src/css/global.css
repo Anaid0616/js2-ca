@@ -42,6 +42,12 @@ header img {
   object-fit: cover;
 }
 
+#update-profile form {
+  display: flex;
+  justify-content: flex-start; /* Align to the left */
+  margin: 20px;
+}
+
 /* post */
 #single-post-page {
   display: flex;
@@ -60,6 +66,7 @@ header img {
   margin-bottom: 15px;
 }
 
+/* Global */
 form {
   max-width: 600px;
   margin: auto;
@@ -73,4 +80,11 @@ form textarea,
 form button {
   padding: 0.5em;
   font-size: 1em;
+}
+
+#pagination {
+  display: flex;
+  justify-content: center; /* Center the buttons */
+  align-items: center;
+  margin: 20px;
 }
