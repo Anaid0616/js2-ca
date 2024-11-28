@@ -2,6 +2,9 @@ import { authGuard } from "../../utilities/authGuard";
 import { readPost } from "../../api/post/read.js";
 import { updatePost } from "../../api/post/update.js";
 
+// Ensure the user is authenticated
+authGuard();
+
 // Get the post ID from the URL
 const postId = new URLSearchParams(window.location.search).get("id");
 if (!postId) {
@@ -20,18 +23,23 @@ const mediaAltInput = document.getElementById("edit-media-alt");
 // Load the post data into the form
 async function loadPostData() {
   try {
-    console.log("Attempting to fetch post with ID:", postId); // Debugging
     const response = await readPost(postId);
+
+    // Check if data exists
+    if (!response || !response.data) {
+      throw new Error("Post data not found.");
+    }
+
     console.log("Post data fetched successfully:", response); // Debugging
-    console.log("Post ID from URL:", postId);
-    console.log("Fetched Post Data:", response);
 
     const { data: post } = response;
 
-    form.title.value = post.title || "";
-    form.body.value = post.body || "";
-    form.mediaUrl.value = post.media?.url || "";
-    form.mediaAlt.value = post.media?.alt || "";
+    // Populate the form fields with fetched post data
+    titleInput.value = post.title || "";
+    bodyInput.value = post.body || "";
+    tagsInput.value = post.tags?.join(", ") || ""; // Join array of tags into a comma-separated string
+    mediaUrlInput.value = post.media?.url || "";
+    mediaAltInput.value = post.media?.alt || "";
 
     console.log("Form populated with post data"); // Debugging
   } catch (error) {
@@ -56,7 +64,8 @@ form.addEventListener("submit", async (event) => {
   };
 
   try {
-    await updatePost(postId, updatedPost);
+    const updated = await updatePost(postId, updatedPost);
+    console.log("Post updated successfully:", updated);
     alert("Post updated successfully!");
     window.location.href = `/post/?id=${postId}`;
   } catch (error) {
@@ -65,5 +74,5 @@ form.addEventListener("submit", async (event) => {
   }
 });
 
-// Load post data on page load
+// Call loadPostData when the page loads
 loadPostData();

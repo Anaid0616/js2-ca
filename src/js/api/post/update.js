@@ -1,5 +1,4 @@
 import { API_KEY, API_SOCIAL_POSTS } from "../constants.js";
-import { headers } from "../headers.js";
 
 /**
  * Updates an existing post by sending updated data to the API.
@@ -19,11 +18,12 @@ import { headers } from "../headers.js";
 export async function updatePost(id, { title, body, tags, media }) {
   const token = localStorage.getItem("token");
 
-  console.log(localStorage.getItem("token"));
-
   if (!token) {
     throw new Error("User is not authenticated. No token found.");
   }
+
+  const payload = { title, body, tags, media };
+  console.log("Payload being sent to API:", payload);
 
   try {
     const response = await fetch(`${API_SOCIAL_POSTS}/${id}`, {
@@ -31,6 +31,7 @@ export async function updatePost(id, { title, body, tags, media }) {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
+        "X-Noroff-API-Key": API_KEY,
       },
       body: JSON.stringify({ title, body, tags, media }),
     });

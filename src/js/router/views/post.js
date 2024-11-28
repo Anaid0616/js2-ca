@@ -1,7 +1,6 @@
 import { authGuard } from "../../utilities/authGuard";
 import { readPost } from "../../api/post/read";
 import { deletePost } from "../../api/post/delete";
-import { updatePost } from "../../api/post/update";
 
 // Ensure the user is authenticated
 authGuard();
@@ -19,7 +18,7 @@ if (!postId) {
 }
 
 // Fetch and display the post
-export async function fetchAndRenderPost() {
+async function fetchAndRenderPost() {
   try {
     console.log("Fetching post with ID:", postId); // Debugging
 
@@ -44,63 +43,54 @@ export async function fetchAndRenderPost() {
         <img src="${mediaUrl}" alt="${mediaAlt}" />
         <h2>${title || "No Title"}</h2>
         <p>${body || "No Description Available"}</p>
-        <p><em>By: ${author?.name || "Anonymous"}</em></p>
+        <p><em>By: ${authorName}</em></p>
       `;
+
+    // Attach event listeners for edit and delete buttons after rendering
+    attachEventListeners();
   } catch (error) {
     console.error("Error fetching post:", error);
     alert("Failed to load the post. Please try again.");
   }
 }
 
+// Create buttons dynamically and add event listeners
+const postButtons = document.querySelector(".post-buttons");
+postButtons.innerHTML = `
+     <button id="edit-post-button">Edit Post</button>
+     <button id="delete-post-button">Delete Post</button>
+   `;
+
+// Function to attach event listeners
+function attachEventListeners() {
+  // Edit Post Button
+  const editButton = document.getElementById("edit-post-button");
+  if (editButton) {
+    editButton.addEventListener("click", () => {
+      window.location.href = `/post/edit/?id=${postId}`;
+    });
+  }
+
+  // Delete Post Button
+  const deleteButton = document.getElementById("delete-post-button");
+  if (deleteButton) {
+    deleteButton.addEventListener("click", async () => {
+      const confirmDelete = confirm(
+        "Are you sure you want to delete this post?"
+      );
+      if (!confirmDelete) return;
+
+      try {
+        await deletePost(postId); // Call your API
+        alert("Post deleted successfully!");
+        window.location.href = "/profile/"; // Redirect to profile or another page after deletion
+      } catch (error) {
+        console.error("Error deleting post:", error);
+        alert("Failed to delete post. Please try again.");
+      }
+    });
+  }
+}
+
 // Execute the function to fetch and render the post
 fetchAndRenderPost();
-
-// Get the delete button
-const deleteButton = document.getElementById("delete-post-button");
-
-// Handle delete post
-deleteButton.addEventListener("click", async () => {
-  const confirmDelete = confirm("Are you sure you want to delete this post?");
-  if (!confirmDelete) return;
-
-  try {
-    // Call the deletePost API function
-    await deletePost(postId);
-    alert("Post deleted successfully!");
-    window.location.href = "/"; // Redirect to homepage after deletion
-  } catch (error) {
-    console.error("Error deleting post:", error);
-    alert("Failed to delete post. Please try again.");
-  }
-});
-
-// Edit Post Button
-const editButton = document.getElementById("edit-post-button");
-
-// Redirect to edit.html with the post ID
-editButton.addEventListener("click", () => {
-  const postId = new URLSearchParams(window.location.search).get("id");
-  if (!postId) {
-    alert("No post ID found. Cannot edit post.");
-    return;
-  }
-  // Redirect to edit.html with the post ID in the URL
-  window.location.href = `/post/edit/?id=${postId}`;
-});
-
-// Delete Post Button
-document
-  .getElementById("delete-post-button")
-  .addEventListener("click", async () => {
-    const confirmDelete = confirm("Are you sure you want to delete this post?");
-    if (!confirmDelete) return;
-
-    try {
-      await deletePost(postId); // Call your API
-      alert("Post deleted successfully!");
-      window.location.href = "/profile/"; // Redirect to profile or another page after deletion
-    } catch (error) {
-      console.error("Error deleting post:", error);
-      alert("Failed to delete post. Please try again.");
-    }
-  });

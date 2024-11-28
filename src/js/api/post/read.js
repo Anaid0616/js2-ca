@@ -1,4 +1,4 @@
-import { API_SOCIAL_POSTS } from "../constants.js";
+import { API_KEY, API_SOCIAL_POSTS } from "../constants.js";
 import { headers } from "../headers.js";
 /**
  * Reads a single post by its ID.
@@ -9,9 +9,10 @@ import { headers } from "../headers.js";
  */
 export async function readPost(id) {
   try {
-    const response = await fetch(`${API_SOCIAL_POSTS}/${id}`, {
+    const response = await fetch(`${API_SOCIAL_POSTS}/${id}?_author=true`, {
       method: "GET",
       headers: headers(),
+      "X-Noroff-API-Key": API_KEY,
     });
 
     if (!response.ok) {
@@ -67,7 +68,7 @@ export async function readPosts(limit = 12, page = 1) {
 export async function readPostsByUser(username, limit = 12, page = 1) {
   try {
     const response = await fetch(
-      `${API_SOCIAL_POSTS}?username=${username}&limit=${limit}&page=${page}`,
+      `${API_SOCIAL_POSTS}?_author=true&author=${author}&limit=${limit}&page=${page}`,
       { headers: headers() }
     );
     if (!response.ok) throw new Error("Failed to fetch user posts");

@@ -1,4 +1,4 @@
-import { API_SOCIAL_POSTS } from "../constants.js";
+import { API_KEY, API_SOCIAL_POSTS } from "../constants.js";
 import { headers } from "../headers.js";
 
 /**
@@ -16,6 +16,7 @@ export async function deletePost(id) {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
+        "X-Noroff-API-Key": API_KEY,
       },
     });
 
