@@ -3,6 +3,7 @@ import { loadHTMLHeader } from "../../ui/global/sharedHeader.js";
 import { API_SOCIAL_PROFILES } from "../../api/constants.js";
 import { headers } from "../../api/headers.js";
 import { fetchAndDisplayProfile } from "./profileUser.js";
+import "../../ui/profile/update.js";
 
 loadHTMLHeader();
 authGuard();
@@ -45,9 +46,7 @@ async function fetchAndDisplayUserPosts() {
     // Render posts
     userPostsContainer.innerHTML = posts
       .map((post) => {
-        const mediaUrl =
-          post.media?.url ||
-          "https://i.postimg.cc/FzLMcSCp/frede-langlois-W1fjs-X7vd-Xs-unsplash-kopiera.jpg";
+        const mediaUrl = post.media?.url || "/images/placeholder.jpg";
         const mediaAlt = post.media?.alt || "Post Image";
         const postTitle = post.title || "Untitled Post";
         const postBody = post.body || "";
@@ -63,8 +62,6 @@ async function fetchAndDisplayUserPosts() {
         `;
       })
       .join("");
-
-    console.log("User posts rendered successfully.");
   } catch (error) {
     console.error("Error fetching user posts:", error);
   }

@@ -34,8 +34,7 @@ async function fetchAndDisplayPosts(page = 1) {
     const posts = response.data;
 
     // Fallback image URL
-    const fallbackImageUrl =
-      "https://i.postimg.cc/FzLMcSCp/frede-langlois-W1fjs-X7vd-Xs-unsplash-kopiera.jpg";
+    const fallbackImageUrl = "/images/placeholder.jpg";
 
     // Filter out posts with missing or invalid image URLs
     const validPosts = [];

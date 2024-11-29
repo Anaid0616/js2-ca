@@ -1,4 +1,5 @@
 import { updateProfile } from "../../api/profile/update.js";
+import { fetchAndDisplayProfile } from "../../router/views/profileUser.js";
 
 /**
  * Handles the update profile form submission.
@@ -8,7 +9,6 @@ const updateProfileForm = document.querySelector(
 );
 
 if (updateProfileForm) {
-  console.log("Form found and event listener attached.");
   updateProfileForm.addEventListener("submit", onUpdateProfile);
 } else {
   console.error("Update profile form not found in DOM.");
@@ -16,11 +16,9 @@ if (updateProfileForm) {
 
 export async function onUpdateProfile(event) {
   event.preventDefault(); // Prevent default form submission behavior
-  console.log("onUpdateProfile function triggered");
 
   const form = event.target;
   const avatar = form.avatar.value.trim();
-  const banner = form.banner.value.trim();
   const bio = form.bio.value.trim();
 
   const user = JSON.parse(localStorage.getItem("user")); // Get logged-in user's data
@@ -33,24 +31,26 @@ export async function onUpdateProfile(event) {
 
   try {
     const updateData = {
-      avatar: avatar || null, // Use null if the field is empty
-      banner: banner || null,
-      bio: bio || null,
+      avatar: avatar ? { url: avatar } : null, // Wrap avatar in an object
+      bio: bio || null, // String
     };
 
-    console.log("Updating profile with data:", updateData);
-
     // Call the API to update the profile
-    const updatedProfile = await updateProfile(user.name, updateData);
+    const updatedProfile = await updateProfile(username, updateData);
     console.log("Updated profile from API:", updatedProfile);
 
-    // Dynamically update the UI with the new profile data
-    document.getElementById("user-avatar").src =
-      updatedProfile.avatar ||
-      "https://i.postimg.cc/hhFynQtz/yoonjae-baik-6qe-V7-CVWIXs-unsplash-kopiera.jpg";
-    document.getElementById("user-bio").textContent =
-      updatedProfile.bio || "No bio available.";
-    document.getElementById("user-name").textContent = username;
+    // Dynamically update the DOM with the updated profile data
+    const userAvatar = document.getElementById("user-avatar");
+    const userBioElement = document.getElementById("user-bio");
+
+    // Ensure avatar and bio fields are updated
+    userAvatar.src =
+      updatedProfile.data.avatar?.url || "/images/placeholder.jpg";
+    userBioElement.textContent = updatedProfile.data.bio || "No bio available.";
+
+    // Update form fields as well
+    form.avatar.value = updatedProfile.data.avatar?.url || "";
+    form.bio.value = updatedProfile.data.bio || "";
 
     alert("Profile updated successfully!");
   } catch (error) {
@@ -58,3 +58,5 @@ export async function onUpdateProfile(event) {
     alert("Failed to update profile. Please try again.");
   }
 }
+
+await fetchAndDisplayProfile();
