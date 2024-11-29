@@ -15,6 +15,20 @@ export async function fetchAndDisplayProfile() {
 
     const username = user.name;
 
+    // Use localStorage data first
+    if (user.avatar || user.bio) {
+      console.log("Using localStorage for profile data:", user);
+
+      // Populate UI from localStorage
+      const userAvatar = document.getElementById("user-avatar");
+      const userBioElement = document.getElementById("user-bio");
+
+      userAvatar.src = user.avatar?.url || "/images/placeholder.jpg";
+      userBioElement.textContent = user.bio || "No bio available.";
+
+      return; // Stop here if localStorage has data
+    }
+
     // Fetch the profile information
     const response = await fetch(`${API_SOCIAL_PROFILES}/${username}`, {
       method: "GET",

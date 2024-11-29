@@ -39,13 +39,24 @@ export async function onUpdateProfile(event) {
     const updatedProfile = await updateProfile(username, updateData);
     console.log("Updated profile from API:", updatedProfile);
 
+    // Update the user's local storage data
+    const updatedUserData = {
+      ...user,
+      name: updatedProfile.data.name,
+      avatar: updatedProfile.data.avatar,
+      bio: updatedProfile.data.bio,
+    };
+    localStorage.setItem("user", JSON.stringify(updatedUserData));
+
     // Dynamically update the DOM with the updated profile data
     const userAvatar = document.getElementById("user-avatar");
+    const userNameElement = document.getElementById("user-name");
     const userBioElement = document.getElementById("user-bio");
 
     // Ensure avatar and bio fields are updated
     userAvatar.src =
       updatedProfile.data.avatar?.url || "/images/placeholder.jpg";
+    userNameElement.textContent = updatedProfile.data.name || "Unknown User";
     userBioElement.textContent = updatedProfile.data.bio || "No bio available.";
 
     // Update form fields as well
@@ -59,4 +70,5 @@ export async function onUpdateProfile(event) {
   }
 }
 
-await fetchAndDisplayProfile();
+// Ensure the profile is fetched and displayed when the page loads
+fetchAndDisplayProfile();
