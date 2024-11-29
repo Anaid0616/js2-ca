@@ -27,6 +27,16 @@ function isValidImageUrl(url) {
   });
 }
 
+/**
+ * Fetches posts from the API and displays them in the DOM.
+ *
+ * @async
+ * @param {number} [page=1] - The page number to fetch.
+ * @returns {Promise<void>} - A promise that resolves when posts are fetched and rendered.
+ *
+ * @example
+ * fetchAndDisplayPosts(1);
+ */
 async function fetchAndDisplayPosts(page = 1) {
   try {
     // Fetch more posts than needed to account for filtering

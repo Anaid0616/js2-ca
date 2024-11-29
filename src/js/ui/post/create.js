@@ -1,7 +1,18 @@
 import { createPost } from "../../api/post/create";
 
 /**
- * Passes data to the createPost function in api/post and handles the response.
+ * Handles the creation of a new post by collecting data from the form,
+ * sending it to the API, and managing the response.
+ *
+ * @async
+ * @function onCreatePost
+ * @param {Event} event - The form submission event.
+ * @returns {Promise<void>} - Resolves when the post is successfully created or an error is handled.
+ * @throws {Error} - Displays an error alert if post creation fails.
+ *
+ * @example
+ * // Usage:
+ * document.getElementById("create-post-form").addEventListener("submit", onCreatePost);
  */
 export async function onCreatePost(event) {
   event.preventDefault(); // Prevent the form from reloading the page
@@ -22,7 +33,6 @@ export async function onCreatePost(event) {
     };
 
     const newPost = await createPost(postData); // Call the createPost function
-    console.log("New Post Response:", newPost);
 
     // Ensure ID exists in the response
     if (newPost && newPost.data && newPost.data.id) {

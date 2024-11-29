@@ -3,6 +3,12 @@ import { headers } from "../../api/headers.js";
 
 /**
  * Fetch and display user profile information (name, avatar, and bio).
+ * - If user data exists in localStorage, it populates the profile directly.
+ * - Otherwise, it fetches data from the API and updates both the DOM and localStorage.
+ *
+ * @async
+ * @function fetchAndDisplayProfile
+ * @throws {Error} If the API request fails or user is not logged in.
  */
 export async function fetchAndDisplayProfile() {
   try {
@@ -17,8 +23,6 @@ export async function fetchAndDisplayProfile() {
 
     // Use localStorage data first if available
     if (user.avatar || user.bio) {
-      console.log("Using localStorage for profile data:", user);
-
       // Populate UI from localStorage
       const userAvatar = document.getElementById("user-avatar");
       const userNameElement = document.getElementById("user-name");
@@ -43,7 +47,6 @@ export async function fetchAndDisplayProfile() {
     }
 
     const profileData = await response.json();
-    console.log("Fetched profile data from API:", profileData);
 
     // Update the HTML with profile info
     const userAvatar = document.getElementById("user-avatar");

@@ -26,7 +26,6 @@ export async function login({ email, password }) {
     }
 
     const data = await response.json();
-    console.log("Login API Response:", data);
     return data;
   } catch (error) {
     console.error("Error during login:", error);

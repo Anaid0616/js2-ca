@@ -1,5 +1,13 @@
 /**
- * This function should pass data to the register function in api/auth and handle the response
+ * Handles user registration by collecting form data, calling the API to register the user,
+ * and storing the authentication details in `localStorage` upon success.
+
+ *
+ * @async
+ * @function onRegister
+ * @param {Event} event - The form submission event.
+ * @returns {Promise<void>} - Resolves when the registration process is complete.
+ * @throws {Error} If registration fails, displays an error alert and logs the error in the console.
  */
 import { register } from "../../api/auth/register";
 
@@ -23,7 +31,6 @@ export async function onRegister(event) {
 
     // If registration is successful
     if (response) {
-      console.log("Registration successful:", response); // Logs the server response
       alert(`Registration successful!`); // Shows alert
       window.location.href = "/auth/login/"; // Redirects to the login page
     }

@@ -5,7 +5,10 @@ import { updatePost } from "../../api/post/update.js";
 // Ensure the user is authenticated
 authGuard();
 
-// Get the post ID from the URL
+/**
+ * Extract the post ID from the URL query parameters.
+ * @type {string | null}
+ */
 const postId = new URLSearchParams(window.location.search).get("id");
 if (!postId) {
   alert("No post ID found. Redirecting to home page.");
@@ -13,14 +16,29 @@ if (!postId) {
 }
 
 // Get form elements
+/**
+ * HTML form element for editing a post.
+ * @type {HTMLFormElement}
+ */
 const form = document.getElementById("edit-post-form");
+
+/**
+ * HTML input elements for editing the post fields.
+ * @type {HTMLInputElement}
+ */
 const titleInput = document.getElementById("edit-title");
 const bodyInput = document.getElementById("edit-body");
 const tagsInput = document.getElementById("edit-tags");
 const mediaUrlInput = document.getElementById("edit-media-url");
 const mediaAltInput = document.getElementById("edit-media-alt");
 
-// Load the post data into the form
+/**
+ * Loads the post data and populates the form fields.
+ *
+ * @async
+ * @returns {Promise<void>} - Resolves when the post data is loaded.
+ * @throws {Error} - Redirects to the home page if post data fails to load.
+ */
 async function loadPostData() {
   try {
     const response = await readPost(postId);
@@ -29,8 +47,6 @@ async function loadPostData() {
     if (!response || !response.data) {
       throw new Error("Post data not found.");
     }
-
-    console.log("Post data fetched successfully:", response); // Debugging
 
     const { data: post } = response;
 
@@ -65,7 +81,7 @@ form.addEventListener("submit", async (event) => {
 
   try {
     const updated = await updatePost(postId, updatedPost);
-    console.log("Post updated successfully:", updated);
+
     alert("Post updated successfully!");
     window.location.href = `/post/?id=${postId}`;
   } catch (error) {

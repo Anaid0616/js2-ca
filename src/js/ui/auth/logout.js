@@ -1,10 +1,15 @@
 /**
- * This function should log the user out by removing aproppriate user data from the browser.
+ * Logs the user out by removing authentication-related data from localStorage
+ * and redirecting to the login page.
+ *
+ * - Removes the `token` and `user` data from `localStorage`.
+ * - Alerts the user that they have been logged out.
+ * - Redirects the browser to the `/auth/login/` page.
+ *
+ * @function logout
+ * @returns {void}
  */
-
 export function logout() {
-  console.log("Logout function triggered");
-
   localStorage.removeItem("token");
   localStorage.removeItem("user");
 

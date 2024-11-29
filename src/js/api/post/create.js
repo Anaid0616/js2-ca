@@ -13,10 +13,26 @@ import { API_KEY } from "../../api/constants";
  * @param {string} [data.media.alt] - Alt text for the media (optional).
  * @returns {Promise<Object>} The created post data from the API.
  * @throws {Error} If the API request fails.
+ *
+ * @example
+ * // Example usage:
+ * const postData = {
+ *   title: "My New Post",
+ *   body: "This is the body of my post.",
+ *   tags: ["tag1", "tag2"],
+ *   media: { url: "https://example.com/image.jpg", alt: "Example Image" },
+ * };
+ *
+ * try {
+ *   const newPost = await createPost(postData);
+ *   console.log("Post created:", newPost);
+ * } catch (error) {
+ *   console.error("Failed to create post:", error);
+ * }
  */
 export async function createPost({ title, body = "", tags = [], media = {} }) {
   const token = localStorage.getItem("token"); // Retrieve the token for authentication
-  console.log("Token used for Authorization:", token);
+
   try {
     const response = await fetch(API_SOCIAL_POSTS, {
       method: "POST",
@@ -34,7 +50,6 @@ export async function createPost({ title, body = "", tags = [], media = {} }) {
 
     // Parse the response JSON
     const jsonResponse = await response.json();
-    console.log("API Response from createPost:", jsonResponse);
 
     // Return the JSON response if all checks pass
     return jsonResponse;

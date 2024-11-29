@@ -6,9 +6,23 @@ import { deletePost } from "../../api/post/delete";
 authGuard();
 
 // Get the post container and query string parameters
+/**
+ * The container element where the post will be rendered.
+ * @type {HTMLElement}
+ */
 const postContainer = document.querySelector(".post");
+
+/**
+ * Parse the query string parameters from the URL.
+ * @type {URLSearchParams}
+ */
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
+
+/**
+ * Extract the post ID from the URL query parameters.
+ * @type {string | null}
+ */
 const postId = urlParams.get("id"); // Get the post ID from the URL
 
 // Redirect if no post ID is provided
@@ -17,14 +31,18 @@ if (!postId) {
   window.location.href = "/";
 }
 
+/**
+ * Fetches the post by ID and renders it in the DOM.
+ *
+ * @async
+ * @returns {Promise<void>} - A promise that resolves when the post is fetched and rendered.
+ * @throws Will display an alert if the post cannot be loaded.
+ */
 // Fetch and display the post
 async function fetchAndRenderPost() {
   try {
-    console.log("Fetching post with ID:", postId); // Debugging
-
     // Fetch the post using its ID
     const response = await readPost(postId);
-    console.log("Post data:", response); // Debugging
 
     // Extract post data
     const { data: post } = response; // Destructure the 'data' field from the response
@@ -33,10 +51,9 @@ async function fetchAndRenderPost() {
     const { media, title, body, author } = post;
 
     // Validate media and provide fallback if media is missing
-    const mediaUrl =
-      media?.url || "https://i.postimg.cc/j2K0443Z/placeholder.jpg"; // Placeholder for invalid image
+    const mediaUrl = media?.url || "/images/placeholder.jpg"; // Placeholder for invalid image
     const mediaAlt = media?.alt || "Post Image";
-    const authorName = author?.name || "Anonymous"; // Use author.name if it exists
+    const authorName = author?.name || "Anonymous";
 
     // Update the DOM with the post data
     postContainer.innerHTML = `
@@ -55,13 +72,22 @@ async function fetchAndRenderPost() {
 }
 
 // Create buttons dynamically and add event listeners
+/**
+ * The container element for the post action buttons (Edit and Delete).
+ * @type {HTMLElement}
+ */
 const postButtons = document.querySelector(".post-buttons");
 postButtons.innerHTML = `
      <button id="edit-post-button">Edit Post</button>
      <button id="delete-post-button">Delete Post</button>
    `;
 
-// Function to attach event listeners
+/**
+ * Attach event listeners to the dynamically created buttons.
+ *
+ * - Edit Button: Redirects to the post edit page.
+ * - Delete Button: Deletes the post after user confirmation.
+ */
 function attachEventListeners() {
   // Edit Post Button
   const editButton = document.getElementById("edit-post-button");

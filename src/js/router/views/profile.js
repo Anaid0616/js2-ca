@@ -10,6 +10,15 @@ authGuard();
 
 const userPostsContainer = document.getElementById("user-posts-container");
 
+/**
+ * Fetch and display posts for the logged-in user.
+ * - Retrieves posts from the API and renders them in the `userPostsContainer`.
+ * - If no posts are found, displays a "No posts available" message.
+ *
+ * @async
+ * @function fetchAndDisplayUserPosts
+ * @throws {Error} If the API request fails or the user is not logged in.
+ */
 // Function to fetch and display posts
 async function fetchAndDisplayUserPosts() {
   try {
@@ -21,7 +30,6 @@ async function fetchAndDisplayUserPosts() {
     }
 
     const username = user.name; // Get username
-    console.log("Fetching profile for username:", username); // Debugging
 
     // Fetch profile data with posts
     const response = await fetch(`${API_SOCIAL_PROFILES}/${username}/posts`, {
@@ -34,7 +42,6 @@ async function fetchAndDisplayUserPosts() {
     }
 
     const profileData = await response.json();
-    console.log("Profile Data:", profileData);
 
     const posts = profileData.data;
 

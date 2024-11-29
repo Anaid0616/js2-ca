@@ -21,9 +21,6 @@ export async function onLogin(event) {
     // Call the API and get the response
     const response = await login(data);
 
-    // Check the structure of your response
-    console.log("Login API Response:", response);
-
     // Save the access token and user data to local storage
     const token = response.data.accessToken;
     const user = {
@@ -49,7 +46,6 @@ export async function onLogin(event) {
     const userName = user.name || "User";
 
     // Log success and show an alert
-    console.log("Login successful:", user);
     alert(`Login successful! Welcome ${userName}!`);
 
     // Redirect to the home page

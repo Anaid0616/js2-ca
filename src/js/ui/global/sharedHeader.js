@@ -1,5 +1,23 @@
 import { logout } from "../auth/logout";
 
+/**
+ * Dynamically loads the HTML content for the `<header>` element and manages link visibility
+ * based on the user's authentication state.
+ *
+ * - Fetches the header HTML from `/header/index.html` and inserts it into the `<header>` element.
+ * - Hides or shows navigation links (e.g., Login, Register, Logout) based on whether the user is logged in.
+ * - Attaches a click event listener to the Logout button if the user is authenticated.
+ *
+ * @async
+ * @function loadHTMLHeader
+ * @returns {Promise<void>} - Resolves when the header is loaded and DOM elements are updated.
+ * @throws {Error} - Logs an error if the header fails to load or the fetch request is unsuccessful.
+ *
+ * @example
+ * // Usage:
+ * await loadHTMLHeader();
+ * // Dynamically loads and manages the header content on the page.
+ */
 export async function loadHTMLHeader() {
   const headerElement = document.querySelector("header");
   try {
