@@ -2,7 +2,7 @@ import { API_SOCIAL_PROFILES } from "../../api/constants.js";
 import { headers } from "../../api/headers.js";
 
 /**
- * Fetch and display user profile information (name and bio).
+ * Fetch and display user profile information (name, avatar, and bio).
  */
 export async function fetchAndDisplayProfile() {
   try {
@@ -15,21 +15,24 @@ export async function fetchAndDisplayProfile() {
 
     const username = user.name;
 
-    // Use localStorage data first
+    // Use localStorage data first if available
     if (user.avatar || user.bio) {
       console.log("Using localStorage for profile data:", user);
 
       // Populate UI from localStorage
       const userAvatar = document.getElementById("user-avatar");
+      const userNameElement = document.getElementById("user-name");
       const userBioElement = document.getElementById("user-bio");
 
       userAvatar.src = user.avatar?.url || "/images/placeholder.jpg";
+      userAvatar.alt = user.name || "User Avatar"; // Set alt text
+      userNameElement.textContent = user.name || "Unknown User"; // Set username
       userBioElement.textContent = user.bio || "No bio available.";
 
       return; // Stop here if localStorage has data
     }
 
-    // Fetch the profile information
+    // Fetch the profile information from the API
     const response = await fetch(`${API_SOCIAL_PROFILES}/${username}`, {
       method: "GET",
       headers: headers(),
@@ -40,24 +43,31 @@ export async function fetchAndDisplayProfile() {
     }
 
     const profileData = await response.json();
+    console.log("Fetched profile data from API:", profileData);
 
     // Update the HTML with profile info
     const userAvatar = document.getElementById("user-avatar");
     const userNameElement = document.getElementById("user-name");
     const userBioElement = document.getElementById("user-bio");
 
-    // Use fallback values only if data is truly missing
-    userNameElement.textContent =
-      profileData.name || user.name || "Unknown User";
+    // Populate UI with fetched data
+    userAvatar.src = profileData.avatar?.url || "/images/placeholder.jpg";
+    userAvatar.alt = profileData.name || "User Avatar"; // Set alt text
+    userNameElement.textContent = profileData.name || "Unknown User"; // Set username
     userBioElement.textContent = profileData.bio || "No bio available.";
-    // Handle avatar fallback
-    const avatarUrl = profileData.avatar?.url || "/images/placeholder.jpg"; // Fallback image
-    userAvatar.src = avatarUrl;
-    userAvatar.alt = profileData.name || "User Avatar";
+
+    // Update localStorage with fetched data
+    const updatedUserData = {
+      ...user, // Preserve existing data
+      avatar: profileData.avatar,
+      bio: profileData.bio,
+      name: profileData.name, // Ensure name is updated
+    };
+    localStorage.setItem("user", JSON.stringify(updatedUserData));
   } catch (error) {
     console.error("Error fetching user profile:", error);
   }
 }
 
-// Call the function to fetch and display profile
+// Call the function to fetch and display profile data
 fetchAndDisplayProfile();
