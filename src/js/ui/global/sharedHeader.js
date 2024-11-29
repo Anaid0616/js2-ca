@@ -22,7 +22,7 @@ export async function loadHTMLHeader() {
   const headerElement = document.querySelector("header");
   try {
     // Update the path to fetch header/index.html
-    const response = await fetch("/header/index.html");
+    const response = await fetch("/images/sharedheader.html");
     if (!response.ok) {
       throw new Error("Failed to load header");
     }
