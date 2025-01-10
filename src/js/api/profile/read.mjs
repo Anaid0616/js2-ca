@@ -1,5 +1,5 @@
-import { API_SOCIAL_PROFILES } from "../constants.js";
-import { headers } from "../headers.js";
+import { API_SOCIAL_PROFILES } from '../constants.mjs';
+import { doFetch } from '../../utilities/doFetch.mjs';
 
 /**
  * Fetch the profile data for a specific user.
@@ -21,18 +21,14 @@ import { headers } from "../headers.js";
  */
 export async function readProfile(username) {
   try {
-    const response = await fetch(`${API_SOCIAL_PROFILES}/${username}`, {
-      method: "GET",
-      headers: headers(),
-    });
+    const options = {
+      method: 'GET', // Set HTTP method
+    };
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch profile");
-    }
-
-    return await response.json(); // Return profile data
+    // Use `doFetch` to send the request
+    return await doFetch(`${API_SOCIAL_PROFILES}/${username}`, options);
   } catch (error) {
-    console.error("Error reading profile:", error);
-    throw error;
+    console.error('Error reading profile:', error);
+    throw error; // Re-throw error for further handling
   }
 }

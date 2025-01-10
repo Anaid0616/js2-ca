@@ -1,7 +1,7 @@
-import { authGuard } from "../../utilities/authGuard";
-import { setLogoutListener } from "../../ui/global/logout";
-import { readPosts } from "../../api/post/read.js";
-import { loadHTMLHeader } from "../../ui/global/sharedHeader.js";
+import { authGuard } from '../../utilities/authGuard.mjs';
+import { setLogoutListener } from '../../ui/global/logout.mjs';
+import { readPosts } from '../../api/post/read.mjs';
+import { loadHTMLHeader } from '../../ui/global/sharedHeader.mjs';
 
 loadHTMLHeader();
 
@@ -12,10 +12,10 @@ setLogoutListener();
 
 // Render posts in DOM and Pagination
 let currentPage = 1;
-const postsContainer = document.getElementById("posts-container");
-const prevButton = document.getElementById("prev-page");
-const nextButton = document.getElementById("next-page");
-const currentPageDisplay = document.getElementById("current-page");
+const postsContainer = document.getElementById('posts-container');
+const prevButton = document.getElementById('prev-page');
+const nextButton = document.getElementById('next-page');
+const currentPageDisplay = document.getElementById('current-page');
 
 // Helper function to validate image URLs
 function isValidImageUrl(url) {
@@ -44,7 +44,7 @@ async function fetchAndDisplayPosts(page = 1) {
     const posts = response.data;
 
     // Fallback image URL
-    const fallbackImageUrl = "/images/placeholder.jpg";
+    const fallbackImageUrl = '/images/placeholder.jpg';
 
     // Filter out posts with missing or invalid image URLs
     const validPosts = [];
@@ -67,9 +67,9 @@ async function fetchAndDisplayPosts(page = 1) {
       .slice(0, 12)
       .map((post) => {
         const mediaUrl = post.media?.url || fallbackImageUrl;
-        const mediaAlt = post.media.alt || "Post Image";
-        const postTitle = post.title || "Untitled Post";
-        const postBody = post.body || "";
+        const mediaAlt = post.media.alt || 'Post Image';
+        const postTitle = post.title || 'Untitled Post';
+        const postBody = post.body || '';
 
         return `
             <div class="post">
@@ -81,24 +81,24 @@ async function fetchAndDisplayPosts(page = 1) {
             </div>
           `;
       })
-      .join("");
+      .join('');
 
     // Update pagination display
     currentPageDisplay.textContent = `Page ${page}`;
   } catch (error) {
-    console.error("Error fetching posts:", error);
+    console.error('Error fetching posts:', error);
   }
 }
 
 // Pagination controls
-prevButton.addEventListener("click", () => {
+prevButton.addEventListener('click', () => {
   if (currentPage > 1) {
     currentPage--;
     fetchAndDisplayPosts(currentPage);
   }
 });
 
-nextButton.addEventListener("click", () => {
+nextButton.addEventListener('click', () => {
   currentPage++;
   fetchAndDisplayPosts(currentPage);
 });

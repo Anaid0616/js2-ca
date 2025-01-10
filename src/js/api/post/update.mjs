@@ -1,4 +1,5 @@
-import { API_KEY, API_SOCIAL_POSTS } from "../constants.js";
+import { API_SOCIAL_POSTS } from '../constants.mjs';
+import { doFetch } from '../../utilities/doFetch.mjs';
 
 /**
  * Updates an existing post by sending updated data to the API.
@@ -16,34 +17,19 @@ import { API_KEY, API_SOCIAL_POSTS } from "../constants.js";
  */
 
 export async function updatePost(id, { title, body, tags, media }) {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("User is not authenticated. No token found.");
-  }
-
-  const payload = { title, body, tags, media };
-  console.log("Payload being sent to API:", payload);
+  const payload = { title, body, tags, media }; // Data to be sent to the API
+  console.log('Payload being sent to API:', payload);
 
   try {
-    const response = await fetch(`${API_SOCIAL_POSTS}/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-        "X-Noroff-API-Key": API_KEY,
-      },
-      body: JSON.stringify({ title, body, tags, media }),
-    });
+    const options = {
+      method: 'PUT',
+      body: JSON.stringify(payload), // Attach payload
+    };
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to update post");
-    }
-
-    return await response.json(); // Return the updated post data
+    // Use `doFetch` to update the post
+    return await doFetch(`${API_SOCIAL_POSTS}/${id}`, options);
   } catch (error) {
-    console.error("Error updating post:", error);
-    throw error;
+    console.error('Error updating post:', error);
+    throw error; // Re-throw error for further handling
   }
 }

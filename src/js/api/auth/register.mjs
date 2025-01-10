@@ -1,4 +1,6 @@
-import { API_AUTH_REGISTER } from "../constants";
+import { API_AUTH_REGISTER } from '../constants.mjs';
+import { doFetch } from '../../utilities/doFetch.mjs';
+
 /**
  * Registers a new user with the provided details.
  *
@@ -19,14 +21,10 @@ import { API_AUTH_REGISTER } from "../constants";
  * @param {boolean} [data.venueManager] - Indicates if the user is a venue manager (optional, used for holidaze).
  * @returns {Promise<Object>} A promise that resolves to the user's registration response.
  */
-
 export async function register({ name, email, password, bio, avatar, banner }) {
   try {
-    const response = await fetch(API_AUTH_REGISTER, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+    const options = {
+      method: 'POST',
       body: JSON.stringify({
         name,
         email,
@@ -35,16 +33,14 @@ export async function register({ name, email, password, bio, avatar, banner }) {
         avatar,
         banner,
       }),
-    });
+    };
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Registration failed");
-    }
+    // Use doFetch with API_AUTH_REGISTER and pass `false` for no auth headers
+    const response = await doFetch(API_AUTH_REGISTER, options, false);
 
-    return await response.json();
+    return response; // Resolve the response as JSON
   } catch (error) {
-    console.error("Error during registration:", error);
-    throw error;
+    console.error('Error during registration:', error);
+    throw error; // Propagate the error for the caller to handle
   }
 }

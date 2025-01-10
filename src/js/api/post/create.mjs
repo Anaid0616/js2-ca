@@ -1,5 +1,5 @@
-import { API_SOCIAL_POSTS } from "../constants.js";
-import { API_KEY } from "../../api/constants";
+import { API_SOCIAL_POSTS } from '../constants.mjs';
+import { doFetch } from '../../utilities/doFetch.mjs';
 
 /**
  * Creates a new post by sending the data to the API.
@@ -30,31 +30,20 @@ import { API_KEY } from "../../api/constants";
  *   console.error("Failed to create post:", error);
  * }
  */
-export async function createPost({ title, body = "", tags = [], media = {} }) {
-  const token = localStorage.getItem("token"); // Retrieve the token for authentication
-
+export async function createPost({ title, body = '', tags = [], media = {} }) {
   try {
-    const response = await fetch(API_SOCIAL_POSTS, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // Add token for authorization
-        "X-Noroff-API-Key": API_KEY,
-      },
-      body: JSON.stringify({ title, body, tags, media }), // Pass the post data
-    });
+    const options = {
+      method: 'POST',
+      body: JSON.stringify({ title, body, tags, media }),
+    };
 
-    if (!response.ok) {
-      throw new Error("Failed to create post");
-    }
+    // Using doFetch with authentication headers (default is `true`)
+    const response = await doFetch(API_SOCIAL_POSTS, options);
 
-    // Parse the response JSON
-    const jsonResponse = await response.json();
-
-    // Return the JSON response if all checks pass
-    return jsonResponse;
+    // Return the response if successful
+    return response;
   } catch (error) {
-    console.error("Error creating post:", error);
+    console.error('Error creating post:', error);
     throw error; // Re-throw error for further handling
   }
 }

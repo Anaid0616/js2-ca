@@ -1,4 +1,4 @@
-import { logout } from "../auth/logout";
+import { logout } from '../auth/logout.mjs';
 /**
  * Attaches a click event listener to the logout button.
  *
@@ -14,14 +14,14 @@ import { logout } from "../auth/logout";
  * // Automatically attaches the listener to the logout button when the DOM is loaded.
  */
 export function setLogoutListener() {
-  const logoutButton = document.querySelector("#logout-button");
+  const logoutButton = document.querySelector('#logout-button');
 
   if (logoutButton) {
-    logoutButton.addEventListener("click", logout);
+    logoutButton.addEventListener('click', logout);
   } else {
-    console.error("Logout button not found in the DOM");
+    console.error('Logout button not found in the DOM');
   }
 }
 
 // Call setLogoutListener when the DOM is loaded
-document.addEventListener("DOMContentLoaded", setLogoutListener);
+document.addEventListener('DOMContentLoaded', setLogoutListener);
