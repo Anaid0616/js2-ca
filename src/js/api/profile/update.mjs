@@ -28,7 +28,15 @@ export async function updateProfile(username, data) {
     };
 
     // Use `doFetch` to send the request
-    return await doFetch(`${API_SOCIAL_PROFILES}/${username}`, options);
+    const response = await doFetch(
+      `${API_SOCIAL_PROFILES}/${username}`,
+      options
+    );
+
+    console.log('API Response Status:', response.status);
+    console.log('API Response JSON:', response);
+
+    return response; // Return the response to the caller
   } catch (error) {
     console.error('Error updating profile:', error);
     throw error; // Propagate the error to the UI layer

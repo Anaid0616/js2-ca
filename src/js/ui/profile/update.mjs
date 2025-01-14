@@ -1,14 +1,15 @@
 import { updateProfile } from '../../api/profile/update.mjs';
+import { fetchAndDisplayProfile } from '../../router/views/profileUser.mjs';
 
 export async function onUpdateProfile(event) {
-  event.preventDefault(); // Prevent default form submission behavior
+  event.preventDefault(); // Prevent default form submission
 
   // Retrieve form values
   const form = event.target;
   const avatar = form.avatar.value.trim();
   const bio = form.bio.value.trim();
 
-  // Fetch current user data from localStorage
+  // Get the current user's data from localStorage
   const user = JSON.parse(localStorage.getItem('user'));
   if (!user || !user.name) {
     alert('User not logged in. Cannot update profile.');
@@ -18,38 +19,35 @@ export async function onUpdateProfile(event) {
   const username = user.name;
 
   try {
-    // Prepare data for API update
+    // Prepare the data to send
     const updateData = {};
     if (avatar) updateData.avatar = { url: avatar };
     if (bio) updateData.bio = bio;
 
-    console.log('Payload being sent:', updateData); // Debugging log
-
+    console.log('Updating profile with data:', updateData);
+    console.log('Sending update to API with data:', updateData);
     // Call the API to update the profile
     const updatedProfile = await updateProfile(username, updateData);
+    console.log('Updated profile response from API:', updatedProfile);
 
-    // Update `localStorage` with new data
+    // Update localStorage with the new profile data
     const updatedUserData = {
-      ...user, // Preserve existing user data
+      ...user,
       name: updatedProfile.name || user.name,
-      avatar: updatedProfile.avatar || user.avatar,
-      bio: updatedProfile.bio || user.bio,
+      avatar: updatedProfile.data.avatar || user.avatar,
+      bio: updatedProfile.data.bio || user.bio,
     };
     localStorage.setItem('user', JSON.stringify(updatedUserData));
-    console.log('Updated localStorage:', localStorage.getItem('user')); // Debugging log
+    console.log(
+      'Updated localStorage:',
+      JSON.parse(localStorage.getItem('user'))
+    );
+    console.log('Old bio:', user.bio);
+    console.log('New bio from API:', updatedProfile.bio);
+    console.log('Full API response:', updatedProfile);
 
-    // Dynamically update the UI
-    const userAvatar = document.getElementById('user-avatar');
-    const userNameElement = document.getElementById('user-name');
-    const userBioElement = document.getElementById('user-bio');
-
-    userAvatar.src = updatedUserData.avatar?.url || '/images/placeholder.jpg';
-    userNameElement.textContent = updatedUserData.name || 'Unknown User';
-    userBioElement.textContent = updatedUserData.bio || 'No bio available.';
-
-    // Pre-fill form with updated data
-    form.avatar.value = updatedUserData.avatar?.url || '';
-    form.bio.value = updatedUserData.bio || '';
+    // Dynamically update the DOM using fetchAndDisplayProfile
+    await fetchAndDisplayProfile();
 
     alert('Profile updated successfully!');
   } catch (error) {
@@ -64,13 +62,6 @@ const updateProfileForm = document.querySelector(
 );
 if (updateProfileForm) {
   updateProfileForm.addEventListener('submit', onUpdateProfile);
-
-  // Populate the form with existing data on page load
-  const user = JSON.parse(localStorage.getItem('user'));
-  if (user) {
-    updateProfileForm.avatar.value = user.avatar?.url || '';
-    updateProfileForm.bio.value = user.bio || '';
-  }
 } else {
   console.error('Update profile form not found in DOM.');
 }
