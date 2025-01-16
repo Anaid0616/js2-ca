@@ -17,13 +17,39 @@
     <header></header>
 
     <main>
-      <div id="posts-container">
-        <h2>All Posts</h2>
+      <!-- Posts Container -->
+      <div class="max-w-screen-lg mx-auto p-5">
+        <div
+          id="posts-container"
+          class="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-5 p-5 mx-auto"
+        >
+          <h2 class="text-xl font-bold col-span-full">All Posts</h2>
+          <!-- Example Post -->
+          <div class="post">
+            <img
+              src="./public/images/placeholder.jpg"
+              alt="Post Image"
+              class="w-full h-[400px] object-cover block"
+            />
+          </div>
+        </div>
       </div>
-      <div id="pagination">
-        <button id="prev-page">Previous</button>
-        <span id="current-page">Page 1</span>
-        <button id="next-page">Next</button>
+
+      <!-- Pagination -->
+      <div id="pagination" class="flex justify-between items-center p-5">
+        <button
+          id="prev-page"
+          class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+        >
+          Previous
+        </button>
+        <span id="current-page" class="text-lg font-bold">Page 1</span>
+        <button
+          id="next-page"
+          class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+        >
+          Next
+        </button>
       </div>
     </main>
 

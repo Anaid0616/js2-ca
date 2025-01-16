@@ -72,14 +72,20 @@ async function fetchAndDisplayPosts(page = 1) {
         const postBody = post.body || '';
 
         return `
-            <div class="post">
-              <a href="/post/?id=${post.id}">
-                <img src="${mediaUrl}" alt="${mediaAlt}" />
-                <h3>${postTitle}</h3>
-                <p>${postBody}</p>
-              </a>
+        <div class="post bg-white shadow rounded-lg overflow-hidden">
+          <a href="/post/?id=${post.id}" class="block hover:opacity-90">
+            <img
+              src="${mediaUrl}"
+              alt="${mediaAlt}"
+              class="w-full h-[400px] object-cover"
+            />
+            <div class="p-4">
+              <h3 class="text-lg font-bold mb-2">${postTitle}</h3>
+              <p class="text-gray-600">${postBody}</p>
             </div>
-          `;
+          </a>
+        </div>
+      `;
       })
       .join('');
 

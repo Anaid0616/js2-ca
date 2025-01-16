@@ -1,7 +1,24 @@
-<a href="/"><img src="/images/noroff-logo.png" alt="Noroff Logo" /></a>
+<header
+  class="flex justify-between items-center p-4 border-b border-gray-300 bg-gray-100"
+>
+  <!-- Logo Section -->
+  <a href="/" class="flex items-center">
+    <img src="/images/noroff-logo.png" alt="Noroff Logo" class="h-12" />
+  </a>
 
-<a href="/profile/">My Profile</a>
-<a href="/post/create/">Create Post</a>
-<a href="/auth/login/">Login</a>
-<a href="/auth/register/">Register</a>
-<button id="logout-button">Logout</button>
+  <!-- Navigation Links -->
+  <nav class="flex space-x-20">
+    <a href="/profile/" class="text-blue-500 hover:underline">My Profile</a>
+    <a href="/post/create/" class="text-blue-500 hover:underline"
+      >Create Post</a
+    >
+    <a href="/auth/login/" class="text-blue-500 hover:underline">Login</a>
+    <a href="/auth/register/" class="text-blue-500 hover:underline">Register</a>
+    <button
+      id="logout-button"
+      class="hidden bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+    >
+      Logout
+    </button>
+  </nav>
+</header>

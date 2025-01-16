@@ -78,9 +78,13 @@ async function fetchAndRenderPost() {
  */
 const postButtons = document.querySelector('.post-buttons');
 postButtons.innerHTML = `
-     <button id="edit-post-button">Edit Post</button>
-     <button id="delete-post-button">Delete Post</button>
-   `;
+<button id="edit-post-button" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+  Edit Post
+</button>
+<button id="delete-post-button" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+  Delete Post
+</button>
+`;
 
 /**
  * Attach event listeners to the dynamically created buttons.

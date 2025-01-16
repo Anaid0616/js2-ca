@@ -11,19 +11,44 @@
 
   <body>
     <h1>Login</h1>
-    <form name="login" method="post">
+    <form
+      name="login"
+      method="post"
+      class="max-w-lg mx-auto flex flex-col gap-4"
+    >
       <div>
         <label for="email">Email</label>
-        <input id="email" type="email" name="email" required />
+        <input
+          id="email"
+          type="email"
+          name="email"
+          required
+          pattern="^[\w\-.]+@(stud\.)?noroff\.no$"
+          title="Please enter a valid noroff.no or stud.noroff.no address"
+          class="p-2 border rounded"
+        />
       </div>
 
       <div>
         <label for="password">Password</label>
-        <input type="password" name="password" id="password" required />
+        <input
+          type="password"
+          name="password"
+          id="password"
+          required
+          minlength="8"
+          class="p-2 border rounded"
+        />
       </div>
 
-      <a href="/auth/register/">Register</a>
-      <button>Login</button>
+      <a href="/auth/register/" class="text-blue-500 hover:underline"
+        >Register</a
+      >
+      <button
+        class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+      >
+        Login
+      </button>
     </form>
   </body>
 </html>

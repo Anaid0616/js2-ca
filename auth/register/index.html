@@ -11,8 +11,11 @@
 
   <body>
     <h1>Register</h1>
-
-    <form name="register" method="post">
+    <form
+      name="register"
+      method="post"
+      class="max-w-lg mx-auto flex flex-col gap-4"
+    >
       <div>
         <label for="name">Name</label>
         <input
@@ -23,6 +26,7 @@
           maxlength="20"
           pattern="^[\w]+$"
           title="Please enter a username using only letters and numbers"
+          class="p-2 border rounded"
         />
       </div>
 
@@ -35,6 +39,7 @@
           required
           pattern="^[\w\-.]+@(stud\.)?noroff\.no$"
           title="Please enter a valid noroff.no or stud.noroff.no address"
+          class="p-2 border rounded"
         />
       </div>
 
@@ -46,11 +51,16 @@
           id="password"
           required
           minlength="8"
+          class="p-2 border rounded"
         />
       </div>
 
-      <a href="/auth/login/">Login</a>
-      <button>Register</button>
+      <a href="/auth/login/" class="text-blue-500 hover:underline">Login</a>
+      <button
+        class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+      >
+        Register
+      </button>
     </form>
   </body>
 </html>

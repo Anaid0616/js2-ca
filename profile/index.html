@@ -16,7 +16,8 @@
       <div id="user-info">
         <!-- This section will be populated dynamically -->
           <!-- User Avatar -->
-          <img id="user-avatar" alt="User Avatar" width="150" height="150" />
+          <img id="user-avatar" alt="User Avatar" class="w-40 h-40 rounded-full object-cover block m-2">
+
   <p>
           <h1><span id="user-name"></span></h1>
         </p>
@@ -24,39 +25,59 @@
       </div>
 
       <!-- Add toggle button -->
-      <button id="toggle-profile-update-button">Update Post</button>
+      <button id="toggle-profile-update-button">Update Profile</button>
 
       <div id="update-profile" style="display: none">
         <!-- Initially hidden -->
-        <form name="updateProfileForm">
+        <form class="max-w-lg mx-auto flex flex-col gap-4" name="updateProfileForm">
           <label for="avatar">Avatar URL:</label>
           <input
             type="text"
             id="avatar"
             name="avatar"
             placeholder="Enter new avatar URL"
+            class="p-2 border rounded"
           />
-
+        
           <label for="bio">Bio:</label>
           <textarea
             id="bio"
             name="bio"
             placeholder="Enter a short bio"
+            class="p-2 border rounded"
           ></textarea>
-
-          <button type="submit">Update Profile</button>
+        
+          <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            Update
+          </button>
         </form>
+        
       </div>
 
-      <div id="user-posts">
+      <div id="user-posts" class="max-w-screen-lg mx-auto p-5">
         <h2>My Posts</h2>
-        <div id="user-posts-container"></div>
+        <div id="user-posts-container" class="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-5 p-5">
+            <!-- Example Post -->
+        <div class="post">
+          <img
+            src=""
+            alt="Post Image"
+            class="w-full h-[250px] object-cover block"
+          />
+        </div>
+        </div>
+        
       </div>
-      <div id="pagination">
-        <button id="prev-page">Previous</button>
-        <span id="current-page">Page 1</span>
-        <button id="next-page">Next</button>
+      <div id="pagination" class="flex justify-between items-center p-5">
+        <button id="prev-page" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
+          Previous
+        </button>
+        <span id="current-page" class="text-lg font-bold">Page 1</span>
+        <button id="next-page" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
+          Next
+        </button>
       </div>
+      
     </main>
 
     <footer></footer>

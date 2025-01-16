@@ -1,2 +1,6 @@
-@import url(reset.css);
-@import url(global.css);
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import your custom CSS */
+@import url('reset.css');

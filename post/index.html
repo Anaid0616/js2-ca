@@ -17,12 +17,32 @@
 
   <body>
     <header></header>
-    <main id="single-post-page">
-      <h1>Post Page</h1>
+
+    <main
+      id="single-post-page"
+      class="flex flex-col justify-center items-center min-h-screen"
+    >
+      <h1 class="text-2xl font-bold mb-4">Post Page</h1>
       <div class="post">
-        <!-- Post content dynamically inserted by post.js -->
+        <img
+          src="../public/images/placeholder.jpg"
+          alt="Post Image"
+          class="w-full max-w-3xl aspect-[1/1] object-cover mb-4"
+        />
+        <p class="text-lg">Post content dynamically inserted by post.js</p>
       </div>
-      <div class="post-buttons"></div>
+      <div class="post-buttons flex gap-4">
+        <button
+          class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Edit post
+        </button>
+        <button
+          class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+        >
+          Delete post
+        </button>
+      </div>
     </main>
 
     <footer></footer>
