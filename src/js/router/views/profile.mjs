@@ -21,6 +21,23 @@ const userPostsContainer = document.getElementById('user-posts-container');
  */
 async function fetchAndDisplayUserPosts() {
   try {
+    // Render skeleton loaders before fetching the posts
+    userPostsContainer.innerHTML = `
+      ${Array.from({ length: 6 })
+        .map(
+          () => `
+        <div class="post border border-gray-200 shadow rounded-md p-4 max-w-sm w-full mx-auto">
+          <div class="animate-pulse flex flex-col space-y-4">
+            <div class="w-full h-[250px] bg-gray-200 rounded"></div>
+            <div class="h-4 bg-gray-200 rounded"></div>
+            <div class="h-2 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+        `
+        )
+        .join('')}
+    `;
+
     const user = JSON.parse(localStorage.getItem('user')); // Get logged-in user
     if (!user) {
       alert('You must be logged in to view your posts.');
@@ -52,24 +69,26 @@ async function fetchAndDisplayUserPosts() {
         const postBody = post.body || '';
 
         return `
-      <div class="post bg-white shadow rounded-lg overflow-hidden">
-        <a href="/post/?id=${post.id}" class="block hover:opacity-90">
-          <img
-            src="${mediaUrl}"
-            alt="${mediaAlt}"
-            class="w-full h-[300px] object-cover"
-          />
-          <div class="p-4">
-            <h3 class="text-lg font-bold mb-2">${postTitle}</h3>
-            <p class="text-gray-600">${postBody}</p>
-          </div>
-        </a>
-      </div>
-    `;
+        <div class="post bg-white shadow rounded-sm overflow-hidden">
+          <a href="/post/?id=${post.id}" class="block hover:opacity-90">
+            <img
+              src="${mediaUrl}"
+              alt="${mediaAlt}"
+              class="w-full h-[250px] object-cover"
+            />
+            <div class="p-4">
+              <h3 class="text-lg font-bold mb-2">${postTitle}</h3>
+              <p class="text-gray-600">${postBody}</p>
+            </div>
+          </a>
+        </div>
+      `;
       })
       .join('');
   } catch (error) {
     console.error('Error fetching user posts:', error);
+    userPostsContainer.innerHTML =
+      '<p>Error loading posts. Please try again.</p>';
   }
 }
 

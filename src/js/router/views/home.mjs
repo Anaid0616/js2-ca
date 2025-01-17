@@ -39,7 +39,27 @@ function isValidImageUrl(url) {
  */
 async function fetchAndDisplayPosts(page = 1) {
   try {
-    // Fetch more posts than needed to account for filtering
+    // Render skeleton loaders before fetching the posts
+    // Render skeleton loaders before fetching the posts
+    postsContainer.innerHTML = `
+${Array.from({ length: 12 })
+  .map(
+    () => `
+    <div class="post bg-white shadow rounded-sm overflow-hidden">
+      <div class="animate-pulse">
+        <div class="w-full h-[500px] bg-gray-200"></div>
+        <div class="p-4">
+          <div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+          <div class="h-3 bg-gray-200 rounded w-1/2"></div>
+        </div>
+      </div>
+    </div>
+  `
+  )
+  .join('')}
+`;
+
+    // Fetch posts from the API
     const response = await readPosts(24, page);
     const posts = response.data;
 
@@ -72,12 +92,12 @@ async function fetchAndDisplayPosts(page = 1) {
         const postBody = post.body || '';
 
         return `
-        <div class="post bg-white shadow rounded-lg overflow-hidden">
+        <div class="post bg-white shadow rounded-sm overflow-hidden">
           <a href="/post/?id=${post.id}" class="block hover:opacity-90">
             <img
               src="${mediaUrl}"
               alt="${mediaAlt}"
-              class="w-full h-[400px] object-cover"
+              class="w-full h-[500px] object-cover"
             />
             <div class="p-4">
               <h3 class="text-lg font-bold mb-2">${postTitle}</h3>
@@ -93,6 +113,7 @@ async function fetchAndDisplayPosts(page = 1) {
     currentPageDisplay.textContent = `Page ${page}`;
   } catch (error) {
     console.error('Error fetching posts:', error);
+    postsContainer.innerHTML = '<p>Error loading posts. Please try again.</p>';
   }
 }
 
