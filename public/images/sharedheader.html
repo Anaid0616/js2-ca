@@ -1,25 +1,156 @@
 <header
-  class="flex justify-between items-center p-4 border-b border-gray-300 bg-gray-100"
+  class="p-4 border-b border-gray-300 bg-gray-100 flex justify-between items-center"
 >
-  <!-- Logo Section -->
+  <!-- Logo -->
   <a href="/" class="flex items-center">
     <img src="/images/noroff-logo.png" alt="Noroff Logo" class="h-12" />
   </a>
 
-  <!-- Navigation Links -->
-  <nav class="flex space-x-20">
-    <a href="/" class="text-blue-500 hover:underline">Home </a>
-    <a href="/profile/" class="text-blue-500 hover:underline">My Profile</a>
-    <a href="/post/create/" class="text-blue-500 hover:underline"
-      >Create Post</a
+  <!-- Top Navigation (Visible on Larger Screens) -->
+  <nav class="hidden sm:flex space-x-10">
+    <!-- Home -->
+    <a
+      href="/"
+      class="flex flex-col items-center text-gray-700 hover:text-blue-500"
     >
-    <a href="/auth/login/" class="text-blue-500 hover:underline">Login</a>
-    <a href="/auth/register/" class="text-blue-500 hover:underline">Register</a>
-    <button
-      id="logout-button"
-      class="hidden bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M2 10l9-7 9 7v10a2 2 0 01-2 2h-3a2 2 0 01-2-2V12H8v8a2 2 0 01-2 2H3a2 2 0 01-2-2V11z"
+        />
+      </svg>
+      <span class="text-sm">Home</span>
+    </a>
+
+    <!-- Profile -->
+    <a
+      href="/profile/"
+      class="flex flex-col items-center text-gray-700 hover:text-blue-500"
     >
-      Logout
-    </button>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M5.121 17.804A11.955 11.955 0 0112 15.5c2.766 0 5.293.88 7.121 2.304M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5z"
+        />
+      </svg>
+      <span class="text-sm">Profile</span>
+    </a>
+
+    <!-- Create -->
+    <a
+      href="/post/create/"
+      class="flex flex-col items-center text-gray-700 hover:text-blue-500"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 4v16m8-8H4"
+        />
+      </svg>
+      <span class="text-sm">Create</span>
+    </a>
   </nav>
+
+  <!-- Logout Button (Always in Header) -->
+  <button
+    id="logout-button"
+    class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+  >
+    Logout
+  </button>
 </header>
+
+<!-- Bottom Navigation (Visible on Smaller Screens Only) -->
+<nav
+  class="fixed bottom-0 left-0 right-0 bg-gray-100 border-t border-gray-300 p-4 flex justify-around sm:hidden"
+>
+  <!-- Home -->
+  <a
+    href="/"
+    class="flex flex-col items-center text-gray-700 hover:text-blue-500"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M2 10l9-7 9 7v10a2 2 0 01-2 2h-3a2 2 0 01-2-2V12H8v8a2 2 0 01-2 2H3a2 2 0 01-2-2V11z"
+      />
+    </svg>
+    <span class="text-sm hidden sm:block">Home</span>
+  </a>
+
+  <!-- Profile -->
+  <a
+    href="/profile/"
+    class="flex flex-col items-center text-gray-700 hover:text-blue-500"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M5.121 17.804A11.955 11.955 0 0112 15.5c2.766 0 5.293.88 7.121 2.304M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5z"
+      />
+    </svg>
+    <span class="text-sm hidden sm:block">Profile</span>
+  </a>
+
+  <!-- Create -->
+  <a
+    href="/post/create/"
+    class="flex flex-col items-center text-gray-700 hover:text-blue-500"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M12 4v16m8-8H4"
+      />
+    </svg>
+    <span class="text-sm hidden sm:block">Create</span>
+  </a>
+</nav>
