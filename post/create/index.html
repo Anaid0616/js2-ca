@@ -10,57 +10,108 @@
     <title>Noroff FED2 JS2 CA</title>
     <link rel="stylesheet" href="../../src/css/style.css" />
     <script type="module" src="../../src/app.mjs"></script>
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      href="../../public/images/favicon.ico"
+      type="image/x-icon"
+    />
+    <link
+      rel="icon"
+      sizes="16x16"
+      href="../../public/images/favicon-16x16.png"
+    />
+    <link
+      rel="icon"
+      sizes="32x32"
+      href="../../public/images/favicon-32x32.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="../../public/images/apple-touch-icon.png"
+    />
   </head>
   <body>
     <header></header>
 
-    <main>
-      <h1>Create Post</h1>
-      <form id="create-post-form" class="max-w-lg mx-auto flex flex-col gap-4">
-        <label for="title">Title:</label>
-        <input
-          type="text"
-          id="title"
-          name="title"
-          required
-          class="p-2 border rounded"
-        />
-
-        <label for="body">Body:</label>
-        <textarea
-          id="body"
-          name="body"
-          required
-          class="p-2 border rounded"
-        ></textarea>
-
-        <label for="tags">Tags:</label>
-        <input type="text" id="tags" name="tags" class="p-2 border rounded" />
-
-        <label for="media-url">Media URL:</label>
-        <input
-          type="url"
-          id="media-url"
-          name="mediaUrl"
-          class="p-2 border rounded"
-        />
-
-        <label for="media-alt">Media Alt Text:</label>
-        <input
-          type="text"
-          id="media-alt"
-          name="mediaAlt"
-          class="p-2 border rounded"
-        />
-
-        <button
-          type="submit"
-          id="create-post-button"
-          class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-        >
+    <main class="min-h-screen flex sm:items-center justify-center bg-gray-100">
+      <div class="max-w-lg w-full p-6 bg-white shadow-md rounded">
+        <!-- Headline -->
+        <h1 class="text-2xl font-bold text-gray-800 mb-6 text-left">
           Create Post
-        </button>
-      </form>
+        </h1>
+        <!-- Form -->
+        <form
+          name="createPost"
+          id="create-post-form"
+          class="flex flex-col gap-3"
+        >
+          <label for="title" class="block text-sm font-medium text-gray-700">
+            Title:
+          </label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            required
+            class="mt-1 p-2 border rounded w-full"
+          />
+
+          <label for="body" class="block text-sm font-medium text-gray-700">
+            Body:
+          </label>
+          <textarea
+            id="body"
+            name="body"
+            required
+            class="mt-1 p-2 border rounded w-full"
+          ></textarea>
+
+          <label for="tags" class="block text-sm font-medium text-gray-700">
+            Tags:
+          </label>
+          <input
+            type="text"
+            id="tags"
+            name="tags"
+            class="mt-1 p-2 border rounded w-full"
+          />
+
+          <label
+            for="media-url"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Media URL:
+          </label>
+          <input
+            type="url"
+            id="media-url"
+            name="mediaUrl"
+            class="mt-1 p-2 border rounded w-full"
+          />
+
+          <label
+            for="media-alt"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Media Alt Text:
+          </label>
+          <input
+            type="text"
+            id="media-alt"
+            name="mediaAlt"
+            class="mt-1 p-2 border rounded w-full"
+          />
+
+          <button
+            type="submit"
+            id="create-post-button"
+            class="w-full py-2 bg-[#59D1AD] text-black rounded hover:bg-[#47c39a] font-semibold"
+          >
+            Create Post
+          </button>
+        </form>
+      </div>
     </main>
     <footer></footer>
     <script type="module">
