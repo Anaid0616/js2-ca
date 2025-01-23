@@ -58,11 +58,19 @@ async function fetchAndRenderPost() {
     // Update the DOM with the post data
     postContainer.innerHTML = `
         <img src="${mediaUrl}" alt="${mediaAlt}" />
-        <h2>${title || 'No Title'}</h2>
-        <p>${body || 'No Description Available'}</p>
-        <p><em>By: ${authorName}</em></p>
-      `;
-
+        <div style="display: flex; align-items: baseline; gap: 8px;">
+          <p style="font-weight: bold; font-size: 1rem; color: black; margin: 0;">
+      ${authorName}
+    </p>
+    <h2 style="font-weight: bold; font-size: 1rem; color: #333; margin: 0;">
+      ${title || 'No Title'}
+    </h2>
+     
+  </div>
+  <p style="font-size: 1rem; color: #555; margin-top: 8px; line-height: 1.5;">
+    ${body || 'No Description Available'}
+  </p>
+`;
     // Attach event listeners for edit and delete buttons after rendering
     attachEventListeners();
   } catch (error) {
@@ -78,10 +86,10 @@ async function fetchAndRenderPost() {
  */
 const postButtons = document.querySelector('.post-buttons');
 postButtons.innerHTML = `
-<button id="edit-post-button" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+<button id="edit-post-button" class="text-sm px-3 py-1 bg-[#59D1AD] text-black rounded hover:bg-[#47c39a] font-semibold ">
   Edit Post
 </button>
-<button id="delete-post-button" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+<button id="delete-post-button" class="text-sm px-3 py-1.5 bg-gray-300 text-gray-800 rounded hover:bg-gray-400  font-semibold mt-6 sm:mt-0">
   Delete Post
 </button>
 `;

@@ -103,7 +103,7 @@ updatePostButton.addEventListener('click', () => {
     updatePostButton.textContent = 'Cancel Update';
   } else {
     updateProfileForm.style.display = 'none';
-    updatePostButton.textContent = 'Update Post';
+    updatePostButton.textContent = 'Update Profile';
   }
 });
 
