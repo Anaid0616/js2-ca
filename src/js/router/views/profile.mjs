@@ -78,7 +78,7 @@ async function fetchAndDisplayUserPosts() {
             />
             <div class="p-4">
               <h3 class="text-lg font-bold mb-2">${postTitle}</h3>
-              <p class="text-gray-600">${postBody}</p>
+              <p class="#333">${postBody}</p>
             </div>
           </a>
         </div>

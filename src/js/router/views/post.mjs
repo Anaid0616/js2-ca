@@ -43,6 +43,7 @@ async function fetchAndRenderPost() {
   try {
     // Fetch the post using its ID
     const response = await readPost(postId);
+    console.log(response.data);
 
     // Extract post data
     const { data: post } = response; // Destructure the 'data' field from the response
@@ -59,7 +60,7 @@ async function fetchAndRenderPost() {
     postContainer.innerHTML = `
         <img src="${mediaUrl}" alt="${mediaAlt}" />
        
-          <p style="font-weight: bold; font-size: 1rem; color: black; margin: 0;">
+          <p style="font-weight: bold; font-size: 0.9rem; color: #333; margin: 0;">
       ${authorName}
     </p>
     <h2 style="font-weight: bold; font-size: 1rem; color: black; margin: 0;">
@@ -86,7 +87,7 @@ async function fetchAndRenderPost() {
  */
 const postButtons = document.querySelector('.post-buttons');
 postButtons.innerHTML = `
-<button id="edit-post-button" class="text-sm px-3 py-1 bg-[#59D1AD] text-black rounded hover:bg-[#47c39a] font-semibold ">
+<button id="edit-post-button" class="text-sm px-3 py-1 bg-[#59D1AD] text-black rounded hover:bg-[#47c39a] font-semibold mt-6 sm:mt-0">
   Edit Post
 </button>
 <button id="delete-post-button" class="text-sm px-3 py-1.5 bg-gray-300 text-gray-800 rounded hover:bg-gray-400  font-semibold mt-6 sm:mt-0">

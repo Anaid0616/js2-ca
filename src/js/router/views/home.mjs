@@ -61,6 +61,7 @@ ${Array.from({ length: 12 })
 
     // Fetch posts from the API
     const response = await readPosts(24, page);
+    console.log(response.data);
     const posts = response.data;
 
     // Fallback image URL
@@ -86,6 +87,7 @@ ${Array.from({ length: 12 })
     postsContainer.innerHTML = validPosts
       .slice(0, 12)
       .map((post) => {
+        const authorName = post.author?.name || 'Anonymous'; // Get username
         const mediaUrl = post.media?.url || fallbackImageUrl;
         const mediaAlt = post.media.alt || 'Post Image';
         const postTitle = post.title || 'Untitled Post';
@@ -93,11 +95,15 @@ ${Array.from({ length: 12 })
 
         return `
         <div class="post bg-white shadow rounded-sm overflow-hidden">
+           <!-- Username -->
+          <div class="px-4 pt-4 text-sm font-semibold text-gray-700 mb-4">
+            ${authorName}
+          </div>
           <a href="/post/?id=${post.id}" class="block hover:opacity-90">
             <img
               src="${mediaUrl}"
               alt="${mediaAlt}"
-              class="w-full h-[500px] object-cover"
+             class="w-full max-w-[600px] aspect-[5/5] object-cover mx-auto"
             />
             <div class="p-4">
               <h3 class="text-lg font-bold mb-2">${postTitle}</h3>
