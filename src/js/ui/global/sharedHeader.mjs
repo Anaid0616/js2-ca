@@ -31,6 +31,7 @@ export async function loadHTMLHeader() {
 
     // Manage link visibility
     const token = localStorage.getItem('token');
+    const homeLink = document.querySelector("a[href='/']");
     const loginLink = document.querySelector("a[href='/auth/login/']"); // Use absolute path
     const registerLink = document.querySelector("a[href='/auth/register/']"); // Use absolute path
     const logoutButton = document.querySelector('#logout-button');
@@ -49,7 +50,25 @@ export async function loadHTMLHeader() {
       if (registerLink) registerLink.style.display = 'block';
       if (logoutButton) logoutButton.style.display = 'none';
     }
+    // Highlight the active link
+    setActiveLink(); // Call this function after loading the header
   } catch (error) {
     console.error('Error loading header:', error);
   }
+}
+
+// Function to highlight the active link
+function setActiveLink() {
+  const links = document.querySelectorAll('nav a'); // Select all navigation links
+  const currentPath = window.location.pathname; // Get the current URL path
+
+  links.forEach((link) => {
+    if (link.getAttribute('href') === currentPath) {
+      // Add 'font-bold' or any other active style to the active link
+      link.classList.add('font-bold', 'text-gray-900'); // Example Tailwind classes
+    } else {
+      // Remove the active styles for non-active links
+      link.classList.remove('font-bold', 'text-gray-900');
+    }
+  });
 }

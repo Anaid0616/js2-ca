@@ -58,16 +58,16 @@ async function fetchAndRenderPost() {
     // Update the DOM with the post data
     postContainer.innerHTML = `
         <img src="${mediaUrl}" alt="${mediaAlt}" />
-        <div style="display: flex; align-items: baseline; gap: 8px;">
+       
           <p style="font-weight: bold; font-size: 1rem; color: black; margin: 0;">
       ${authorName}
     </p>
-    <h2 style="font-weight: bold; font-size: 1rem; color: #333; margin: 0;">
+    <h2 style="font-weight: bold; font-size: 1rem; color: black; margin: 0;">
       ${title || 'No Title'}
     </h2>
      
-  </div>
-  <p style="font-size: 1rem; color: #555; margin-top: 8px; line-height: 1.5;">
+  
+  <p style="font-size: 1rem; color: #333; margin-top: -18px; line-height: 1.5;">
     ${body || 'No Description Available'}
   </p>
 `;
