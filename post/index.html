@@ -21,12 +21,8 @@
   </head>
 
   <body>
-    <header></header>
+    <header class="sticky top-0 z-50"></header>
     <main class="max-w-screen-md mx-auto p-5">
-      <div
-        id="alert-container"
-        class="absolute top-0 left-1/2 transform -translate-x-1/2 mt-2 z-50"
-      ></div>
       <div class="bg-white shadow-md rounded-lg p-6">
         <h1 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">
           Post Page
@@ -43,7 +39,10 @@
             <div class="mt-4 w-full h-20 bg-gray-300 rounded-md"></div>
           </div>
         </div>
-
+        <div
+          id="alert-container"
+          class="absolute top-0 left-1/2 transform -translate-x-1/2 mt-2 z-50"
+        ></div>
         <div class="post-buttons flex justify-end gap-4 mt-6">
           <button
             class="px-4 py-2 bg-[#59D1AD] text-black rounded hover:bg-[#47c39a] font-semibold"

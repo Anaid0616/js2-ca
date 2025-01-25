@@ -4,6 +4,7 @@ import { API_SOCIAL_PROFILES } from '../../api/constants.mjs';
 import { doFetch } from '../../utilities/doFetch.mjs'; // Import doFetch
 import { fetchAndDisplayProfile } from './profileUser.mjs';
 import '../../ui/profile/update.mjs';
+import { showAlert } from '../../utilities/alert.mjs';
 
 loadHTMLHeader();
 authGuard();
@@ -40,8 +41,10 @@ async function fetchAndDisplayUserPosts() {
 
     const user = JSON.parse(localStorage.getItem('user')); // Get logged-in user
     if (!user) {
-      alert('You must be logged in to view your posts.');
-      window.location.href = '/auth/login/';
+      showAlert('error', 'You must be logged in to view your posts.');
+      setTimeout(() => {
+        window.location.href = '/auth/login/';
+      }, 1500);
       return;
     }
 

@@ -1,4 +1,5 @@
 import { authGuard } from '../../utilities/authGuard.mjs';
+import { showModal } from '../../utilities/modal.mjs';
 import { readPost } from '../../api/post/read';
 import { deletePost } from '../../api/post/delete';
 import { showAlert } from '../../utilities/alert.mjs';
@@ -114,19 +115,21 @@ function attachEventListeners() {
       window.location.href = `/post/edit/?id=${postId}`;
     });
   }
+}
 
-  // Delete Post Button
-  const deleteButton = document.getElementById('delete-post-button');
-  if (deleteButton) {
-    deleteButton.addEventListener('click', async () => {
-      const confirmDelete = confirm(
-        'Are you sure you want to delete this post?'
-      );
-      if (!confirmDelete) return;
+// Delete Post Button
+const deleteButton = document.getElementById('delete-post-button');
+if (deleteButton) {
+  deleteButton.addEventListener('click', async () => {
+    const confirmed = await showModal(
+      'Are you sure you want to delete this post?',
+      'Delete',
+      'Cancel'
+    );
 
+    if (confirmed) {
       try {
-        const isDeleted = await deletePost(postId); // Call your API with the improved function
-
+        const isDeleted = await deletePost(postId);
         if (isDeleted) {
           showAlert('success', 'Post deleted successfully!');
           setTimeout(() => {
@@ -139,8 +142,8 @@ function attachEventListeners() {
         console.error('Error deleting post:', error);
         showAlert('error', 'Failed to delete post. Please try again.');
       }
-    });
-  }
+    }
+  });
 }
 
 // Execute the function to fetch and render the post
