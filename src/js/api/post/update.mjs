@@ -18,7 +18,6 @@ import { doFetch } from '../../utilities/doFetch.mjs';
 
 export async function updatePost(id, { title, body, tags, media }) {
   const payload = { title, body, tags, media }; // Data to be sent to the API
-  console.log('Payload being sent to API:', payload);
 
   try {
     const options = {

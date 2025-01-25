@@ -61,7 +61,7 @@ ${Array.from({ length: 12 })
 
     // Fetch posts from the API
     const response = await readPosts(24, page);
-    console.log(response.data);
+
     const posts = response.data;
 
     // Fallback image URL

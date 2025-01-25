@@ -1,6 +1,7 @@
 import { authGuard } from '../../utilities/authGuard.mjs';
 import { readPost } from '../../api/post/read.mjs';
 import { updatePost } from '../../api/post/update.mjs';
+import { showAlert } from '../../utilities/alert.mjs';
 
 // Ensure the user is authenticated
 authGuard();
@@ -11,8 +12,10 @@ authGuard();
  */
 const postId = new URLSearchParams(window.location.search).get('id');
 if (!postId) {
-  alert('No post ID found. Redirecting to home page.');
-  window.location.href = '/';
+  showAlert('error', 'No post ID found. Redirecting to home page.');
+  setTimeout(() => {
+    window.location.href = '/';
+  }, 1500);
 }
 
 // Get form elements
@@ -56,12 +59,12 @@ async function loadPostData() {
     tagsInput.value = post.tags?.join(', ') || ''; // Join array of tags into a comma-separated string
     mediaUrlInput.value = post.media?.url || '';
     mediaAltInput.value = post.media?.alt || '';
-
-    console.log('Form populated with post data'); // Debugging
   } catch (error) {
     console.error('Error loading post data:', error);
-    alert('Failed to load post data. Redirecting to home page.');
-    window.location.href = '/';
+    showAlert('error', 'Failed to load post data. Redirecting to home page.');
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 1500);
   }
 }
 
@@ -82,11 +85,13 @@ form.addEventListener('submit', async (event) => {
   try {
     const updated = await updatePost(postId, updatedPost);
 
-    alert('Post updated successfully!');
-    window.location.href = `/post/?id=${postId}`;
+    showAlert('success', 'Post updated successfully!');
+    setTimeout(() => {
+      window.location.href = `/post/?id=${postId}`;
+    }, 1500); // Redirect after 1.5 seconds to give time for the alert to be seen
   } catch (error) {
     console.error('Error updating post:', error);
-    alert('Failed to update post. Please try again.');
+    showAlert('error', 'Failed to update post. Please try again.');
   }
 });
 

@@ -1,6 +1,7 @@
 import { authGuard } from '../../utilities/authGuard.mjs';
 import { readPost } from '../../api/post/read';
 import { deletePost } from '../../api/post/delete';
+import { showAlert } from '../../utilities/alert.mjs';
 
 // Ensure the user is authenticated
 authGuard();
@@ -27,8 +28,10 @@ const postId = urlParams.get('id'); // Get the post ID from the URL
 
 // Redirect if no post ID is provided
 if (!postId) {
-  alert('No post ID provided. Redirecting to home page.');
-  window.location.href = '/';
+  showAlert('error', 'No post ID provided. Redirecting to home page.');
+  setTimeout(() => {
+    window.location.href = '/'; // Redirect to the home page
+  }, 1500);
 }
 
 /**
@@ -43,7 +46,6 @@ async function fetchAndRenderPost() {
   try {
     // Fetch the post using its ID
     const response = await readPost(postId);
-    console.log(response.data);
 
     // Extract post data
     const { data: post } = response; // Destructure the 'data' field from the response
@@ -76,7 +78,10 @@ async function fetchAndRenderPost() {
     attachEventListeners();
   } catch (error) {
     console.error('Error fetching post:', error);
-    alert('Failed to load the post. Please try again.');
+    showAlert('error', 'Failed to load the post. Please try again.');
+    setTimeout(() => {
+      window.location.href = '/'; // Redirect to the home page
+    }, 1500);
   }
 }
 
@@ -120,12 +125,19 @@ function attachEventListeners() {
       if (!confirmDelete) return;
 
       try {
-        await deletePost(postId); // Call your API
-        alert('Post deleted successfully!');
-        window.location.href = '/profile/'; // Redirect to profile or another page after deletion
+        const isDeleted = await deletePost(postId); // Call your API with the improved function
+
+        if (isDeleted) {
+          showAlert('success', 'Post deleted successfully!');
+          setTimeout(() => {
+            window.location.href = '/profile/';
+          }, 1500);
+        } else {
+          throw new Error('API did not confirm post deletion.');
+        }
       } catch (error) {
         console.error('Error deleting post:', error);
-        alert('Failed to delete post. Please try again.');
+        showAlert('error', 'Failed to delete post. Please try again.');
       }
     });
   }

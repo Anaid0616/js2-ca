@@ -1,5 +1,6 @@
 import { updateProfile } from '../../api/profile/update.mjs';
 import { fetchAndDisplayProfile } from '../../router/views/profileUser.mjs';
+import { showAlert } from '../../utilities/alert.mjs';
 
 export async function onUpdateProfile(event) {
   event.preventDefault(); // Prevent default form submission
@@ -12,7 +13,7 @@ export async function onUpdateProfile(event) {
   // Get the current user's data from localStorage
   const user = JSON.parse(localStorage.getItem('user'));
   if (!user || !user.name) {
-    alert('User not logged in. Cannot update profile.');
+    showAlert('error', 'User not logged in. Cannot update profile.');
     return;
   }
 
@@ -24,11 +25,8 @@ export async function onUpdateProfile(event) {
     if (avatar) updateData.avatar = { url: avatar };
     if (bio) updateData.bio = bio;
 
-    console.log('Updating profile with data:', updateData);
-    console.log('Sending update to API with data:', updateData);
     // Call the API to update the profile
     const updatedProfile = await updateProfile(username, updateData);
-    console.log('Updated profile response from API:', updatedProfile);
 
     // Update localStorage with the new profile data
     const updatedUserData = {
@@ -38,21 +36,14 @@ export async function onUpdateProfile(event) {
       bio: updatedProfile.data.bio || user.bio,
     };
     localStorage.setItem('user', JSON.stringify(updatedUserData));
-    console.log(
-      'Updated localStorage:',
-      JSON.parse(localStorage.getItem('user'))
-    );
-    console.log('Old bio:', user.bio);
-    console.log('New bio from API:', updatedProfile.bio);
-    console.log('Full API response:', updatedProfile);
 
     // Dynamically update the DOM using fetchAndDisplayProfile
     await fetchAndDisplayProfile();
 
-    alert('Profile updated successfully!');
+    showAlert('success', 'Profile updated successfully!');
   } catch (error) {
     console.error('Error updating profile:', error);
-    alert('Failed to update profile. Please try again.');
+    showAlert('error', 'Failed to update profile. Please try again.');
   }
 }
 

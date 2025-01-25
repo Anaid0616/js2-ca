@@ -15,10 +15,14 @@ export async function deletePost(id) {
     };
 
     // Use doFetch with the provided ID URL
-    await doFetch(`${API_SOCIAL_POSTS}/${id}`, options);
+    const response = await doFetch(`${API_SOCIAL_POSTS}/${id}`, options);
 
-    // Return true for successful deletion
-    return true;
+    // Check if the API confirms deletion
+    if (response.ok) {
+      return true;
+    } else {
+      throw new Error('Failed to delete post. API response not OK.');
+    }
   } catch (error) {
     console.error('Error deleting post:', error);
     throw error; // Re-throw error for further handling
