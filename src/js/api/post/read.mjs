@@ -28,7 +28,7 @@ export async function readPost(id) {
  * @throws {Error} If the API request fails.
  */
 export async function readPosts(limit = 12, page = 1) {
-  const url = `${API_SOCIAL_POSTS}?limit=${limit}&page=${page}`;
+  const url = `${API_SOCIAL_POSTS}?limit=${limit}&page=${page}&_author=true`;
   try {
     // Use doFetch with `GET` method and auth headers
     return await doFetch(url, { method: 'GET' }, true);
