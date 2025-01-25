@@ -1,4 +1,5 @@
 import { login } from '../../api/auth/login';
+import { showAlert } from '../../utilities/alert.mjs';
 
 /**
  * This function should pass data to the login function in api/auth and handle the response
@@ -47,15 +48,20 @@ export async function onLogin(event) {
     const userName = user.name || 'User';
 
     // Log success and show an alert
-    alert(`Login successful! Welcome ${userName}!`);
+    showAlert('success', `Login successful! Welcome ${userName}!`);
 
     // Redirect to the home page
-    window.location.href = '/';
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 1500);
   } catch (error) {
     console.error('Login failed:', error);
 
-    // Display an error message to the user
-    alert('Login failed. Please check your email and password and try again.');
+    // Show an error alert
+    showAlert(
+      'error',
+      'Login failed. Please check your email and password and try again.'
+    );
   }
 }
 
