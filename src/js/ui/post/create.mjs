@@ -1,5 +1,10 @@
 import { createPost } from '../../api/post/create';
 import { showAlert } from '../../utilities/alert.mjs';
+// Import the form handler
+import { initializeFormHandler } from '../../utilities/formHandler.mjs';
+
+// Call the function to attach the form submission logic
+initializeFormHandler();
 
 /**
  * Handles the creation of a new post by collecting data from the form,
@@ -34,7 +39,6 @@ export async function onCreatePost(event) {
     };
 
     const newPost = await createPost(postData); // Call the createPost function
-    console.log('API response:', newPost);
 
     // Ensure ID exists in the response
     if (newPost && newPost.data && newPost.data.id) {

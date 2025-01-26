@@ -27,74 +27,82 @@
         </h1>
         <!-- Register Form -->
         <form name="register" method="post" class="flex flex-col gap-6">
-          <!-- Name Input -->
-          <div>
-            <label for="name" class="block text-sm font-medium text-gray-700">
-              Name
-            </label>
-            <input
-              id="name"
-              type="text"
-              name="name"
-              required
-              maxlength="20"
-              pattern="^[\w]+$"
-              title="Please enter a username using only letters and numbers"
-              class="mt-1 p-2 border rounded w-full"
-            />
-          </div>
+          <fieldset class="flex flex-col gap-6">
+            <!-- Name Input -->
+            <div>
+              <label for="name" class="block text-sm font-medium text-gray-700">
+                Name
+              </label>
+              <input
+                id="name"
+                type="text"
+                name="name"
+                required
+                maxlength="20"
+                pattern="^[\w]+$"
+                title="Please enter a username using only letters and numbers"
+                class="mt-1 p-2 border rounded w-full"
+              />
+            </div>
 
-          <!-- Email Input -->
-          <div>
-            <label for="email" class="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              name="email"
-              required
-              pattern="^[\w\-.]+@(stud\.)?noroff\.no$"
-              title="Please enter a valid noroff.no or stud.noroff.no address"
-              class="mt-1 p-2 border rounded w-full"
-            />
-          </div>
+            <!-- Email Input -->
+            <div>
+              <label
+                for="email"
+                class="block text-sm font-medium text-gray-700"
+              >
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                required
+                pattern="^[\w\-.]+@(stud\.)?noroff\.no$"
+                title="Please enter a valid noroff.no or stud.noroff.no address"
+                class="mt-1 p-2 border rounded w-full"
+              />
+            </div>
 
-          <!-- Password Input -->
-          <div>
-            <label
-              for="password"
-              class="block text-sm font-medium text-gray-700"
+            <!-- Password Input -->
+            <div>
+              <label
+                for="password"
+                class="block text-sm font-medium text-gray-700"
+              >
+                Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                required
+                minlength="8"
+                class="mt-1 p-2 border rounded w-full"
+              />
+            </div>
+
+            <!-- Text and Link -->
+            <div class="text-left">
+              <span class="text-sm text-gray-600"
+                >Already have an account?</span
+              >
+              <a
+                href="/auth/login/"
+                class="text-sm text-blue-500 hover:underline ml-1"
+              >
+                Login
+              </a>
+            </div>
+
+            <!-- Register Button -->
+            <button
+              class="w-full py-2 bg-[#59D1AD] text-black rounded hover:bg-[#47c39a] font-semibold"
             >
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              required
-              minlength="8"
-              class="mt-1 p-2 border rounded w-full"
-            />
-          </div>
-
-          <!-- Text and Link -->
-          <div class="text-left">
-            <span class="text-sm text-gray-600">Already have an account?</span>
-            <a
-              href="/auth/login/"
-              class="text-sm text-blue-500 hover:underline ml-1"
-            >
-              Login
-            </a>
-          </div>
-
-          <!-- Register Button -->
-          <button
-            class="w-full py-2 bg-[#59D1AD] text-black rounded hover:bg-[#47c39a] font-semibold"
-          >
-            Register
-          </button>
+              Register
+            </button>
+          </fieldset>
+          <div class="feedback-container hidden"></div>
         </form>
       </div>
     </div>

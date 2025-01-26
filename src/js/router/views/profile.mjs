@@ -77,7 +77,7 @@ async function fetchAndDisplayUserPosts() {
             <img
               src="${mediaUrl}"
               alt="${mediaAlt}"
-              class="w-full h-[250px] object-cover"
+              class="w-full h-auto aspect-square object-cover"
             />
             <div class="p-4">
               <h3 class="text-lg font-bold mb-2">${postTitle}</h3>

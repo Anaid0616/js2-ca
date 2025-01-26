@@ -35,13 +35,13 @@
           <img
             id="user-avatar"
             alt="User Avatar"
-            class="w-40 h-40 rounded-full object-cover"
+            class="w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full object-cover"
           />
 
           <!-- User Info -->
           <div>
-            <h1 class="text-2xl font-bold" id="user-name">User Name</h1>
-            <p class="text-gray-600" id="user-bio">This is the user bio.</p>
+            <h1 class="text-lg font-bold sm:text-xl md:text-2xl" id="user-name">User Name</h1>
+            <p class="text-gray-600 text-base md:text-lg text-gray-600" id="user-bio">This is the user bio.</p>
           </div>
         </div>
 
@@ -65,33 +65,36 @@
           class="max-w-lg mx-auto flex flex-col gap-4"
           name="updateProfileForm"
         >
-          <div class="relative">
-            <!-- Rest of your content -->
-          </div>
+          <fieldset class="flex flex-col gap-4">
+            <div class="relative">
+              <!-- Rest of your content -->
+            </div>
 
-          <label for="avatar">Avatar URL:</label>
-          <input
-            type="text"
-            id="avatar"
-            name="avatar"
-            placeholder="Enter new avatar URL"
-            class="p-2 border rounded"
-          />
+            <label for="avatar">Avatar URL:</label>
+            <input
+              type="text"
+              id="avatar"
+              name="avatar"
+              placeholder="Enter new avatar URL"
+              class="p-2 border rounded"
+            />
 
-          <label for="bio">Bio:</label>
-          <textarea
-            id="bio"
-            name="bio"
-            placeholder="Enter a short bio"
-            class="p-2 border rounded"
-          ></textarea>
+            <label for="bio">Bio:</label>
+            <textarea
+              id="bio"
+              name="bio"
+              placeholder="Enter a short bio"
+              class="p-2 border rounded"
+            ></textarea>
 
-          <button
-            type="submit"
-            class="px-4 py-2 bg-[#59D1AD] text-black rounded hover:bg-[#47c39a] font-semibold"
-          >
-            Update
-          </button>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-[#59D1AD] text-black rounded hover:bg-[#47c39a] font-semibold"
+            >
+              Update
+            </button>
+          </fieldset>
+          <div class="feedback-container hidden"></div>
         </form>
       </div>
 
@@ -102,20 +105,13 @@
           My posts
         </h2>
 
-        <div
-          id="user-posts-container"
-          class="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-5"
-        >
-          <!-- Example Post -->
-          <div class="post">
-            <img
-              src=""
-              alt="Post Image"
-              class="w-full h-[250px] object-cover block"
-            />
-          </div>
-        </div>
-      </div>
+     <div
+  id="user-posts-container"
+  class="grid grid-cols-2 sm:grid-cols-3 gap-4"
+>
+</div>
+
+      
       <div
         id="pagination"
         class="flex justify-center items-center space-x-4 p-5"

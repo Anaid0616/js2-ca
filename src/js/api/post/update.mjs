@@ -1,5 +1,10 @@
 import { API_SOCIAL_POSTS } from '../constants.mjs';
 import { doFetch } from '../../utilities/doFetch.mjs';
+// Import the form handler
+import { initializeFormHandler } from '../../utilities/formHandler.mjs';
+
+// Call the function to attach the form submission logic
+initializeFormHandler();
 
 /**
  * Updates an existing post by sending updated data to the API.

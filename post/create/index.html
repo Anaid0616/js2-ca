@@ -35,70 +35,73 @@
           id="create-post-form"
           class="flex flex-col gap-3"
         >
-          <label for="title" class="block text-sm font-medium text-gray-700">
-            Title:
-          </label>
-          <input
-            type="text"
-            id="title"
-            name="title"
-            required
-            class="mt-1 p-2 border rounded w-full"
-          />
+          <fieldset class="flex flex-col gap-3">
+            <label for="title" class="block text-sm font-medium text-gray-700">
+              Title:
+            </label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              required
+              class="mt-1 p-2 border rounded w-full"
+            />
 
-          <label for="body" class="block text-sm font-medium text-gray-700">
-            Body:
-          </label>
-          <textarea
-            id="body"
-            name="body"
-            required
-            class="mt-1 p-2 border rounded w-full"
-          ></textarea>
+            <label for="body" class="block text-sm font-medium text-gray-700">
+              Body:
+            </label>
+            <textarea
+              id="body"
+              name="body"
+              required
+              class="mt-1 p-2 border rounded w-full"
+            ></textarea>
 
-          <label for="tags" class="block text-sm font-medium text-gray-700">
-            Tags:
-          </label>
-          <input
-            type="text"
-            id="tags"
-            name="tags"
-            class="mt-1 p-2 border rounded w-full"
-          />
+            <label for="tags" class="block text-sm font-medium text-gray-700">
+              Tags:
+            </label>
+            <input
+              type="text"
+              id="tags"
+              name="tags"
+              class="mt-1 p-2 border rounded w-full"
+            />
 
-          <label
-            for="media-url"
-            class="block text-sm font-medium text-gray-700"
-          >
-            Media URL:
-          </label>
-          <input
-            type="url"
-            id="media-url"
-            name="mediaUrl"
-            class="mt-1 p-2 border rounded w-full"
-          />
+            <label
+              for="media-url"
+              class="block text-sm font-medium text-gray-700"
+            >
+              Media URL:
+            </label>
+            <input
+              type="url"
+              id="media-url"
+              name="mediaUrl"
+              class="mt-1 p-2 border rounded w-full"
+            />
 
-          <label
-            for="media-alt"
-            class="block text-sm font-medium text-gray-700"
-          >
-            Media Alt Text:
-          </label>
-          <input
-            type="text"
-            id="media-alt"
-            name="mediaAlt"
-            class="mt-1 p-2 border rounded w-full"
-          />
+            <label
+              for="media-alt"
+              class="block text-sm font-medium text-gray-700"
+            >
+              Media Alt Text:
+            </label>
+            <input
+              type="text"
+              id="media-alt"
+              name="mediaAlt"
+              class="mt-1 p-2 border rounded w-full"
+            />
 
-          <button
-            type="submit"
-            id="create-post-button"
-            class="w-full py-2 bg-[#59D1AD] text-black rounded hover:bg-[#47c39a] font-semibold"
-          >
-            Create Post
-          </button>
+            <button
+              type="submit"
+              id="create-post-button"
+              class="w-full py-2 bg-[#59D1AD] text-black rounded hover:bg-[#47c39a] font-semibold"
+            >
+              Create Post
+            </button>
+          </fieldset>
+          <div class="feedback-container hidden"></div>
         </form>
       </div>
     </main>

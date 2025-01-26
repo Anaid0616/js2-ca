@@ -30,55 +30,61 @@
         </h1>
         <!-- Login Form -->
         <form name="login" method="post" class="flex flex-col gap-6">
-          <div>
-            <label for="email" class="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              name="email"
-              required
-              pattern="^[\w\-.]+@(stud\.)?noroff\.no$"
-              title="Please enter a valid noroff.no or stud.noroff.no address"
-              class="mt-1 p-2 border rounded w-full"
-            />
-          </div>
+          <fieldset class="flex flex-col gap-6">
+            <div>
+              <label
+                for="email"
+                class="block text-sm font-medium text-gray-700"
+              >
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                required
+                pattern="^[\w\-.]+@(stud\.)?noroff\.no$"
+                title="Please enter a valid noroff.no or stud.noroff.no address"
+                class="mt-1 p-2 border rounded w-full"
+              />
+            </div>
 
-          <div>
-            <label
-              for="password"
-              class="block text-sm font-medium text-gray-700"
+            <div>
+              <label
+                for="password"
+                class="block text-sm font-medium text-gray-700"
+              >
+                Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                required
+                minlength="8"
+                class="mt-1 p-2 border rounded w-full"
+              />
+            </div>
+
+            <!-- Text and link -->
+            <div class="text-left">
+              <span class="text-sm text-gray-600">Don't have an account?</span>
+              <a
+                href="/auth/register/"
+                class="text-sm text-blue-500 hover:underline ml-1"
+              >
+                Register
+              </a>
+            </div>
+
+            <!-- Login Button -->
+            <button
+              class="w-full py-2 bg-[#59D1AD] text-black rounded hover:bg-[#47c39a] font-semibold"
             >
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              required
-              minlength="8"
-              class="mt-1 p-2 border rounded w-full"
-            />
-          </div>
-
-          <!-- Text and link -->
-          <div class="text-left">
-            <span class="text-sm text-gray-600">Don't have an account?</span>
-            <a
-              href="/auth/register/"
-              class="text-sm text-blue-500 hover:underline ml-1"
-            >
-              Register
-            </a>
-          </div>
-
-          <!-- Login Button -->
-          <button
-            class="w-full py-2 bg-[#59D1AD] text-black rounded hover:bg-[#47c39a] font-semibold"
-          >
-            Login
-          </button>
+              Login
+            </button>
+          </fieldset>
+          <div class="feedback-container hidden"></div>
         </form>
       </div>
     </div>
