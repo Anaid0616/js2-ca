@@ -13,7 +13,6 @@ import { doFetch } from '../../utilities/doFetch.mjs';
 export async function fetchAndDisplayProfile() {
   try {
     const user = JSON.parse(localStorage.getItem('user'));
-    console.log('Fetched user from localStorage:', user);
 
     if (!user) {
       alert('You must be logged in to view this page.');
@@ -35,17 +34,14 @@ export async function fetchAndDisplayProfile() {
       userNameElement.textContent = user.name || 'Unknown User'; // Set username
       userBioElement.textContent = user.bio || 'No bio available.';
 
-      console.log('UI updated with new profile data.');
       return; // Stop here if localStorage has data
     }
-    console.log('Username being used:', username);
 
     // Fetch the profile information from the API using doFetch
     const profileData = await doFetch(`${API_SOCIAL_PROFILES}/${username}`, {
       method: 'GET',
     });
 
-    console.log('Profile data fetched from API:', profileData);
     if (!profileData) {
       throw new Error('Failed to fetch profile information.');
     }
@@ -70,7 +66,6 @@ export async function fetchAndDisplayProfile() {
     };
 
     localStorage.setItem('user', JSON.stringify(updatedUserData));
-    console.log('Updated profile response from API:', updatedProfile);
   } catch (error) {
     console.error('Error fetching user profile:', error);
   }

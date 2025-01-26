@@ -4,6 +4,7 @@ import { API_SOCIAL_PROFILES } from '../../api/constants.mjs';
 import { doFetch } from '../../utilities/doFetch.mjs'; // Import doFetch
 import { fetchAndDisplayProfile } from './profileUser.mjs';
 import '../../ui/profile/update.mjs';
+import { showAlert } from '../../utilities/alert.mjs';
 
 loadHTMLHeader();
 authGuard();
@@ -21,10 +22,29 @@ const userPostsContainer = document.getElementById('user-posts-container');
  */
 async function fetchAndDisplayUserPosts() {
   try {
+    // Render skeleton loaders before fetching the posts
+    userPostsContainer.innerHTML = `
+      ${Array.from({ length: 6 })
+        .map(
+          () => `
+        <div class="post border border-gray-200 shadow rounded-md p-4 max-w-sm w-full mx-auto">
+          <div class="animate-pulse flex flex-col space-y-4">
+            <div class="w-full h-[250px] bg-gray-200 rounded"></div>
+            <div class="h-4 bg-gray-200 rounded"></div>
+            <div class="h-2 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+        `
+        )
+        .join('')}
+    `;
+
     const user = JSON.parse(localStorage.getItem('user')); // Get logged-in user
     if (!user) {
-      alert('You must be logged in to view your posts.');
-      window.location.href = '/auth/login/';
+      showAlert('error', 'You must be logged in to view your posts.');
+      setTimeout(() => {
+        window.location.href = '/auth/login/';
+      }, 1500);
       return;
     }
 
@@ -52,18 +72,26 @@ async function fetchAndDisplayUserPosts() {
         const postBody = post.body || '';
 
         return `
-          <div class="post">
-            <a href="/post/?id=${post.id}">
-              <img src="${mediaUrl}" alt="${mediaAlt}" />
-              <h3>${postTitle}</h3>
-              <p>${postBody}</p>
-            </a>
-          </div>
-        `;
+        <div class="post bg-white shadow rounded-sm overflow-hidden">
+          <a href="/post/?id=${post.id}" class="block hover:opacity-90">
+            <img
+              src="${mediaUrl}"
+              alt="${mediaAlt}"
+              class="w-full h-auto aspect-square object-cover"
+            />
+            <div class="p-4">
+              <h3 class="text-lg font-bold mb-2">${postTitle}</h3>
+              <p class="#333">${postBody}</p>
+            </div>
+          </a>
+        </div>
+      `;
       })
       .join('');
   } catch (error) {
     console.error('Error fetching user posts:', error);
+    userPostsContainer.innerHTML =
+      '<p>Error loading posts. Please try again.</p>';
   }
 }
 
@@ -78,7 +106,7 @@ updatePostButton.addEventListener('click', () => {
     updatePostButton.textContent = 'Cancel Update';
   } else {
     updateProfileForm.style.display = 'none';
-    updatePostButton.textContent = 'Update Post';
+    updatePostButton.textContent = 'Update Profile';
   }
 });
 

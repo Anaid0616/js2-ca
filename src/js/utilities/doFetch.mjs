@@ -23,9 +23,9 @@ export async function doFetch(url, options = {}, useAuth = true) {
 
     const response = await fetch(url, fetchOptions);
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Something went wrong');
+    // Handle empty responses (like 204)
+    if (response.status === 204) {
+      return response; // No content to parse
     }
 
     return await response.json();
