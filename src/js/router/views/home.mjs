@@ -40,7 +40,6 @@ function isValidImageUrl(url) {
 async function fetchAndDisplayPosts(page = 1) {
   try {
     // Render skeleton loaders before fetching the posts
-    // Render skeleton loaders before fetching the posts
     postsContainer.innerHTML = `
 ${Array.from({ length: 12 })
   .map(

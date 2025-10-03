@@ -15,10 +15,7 @@ export function logout() {
   localStorage.removeItem('user');
 
   // Show a success alert
-  console.log('Logging out...');
   showAlert('success', 'You have been logged out!');
-  console.log('Alert should be displayed now.');
-  console.log(document.getElementById('alert-container'));
 
   // Redirect to the login page after a short delay
   setTimeout(() => {
