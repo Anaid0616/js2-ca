@@ -14,13 +14,20 @@ export async function deletePost(id) {
       method: 'DELETE',
     };
 
-    // Use doFetch with the provided ID URL
-    await doFetch(`${API_SOCIAL_POSTS}/${id}`, options);
+    const response = await doFetch(`${API_SOCIAL_POSTS}/${id}`, options);
 
-    // Return true for successful deletion
-    return true;
+    // Check if the response status is 204 (No Content) or a successful status
+    if (response && response.status === 204) {
+      console.log('Post deleted successfully');
+      return true; // Indicate success
+    }
+
+    // Handle unexpected responses
+    const result = await response.json(); // Attempt to parse any other response
+    console.log('Delete response:', result);
+    return result; // Return the result if it exists
   } catch (error) {
     console.error('Error deleting post:', error);
-    throw error; // Re-throw error for further handling
+    throw error; // Re-throw the error for higher-level handling
   }
 }

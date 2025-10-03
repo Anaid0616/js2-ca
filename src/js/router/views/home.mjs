@@ -39,8 +39,28 @@ function isValidImageUrl(url) {
  */
 async function fetchAndDisplayPosts(page = 1) {
   try {
-    // Fetch more posts than needed to account for filtering
+    // Render skeleton loaders before fetching the posts
+    postsContainer.innerHTML = `
+${Array.from({ length: 12 })
+  .map(
+    () => `
+    <div class="post bg-white shadow rounded-sm overflow-hidden">
+      <div class="animate-pulse">
+        <div class="w-full h-[500px] bg-gray-200"></div>
+        <div class="p-4">
+          <div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+          <div class="h-3 bg-gray-200 rounded w-1/2"></div>
+        </div>
+      </div>
+    </div>
+  `
+  )
+  .join('')}
+`;
+
+    // Fetch posts from the API
     const response = await readPosts(24, page);
+
     const posts = response.data;
 
     // Fallback image URL
@@ -66,20 +86,31 @@ async function fetchAndDisplayPosts(page = 1) {
     postsContainer.innerHTML = validPosts
       .slice(0, 12)
       .map((post) => {
+        const authorName = post.author?.name || 'Anonymous'; // Get username
         const mediaUrl = post.media?.url || fallbackImageUrl;
         const mediaAlt = post.media.alt || 'Post Image';
         const postTitle = post.title || 'Untitled Post';
         const postBody = post.body || '';
 
         return `
-            <div class="post">
-              <a href="/post/?id=${post.id}">
-                <img src="${mediaUrl}" alt="${mediaAlt}" />
-                <h3>${postTitle}</h3>
-                <p>${postBody}</p>
-              </a>
+        <div class="post bg-white shadow rounded-sm overflow-hidden">
+           <!-- Username -->
+          <div class="px-4 pt-4 text-sm font-semibold text-gray-700 mb-4">
+            ${authorName}
+          </div>
+          <a href="/post/?id=${post.id}" class="block hover:opacity-90">
+            <img
+              src="${mediaUrl}"
+              alt="${mediaAlt}"
+             class="w-full max-w-[600px] aspect-[5/5] object-cover mx-auto"
+            />
+            <div class="p-4">
+              <h3 class="text-lg font-bold mb-2">${postTitle}</h3>
+              <p class="text-gray-600">${postBody}</p>
             </div>
-          `;
+          </a>
+        </div>
+      `;
       })
       .join('');
 
@@ -87,6 +118,7 @@ async function fetchAndDisplayPosts(page = 1) {
     currentPageDisplay.textContent = `Page ${page}`;
   } catch (error) {
     console.error('Error fetching posts:', error);
+    postsContainer.innerHTML = '<p>Error loading posts. Please try again.</p>';
   }
 }
 

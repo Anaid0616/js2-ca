@@ -2,28 +2,64 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
       content="The social media platform for photo enthusiasts and storytellers. Create a profile, post your favorite moments, and explore an inspiring community of creatives"
     />
-    <title>Noroff FED2 JS2 CA</title>
+    <title>Pixly</title>
+
+    <!-- Inter Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Red+Rose:wght@300..700&family=Satisfy&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="./src/css/style.css" />
     <script type="module" src="./src/app.mjs"></script>
+    <!-- Favicon -->
+    <link rel="icon" href="./images/favicon.ico" type="image/x-icon" />
+    <link rel="icon" sizes="16x16" href="./images/favicon-16x16.png" />
+    <link rel="icon" sizes="32x32" href="./images/favicon-32x32.png" />
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png" />
   </head>
 
-  <body>
-    <header></header>
+  <body class="font-bodyfont">
+    <header class="sticky top-0 z-50"></header>
 
     <main>
-      <div id="posts-container">
-        <h2>All Posts</h2>
+      <!-- Posts Container -->
+      <div class="max-w-screen-sm mx-auto p-5">
+        <div
+          id="alert-container"
+          class="absolute top-0 left-1/2 transform -translate-x-1/2 mt-2 z-50"
+        ></div>
+        <div
+          id="posts-container"
+          class="max-w-screen-md mx-auto space-y-6 p-5 sm:space-y-8"
+        >
+          <h2 class="text-xl font-bold col-span-full">All Posts</h2>
+          <!-- Skeleton Loader -->
+        </div>
       </div>
-      <div id="pagination">
-        <button id="prev-page">Previous</button>
-        <span id="current-page">Page 1</span>
-        <button id="next-page">Next</button>
+
+      <!-- Pagination -->
+      <div
+        id="pagination"
+        class="flex justify-center items-center space-x-4 p-5"
+      >
+        <button
+          id="prev-page"
+          class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+        >
+          Previous
+        </button>
+        <span id="current-page" class="text-lg font-bold">Page 1</span>
+        <button
+          id="next-page"
+          class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+        >
+          Next
+        </button>
       </div>
     </main>
 

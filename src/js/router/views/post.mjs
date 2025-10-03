@@ -1,6 +1,8 @@
 import { authGuard } from '../../utilities/authGuard.mjs';
+import { showModal } from '../../utilities/modal.mjs';
 import { readPost } from '../../api/post/read';
 import { deletePost } from '../../api/post/delete';
+import { showAlert } from '../../utilities/alert.mjs';
 
 // Ensure the user is authenticated
 authGuard();
@@ -27,8 +29,10 @@ const postId = urlParams.get('id'); // Get the post ID from the URL
 
 // Redirect if no post ID is provided
 if (!postId) {
-  alert('No post ID provided. Redirecting to home page.');
-  window.location.href = '/';
+  showAlert('error', 'No post ID provided. Redirecting to home page.');
+  setTimeout(() => {
+    window.location.href = '/'; // Redirect to the home page
+  }, 1500);
 }
 
 /**
@@ -58,16 +62,27 @@ async function fetchAndRenderPost() {
     // Update the DOM with the post data
     postContainer.innerHTML = `
         <img src="${mediaUrl}" alt="${mediaAlt}" />
-        <h2>${title || 'No Title'}</h2>
-        <p>${body || 'No Description Available'}</p>
-        <p><em>By: ${authorName}</em></p>
-      `;
-
+       
+          <p style="font-weight: bold; font-size: 0.9rem; color: #333; margin: 0;">
+      ${authorName}
+    </p>
+    <h2 style="font-weight: bold; font-size: 1rem; color: black; margin: 0;">
+      ${title || 'No Title'}
+    </h2>
+     
+  
+  <p style="font-size: 1rem; color: #333; margin-top: -18px; line-height: 1.5;">
+    ${body || 'No Description Available'}
+  </p>
+`;
     // Attach event listeners for edit and delete buttons after rendering
     attachEventListeners();
   } catch (error) {
     console.error('Error fetching post:', error);
-    alert('Failed to load the post. Please try again.');
+    showAlert('error', 'Failed to load the post. Please try again.');
+    setTimeout(() => {
+      window.location.href = '/'; // Redirect to the home page
+    }, 1500);
   }
 }
 
@@ -78,9 +93,13 @@ async function fetchAndRenderPost() {
  */
 const postButtons = document.querySelector('.post-buttons');
 postButtons.innerHTML = `
-     <button id="edit-post-button">Edit Post</button>
-     <button id="delete-post-button">Delete Post</button>
-   `;
+<button id="edit-post-button" class="text-sm px-3 py-1 bg-[#59D1AD] text-black rounded hover:bg-[#47c39a] font-semibold mt-6 sm:mt-0">
+  Edit Post
+</button>
+<button id="delete-post-button" class="text-sm px-3 py-1.5 bg-gray-300 text-gray-800 rounded hover:bg-gray-400  font-semibold mt-6 sm:mt-0">
+  Delete Post
+</button>
+`;
 
 /**
  * Attach event listeners to the dynamically created buttons.
@@ -96,26 +115,35 @@ function attachEventListeners() {
       window.location.href = `/post/edit/?id=${postId}`;
     });
   }
+}
 
-  // Delete Post Button
-  const deleteButton = document.getElementById('delete-post-button');
-  if (deleteButton) {
-    deleteButton.addEventListener('click', async () => {
-      const confirmDelete = confirm(
-        'Are you sure you want to delete this post?'
-      );
-      if (!confirmDelete) return;
+// Delete Post Button
+const deleteButton = document.getElementById('delete-post-button');
+if (deleteButton) {
+  deleteButton.addEventListener('click', async () => {
+    const confirmed = await showModal(
+      'Are you sure you want to delete this post?',
+      'Delete',
+      'Cancel'
+    );
 
+    if (confirmed) {
       try {
-        await deletePost(postId); // Call your API
-        alert('Post deleted successfully!');
-        window.location.href = '/profile/'; // Redirect to profile or another page after deletion
+        const isDeleted = await deletePost(postId);
+        if (isDeleted) {
+          showAlert('success', 'Post deleted successfully!');
+          setTimeout(() => {
+            window.location.href = '/profile/';
+          }, 1500);
+        } else {
+          throw new Error('API did not confirm post deletion.');
+        }
       } catch (error) {
         console.error('Error deleting post:', error);
-        alert('Failed to delete post. Please try again.');
+        showAlert('error', 'Failed to delete post. Please try again.');
       }
-    });
-  }
+    }
+  });
 }
 
 // Execute the function to fetch and render the post

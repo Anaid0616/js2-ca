@@ -2,55 +2,109 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Noroff FED2 JS2 CA</title>
+    <meta
+      name="description"
+      content="Join Pixly today and share your favorite moments with stunning images and creative captions. Connect with a vibrant community of visual storytellers and start your journey!"
+    />
+    <title>Register | Pixly</title>
     <link rel="stylesheet" href="../../src/css/style.css" />
     <script type="module" src="../../src/app.mjs"></script>
   </head>
 
   <body>
-    <h1>Register</h1>
+    <div
+      class="min-h-screen flex items-center justify-center bg-gray-100 sm:py-8"
+    >
+      <div
+        id="alert-container"
+        class="absolute top-0 left-1/2 transform -translate-x-1/2 mt-2 z-50"
+      ></div>
+      <div class="max-w-lg w-full p-6 bg-white shadow-md rounded">
+        <!-- Headline -->
+        <h1 class="text-2xl font-bold text-gray-800 mb-6 text-left">
+          Register on Pixly
+        </h1>
+        <!-- Register Form -->
+        <form name="register" method="post" class="flex flex-col gap-6">
+          <fieldset class="flex flex-col gap-6">
+            <!-- Name Input -->
+            <div>
+              <label for="name" class="block text-sm font-medium text-gray-700">
+                Name
+              </label>
+              <input
+                id="name"
+                type="text"
+                name="name"
+                required
+                maxlength="20"
+                pattern="^[\w]+$"
+                title="Please enter a username using only letters and numbers"
+                class="mt-1 p-2 border rounded w-full"
+              />
+            </div>
 
-    <form name="register" method="post">
-      <div>
-        <label for="name">Name</label>
-        <input
-          id="name"
-          type="text"
-          name="name"
-          required
-          maxlength="20"
-          pattern="^[\w]+$"
-          title="Please enter a username using only letters and numbers"
-        />
+            <!-- Email Input -->
+            <div>
+              <label
+                for="email"
+                class="block text-sm font-medium text-gray-700"
+              >
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                required
+                pattern="^[\w\-.]+@(stud\.)?noroff\.no$"
+                title="Please enter a valid noroff.no or stud.noroff.no address"
+                class="mt-1 p-2 border rounded w-full"
+              />
+            </div>
+
+            <!-- Password Input -->
+            <div>
+              <label
+                for="password"
+                class="block text-sm font-medium text-gray-700"
+              >
+                Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                required
+                minlength="8"
+                class="mt-1 p-2 border rounded w-full"
+              />
+            </div>
+
+            <!-- Text and Link -->
+            <div class="text-left">
+              <span class="text-sm text-gray-600"
+                >Already have an account?</span
+              >
+              <a
+                href="/auth/login/"
+                class="text-sm text-blue-500 hover:underline ml-1"
+              >
+                Login
+              </a>
+            </div>
+
+            <!-- Register Button -->
+            <button
+              class="w-full py-2 bg-[#59D1AD] text-black rounded hover:bg-[#47c39a] font-semibold"
+            >
+              Register
+            </button>
+          </fieldset>
+          <div class="feedback-container hidden"></div>
+        </form>
       </div>
-
-      <div>
-        <label for="email">Email</label>
-        <input
-          id="email"
-          type="email"
-          name="email"
-          required
-          pattern="^[\w\-.]+@(stud\.)?noroff\.no$"
-          title="Please enter a valid noroff.no or stud.noroff.no address"
-        />
-      </div>
-
-      <div>
-        <label for="password">Password</label>
-        <input
-          type="password"
-          name="password"
-          id="password"
-          required
-          minlength="8"
-        />
-      </div>
-
-      <a href="/auth/login/">Login</a>
-      <button>Register</button>
-    </form>
+    </div>
   </body>
 </html>

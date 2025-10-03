@@ -1,4 +1,6 @@
-import { login } from "../../api/auth/login";
+import { login } from '../../api/auth/login';
+import { showAlert } from '../../utilities/alert.mjs';
+
 /**
  * This function should pass data to the login function in api/auth and handle the response
  */
@@ -13,8 +15,8 @@ export async function onLogin(event) {
   // Collect form data
   const formData = new FormData(event.target);
   const data = {
-    email: formData.get("email"),
-    password: formData.get("password"),
+    email: formData.get('email'),
+    password: formData.get('password'),
   };
 
   try {
@@ -31,33 +33,38 @@ export async function onLogin(event) {
     };
 
     if (token) {
-      localStorage.setItem("token", token); // Save the token
+      localStorage.setItem('token', token); // Save the token
     } else {
-      console.error("Token is missing from the API response");
+      console.error('Token is missing from the API response');
     }
 
     if (user) {
-      localStorage.setItem("user", JSON.stringify(user)); // Save the user details
+      localStorage.setItem('user', JSON.stringify(user)); // Save the user details
     } else {
-      console.error("User data is missing from the API response");
+      console.error('User data is missing from the API response');
     }
 
     // Extract the user's name for the alert
-    const userName = user.name || "User";
+    const userName = user.name || 'User';
 
     // Log success and show an alert
-    alert(`Login successful! Welcome ${userName}!`);
+    showAlert('success', `Login successful! Welcome ${userName}!`);
 
     // Redirect to the home page
-    window.location.href = "/";
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 1500);
   } catch (error) {
-    console.error("Login failed:", error);
+    console.error('Login failed:', error);
 
-    // Display an error message to the user
-    alert("Login failed. Please check your email and password and try again.");
+    // Show an error alert
+    showAlert(
+      'error',
+      'Login failed. Please check your email and password and try again.'
+    );
   }
 }
 
 // Attach the function to the form submission event
 const form = document.forms.login;
-form.addEventListener("submit", onLogin);
+form.addEventListener('submit', onLogin);

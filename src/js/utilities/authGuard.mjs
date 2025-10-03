@@ -13,8 +13,8 @@
  * // Redirects to login page if user is not logged in.
  */
 export function authGuard() {
-  if (!localStorage.token) {
-    alert("You must be logged in to view this page");
-    window.location.href = "/auth/login/";
+  const user = localStorage.getItem('user');
+  if (!user) {
+    window.location.href = '/auth/login/';
   }
 }
