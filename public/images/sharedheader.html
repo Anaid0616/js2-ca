@@ -6,16 +6,14 @@
 </head>
 
 <body>
-  <header
-    class="p-2 border-b border-gray-300 bg-gray-100 flex justify-between items-center"
-  >
+ <header class="min-h-20 h-20 flex items-center justify-between bg-gray-100 border-b border-gray-300 px-2">
     <!-- Logo -->
-    <a href="/" class="flex items-center">
-      <img src="/images/pixlys.png" alt="Pixly Logo" class="h-16" />
-    </a>
+    <a href="/" class="flex items-center w-28">
+    <img src="/images/pixlys.png" alt="Pixly Logo" class="h-16 w-auto" width="64" height="64" />
+  </a>
 
     <!-- Top Navigation (Visible on Larger Screens) -->
-    <nav class="hidden sm:flex space-x-10">
+     <nav class="h-10 w-[240px] opacity-0 pointer-events-none sm:opacity-100 sm:pointer-events-auto sm:flex sm:justify-center sm:gap-10">
       <!-- Home -->
       <a
         href="/"
@@ -93,18 +91,19 @@
     </nav>
 
     <!-- Logout Button (Always in Header) -->
-    <button
-      id="logout-button"
-      class="bg-[#59D1AD] text-black px-4 py-2 rounded hover:bg-[#47c39a] font-semibold"
-    >
+    <div class="w-28 flex justify-end">
+    <button id="logout-button"
+      class="bg-[#59D1AD] text-black px-4 py-2 rounded hover:bg-[#47c39a] font-semibold">
       Logout
     </button>
+  </div>
   </header>
 </body>
+
 <!-- Bottom Navigation (Visible on Smaller Screens Only) -->
-<nav
-  class="fixed bottom-0 left-0 right-0 bg-gray-100 border-t border-gray-300 p-4 flex justify-around sm:hidden"
->
+<nav class="fixed bottom-0 left-0 right-0 h-16 bg-gray-100 border-t border-gray-300 p-4
+            flex justify-around sm:hidden">
+            
   <!-- Home -->
   <a
     href="/"

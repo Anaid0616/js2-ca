@@ -12,6 +12,7 @@ setLogoutListener();
 
 // Render posts in DOM and Pagination
 let currentPage = 1;
+const block = document.getElementById('posts-block');
 const postsContainer = document.getElementById('posts-container');
 const prevButton = document.getElementById('prev-page');
 const nextButton = document.getElementById('next-page');
@@ -38,29 +39,39 @@ function isValidImageUrl(url) {
  * fetchAndDisplayPosts(1);
  */
 async function fetchAndDisplayPosts(page = 1) {
+  const pagination = document.getElementById('pagination');
+
   try {
+    // Reserve space so pagination doesn't jump up
+    postsContainer.classList.add('min-h-[900px]');
+    postsContainer.setAttribute('aria-busy', 'true');
+
     // Render skeleton loaders before fetching the posts
     postsContainer.innerHTML = `
 ${Array.from({ length: 12 })
   .map(
     () => `
-    <div class="post bg-white shadow rounded-sm overflow-hidden">
-      <div class="animate-pulse">
-        <div class="w-full h-[500px] bg-gray-200"></div>
-        <div class="p-4">
-          <div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-          <div class="h-3 bg-gray-200 rounded w-1/2"></div>
-        </div>
-      </div>
+  <div class="post bg-white shadow rounded-sm overflow-hidden">
+
+    <div class="px-4 pt-4 mb-4">
+      <div class="h-4 w-32 bg-gray-200 rounded animate-pulse"></div>
     </div>
-  `
+    <div class="mx-auto w-full max-w-[600px] aspect-[1/1] bg-gray-200 animate-pulse"></div>
+
+    <div class="p-4">
+      <div class="h-5 bg-gray-200 rounded w-3/4 mb-2 animate-pulse"></div>
+      <div class="h-4 bg-gray-200 rounded w-1/2 animate-pulse"></div>
+    </div>
+  </div>
+`
   )
   .join('')}
 `;
 
+    block.style.visibility = 'visible';
+
     // Fetch posts from the API
     const response = await readPosts(24, page);
-
     const posts = response.data;
 
     // Fallback image URL
@@ -85,25 +96,38 @@ ${Array.from({ length: 12 })
     // Render exactly 12 valid posts
     postsContainer.innerHTML = validPosts
       .slice(0, 12)
-      .map((post) => {
-        const authorName = post.author?.name || 'Anonymous'; // Get username
+      .map((post, i) => {
+        const isLcp = page === 1 && i === 0;
+        const loading = isLcp ? 'eager' : 'lazy';
+        const fetchAttr = isLcp ? 'fetchpriority="high"' : '';
+
+        const authorName = post.author?.name || 'Anonymous';
         const mediaUrl = post.media?.url || fallbackImageUrl;
-        const mediaAlt = post.media.alt || 'Post Image';
+        const mediaAlt = post.media?.alt || 'Post Image';
         const postTitle = post.title || 'Untitled Post';
         const postBody = post.body || '';
 
         return `
+        
         <div class="post bg-white shadow rounded-sm overflow-hidden">
            <!-- Username -->
           <div class="px-4 pt-4 text-sm font-semibold text-gray-700 mb-4">
             ${authorName}
           </div>
-          <a href="/post/?id=${post.id}" class="block hover:opacity-90">
-            <img
-              src="${mediaUrl}"
-              alt="${mediaAlt}"
-             class="w-full max-w-[600px] aspect-[5/5] object-cover mx-auto"
-            />
+          
+ <a href="/post/?id=${post.id}" class="block hover:opacity-90">
+      <img
+  src="${mediaUrl}"                    
+  srcset="
+    ${mediaUrl}?w=320 320w,
+    ${mediaUrl}?w=480 480w,
+    ${mediaUrl}?w=600 600w
+  "
+  sizes="(max-width: 640px) 100vw, 600px"
+  width="600" height="600"
+  class="mx-auto w-full max-w-[600px] aspect-[1/1] object-cover"
+  loading="eager" fetchpriority="high" decoding="async"
+/>
             <div class="p-4">
               <h3 class="text-lg font-bold mb-2">${postTitle}</h3>
               <p class="text-gray-600">${postBody}</p>
@@ -116,9 +140,19 @@ ${Array.from({ length: 12 })
 
     // Update pagination display
     currentPageDisplay.textContent = `Page ${page}`;
+    // make the pagination visible
+    pagination?.classList.remove('invisible');
+
+    // disable Prev button on first page
+    prevButton.disabled = page <= 1;
+    // disable Next button if fewer than 24 posts were fetched
+    nextButton.disabled = posts.length < 24;
   } catch (error) {
     console.error('Error fetching posts:', error);
     postsContainer.innerHTML = '<p>Error loading posts. Please try again.</p>';
+  } finally {
+    postsContainer.classList.remove('min-h-[900px]');
+    postsContainer.removeAttribute('aria-busy');
   }
 }
 

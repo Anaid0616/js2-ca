@@ -2,74 +2,147 @@ import { API_SOCIAL_PROFILES } from '../../api/constants.mjs';
 import { doFetch } from '../../utilities/doFetch.mjs';
 
 /**
- * Fetch and display user profile information (name, avatar, and bio).
- * - If user data exists in localStorage, it populates the profile directly.
- * - Otherwise, it fetches data from the API and updates both the DOM and localStorage.
- *
- * @async
- * @function fetchAndDisplayProfile
- * @throws {Error} If the API request fails or user is not logged in.
+ * Safe getter for DOM nodes.
+ * @param {string} sel - CSS selector
+ * @returns {HTMLElement|null}
  */
-export async function fetchAndDisplayProfile() {
-  try {
-    const user = JSON.parse(localStorage.getItem('user'));
+function $(sel) {
+  return document.querySelector(sel);
+}
 
-    if (!user) {
-      alert('You must be logged in to view this page.');
-      window.location.href = '/auth/login/';
-      return;
-    }
+/**
+ * Apply profile data to the DOM (does not toggle skeleton/real visibility).
+ * The avatar is kept hidden until image load completes to avoid fallback flash.
+ *
+ * @param {{name?: string, bio?: string, avatar?: { url?: string }}} data
+ */
+function paintProfile(data = {}) {
+  const nameEl = $('#user-name');
+  const bioEl = $('#user-bio');
+  const avatarEl = $('#user-avatar');
 
-    const username = user.name;
+  if (nameEl) nameEl.textContent = data.name || 'Unknown user';
+  if (bioEl) bioEl.textContent = data.bio || '';
 
-    // Use localStorage data first if available
-    if (user.avatar || user.bio) {
-      // Populate UI from localStorage
-      const userAvatar = document.getElementById('user-avatar');
-      const userNameElement = document.getElementById('user-name');
-      const userBioElement = document.getElementById('user-bio');
-
-      userAvatar.src = user.avatar?.url || '/images/placeholder.jpg';
-      userAvatar.alt = user.name || 'User Avatar'; // Set alt text
-      userNameElement.textContent = user.name || 'Unknown User'; // Set username
-      userBioElement.textContent = user.bio || 'No bio available.';
-
-      return; // Stop here if localStorage has data
-    }
-
-    // Fetch the profile information from the API using doFetch
-    const profileData = await doFetch(`${API_SOCIAL_PROFILES}/${username}`, {
-      method: 'GET',
-    });
-
-    if (!profileData) {
-      throw new Error('Failed to fetch profile information.');
-    }
-
-    // Update the HTML with profile info
-    const userAvatar = document.getElementById('user-avatar');
-    const userNameElement = document.getElementById('user-name');
-    const userBioElement = document.getElementById('user-bio');
-
-    // Populate UI with fetched data
-    userAvatar.src = profileData.avatar?.url || '/images/placeholder.jpg';
-    userAvatar.alt = profileData.name || 'User Avatar'; // Set alt text
-    userNameElement.textContent = profileData.name || 'Unknown User'; // Set username
-    userBioElement.textContent = profileData.bio || 'No bio available.';
-
-    // Update localStorage with fetched data
-    const updatedUserData = {
-      ...user,
-      name: updatedProfile.name || user.name,
-      avatar: updatedProfile.avatar || user.avatar,
-      bio: updatedProfile.bio || user.bio,
-    };
-
-    localStorage.setItem('user', JSON.stringify(updatedUserData));
-  } catch (error) {
-    console.error('Error fetching user profile:', error);
+  if (avatarEl) {
+    // Hide avatar until the image has either loaded or errored
+    avatarEl.style.visibility = 'hidden';
+    avatarEl.src = data?.avatar?.url || '/images/placeholder.jpg';
+    avatarEl.alt = data?.name ? `${data.name}'s avatar` : 'User avatar';
   }
 }
 
-// Call the function to fetch and display profile data
+/**
+ * Reveal the real profile block and hide the skeleton.
+ * Also make sure the avatar is visible once the image is ready.
+ */
+function revealProfile() {
+  const skeleton = $('#profile-skeleton');
+  const real = $('#profile-real');
+  const avatarEl = $('#user-avatar');
+
+  if (skeleton) skeleton.classList.add('hidden');
+  if (real) real.classList.remove('hidden');
+
+  if (avatarEl) {
+    avatarEl.style.visibility = 'visible';
+  }
+}
+
+/**
+ * Attach a one-time "load or error" listener to the avatar to control reveal timing.
+ */
+function revealWhenAvatarReady() {
+  const avatarEl = $('#user-avatar');
+  if (!avatarEl) {
+    // No avatar element; just reveal.
+    revealProfile();
+    return;
+  }
+
+  if (avatarEl.complete) {
+    // Already loaded from cache
+    revealProfile();
+    return;
+  }
+
+  const once = { once: true };
+  avatarEl.addEventListener('load', revealProfile, once);
+  avatarEl.addEventListener('error', revealProfile, once);
+}
+
+/**
+ * Fetch and display the current user's profile.
+ *
+ * Behavior:
+ * - Shows skeleton (#profile-skeleton) by default (in HTML).
+ * - Uses cached localStorage user to paint text instantly (no reveal yet).
+ * - Fetches fresh data from API -> repaints -> reveals when avatar is ready.
+ * - Merges fresh data back into localStorage.
+ *
+ * Error handling:
+ * - On failure, keeps the skeleton (prevents big layout jumps) and logs to console.
+ *
+ * Side effects:
+ * - Mutates DOM under #profile-real and #profile-skeleton.
+ * - Reads/writes localStorage.user.
+ *
+ * @async
+ * @function fetchAndDisplayProfile
+ * @throws {Error} If the user is not logged in.
+ */
+export async function fetchAndDisplayProfile() {
+  // 1) Require login
+  const cachedUser = JSON.parse(localStorage.getItem('user'));
+  if (!cachedUser?.name) {
+    alert('You must be logged in to view this page.');
+    window.location.href = '/auth/login/';
+    return;
+  }
+
+  const username = cachedUser.name;
+
+  // 2) Optimistic paint from cache (fast text; avatar still hidden)
+  if (cachedUser?.avatar || cachedUser?.bio) {
+    paintProfile({
+      name: cachedUser.name,
+      bio: cachedUser.bio,
+      avatar: cachedUser.avatar,
+    });
+  }
+
+  // Important: wait to reveal until avatar is loaded for the currently painted data
+  revealWhenAvatarReady();
+
+  try {
+    // 3) Fetch fresh data from API
+    const res = await doFetch(
+      `${API_SOCIAL_PROFILES}/${encodeURIComponent(username)}`,
+      {
+        method: 'GET',
+      }
+    );
+
+    // The API generally returns { data: {...} }
+    const profile = res?.data;
+    if (!profile) throw new Error('Missing profile data');
+
+    // 4) Repaint with fresh API data, keep avatar hidden until image event
+    paintProfile(profile);
+    revealWhenAvatarReady();
+
+    // 5) Merge back into localStorage
+    const merged = {
+      ...cachedUser,
+      name: profile.name ?? cachedUser.name,
+      avatar: profile.avatar ?? cachedUser.avatar,
+      bio: profile.bio ?? cachedUser.bio,
+    };
+    localStorage.setItem('user', JSON.stringify(merged));
+  } catch (err) {
+    console.error('Error fetching user profile:', err);
+    // Keep skeleton visible; you can optionally show a toast here
+  }
+}
+
 fetchAndDisplayProfile();

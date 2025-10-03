@@ -4,147 +4,204 @@ import { readPost } from '../../api/post/read';
 import { deletePost } from '../../api/post/delete';
 import { showAlert } from '../../utilities/alert.mjs';
 
-// Ensure the user is authenticated
+// Require auth
 authGuard();
 
-// Get the post container and query string parameters
-/**
- * The container element where the post will be rendered.
- * @type {HTMLElement}
- */
+/** @type {HTMLElement|null} */
+const postWrap = document.getElementById('post-wrap');
+/** @type {HTMLElement|null} */
 const postContainer = document.querySelector('.post');
+/** @type {HTMLElement|null} */
+const buttonsContainer = document.querySelector('.post-buttons');
 
-/**
- * Parse the query string parameters from the URL.
- * @type {URLSearchParams}
- */
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
+const urlParams = new URLSearchParams(window.location.search);
+const postId = urlParams.get('id');
 
-/**
- * Extract the post ID from the URL query parameters.
- * @type {string | null}
- */
-const postId = urlParams.get('id'); // Get the post ID from the URL
-
-// Redirect if no post ID is provided
 if (!postId) {
   showAlert('error', 'No post ID provided. Redirecting to home page.');
-  setTimeout(() => {
-    window.location.href = '/'; // Redirect to the home page
-  }, 1500);
+  setTimeout(() => (window.location.href = '/'), 1500);
 }
 
 /**
- * Fetches the post by ID and renders it in the DOM.
- *
- * @async
- * @returns {Promise<void>} - A promise that resolves when the post is fetched and rendered.
- * @throws Will display an alert if the post cannot be loaded.
+ * Return a skeleton markup that matches the final layout
+ * (avatar + name, square image, title, body).
+ * Keeping paddings here so the skeleton lines up perfectly.
+ * @returns {string}
  */
-// Fetch and display the post
-async function fetchAndRenderPost() {
-  try {
-    // Fetch the post using its ID
-    const response = await readPost(postId);
+function postSkeleton() {
+  return `
+    <div class="animate-pulse">
+      <!-- Avatar + name -->
+      <div class="px-5 sm:px-6 pt-4 mb-3">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-gray-300"></div>
+          <div class="h-4 w-32 bg-gray-300 rounded"></div>
+        </div>
+      </div>
 
-    // Extract post data
-    const { data: post } = response; // Destructure the 'data' field from the response
+      <!-- Square image -->
+      <div class="w-full max-w-[600px] mx-auto aspect-[1/1] bg-gray-300 rounded-sm"></div>
 
-    // Destructure post properties for rendering
-    const { media, title, body, author } = post;
-
-    // Validate media and provide fallback if media is missing
-    const mediaUrl = media?.url || '/images/placeholder.jpg'; // Placeholder for invalid image
-    const mediaAlt = media?.alt || 'Post Image';
-    const authorName = author?.name || 'Anonymous';
-
-    // Update the DOM with the post data
-    postContainer.innerHTML = `
-        <img src="${mediaUrl}" alt="${mediaAlt}" />
-       
-          <p style="font-weight: bold; font-size: 0.9rem; color: #333; margin: 0;">
-      ${authorName}
-    </p>
-    <h2 style="font-weight: bold; font-size: 1rem; color: black; margin: 0;">
-      ${title || 'No Title'}
-    </h2>
-     
-  
-  <p style="font-size: 1rem; color: #333; margin-top: -18px; line-height: 1.5;">
-    ${body || 'No Description Available'}
-  </p>
-`;
-    // Attach event listeners for edit and delete buttons after rendering
-    attachEventListeners();
-  } catch (error) {
-    console.error('Error fetching post:', error);
-    showAlert('error', 'Failed to load the post. Please try again.');
-    setTimeout(() => {
-      window.location.href = '/'; // Redirect to the home page
-    }, 1500);
-  }
+      <!-- Title + body -->
+      <div class="px-5 sm:px-6 pt-4 pb-2">
+        <div class="h-6 w-48 bg-gray-300 rounded mb-3"></div>
+        <div class="space-y-3">
+          <div class="h-4 w-full bg-gray-300 rounded"></div>
+          <div class="h-4 w-5/6 bg-gray-300 rounded"></div>
+          <div class="h-4 w-4/6 bg-gray-300 rounded"></div>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
-// Create buttons dynamically and add event listeners
 /**
- * The container element for the post action buttons (Edit and Delete).
- * @type {HTMLElement}
+ * Build the final post markup (avatar + name above a 1:1 image),
+ * with stable dimensions to avoid layout shifts.
+ * @param {{media?:{url?:string,alt?:string}, title?:string, body?:string, author?:{name?:string, avatar?:{url?:string}}}} post
+ * @returns {string}
  */
-const postButtons = document.querySelector('.post-buttons');
-postButtons.innerHTML = `
-<button id="edit-post-button" class="text-sm px-3 py-1 bg-[#59D1AD] text-black rounded hover:bg-[#47c39a] font-semibold mt-6 sm:mt-0">
-  Edit Post
-</button>
-<button id="delete-post-button" class="text-sm px-3 py-1.5 bg-gray-300 text-gray-800 rounded hover:bg-gray-400  font-semibold mt-6 sm:mt-0">
-  Delete Post
-</button>
-`;
+function postHtml(post) {
+  const mediaUrl = post?.media?.url || '/images/placeholder.jpg';
+  const mediaAlt = post?.media?.alt || 'Post image';
+  const authorName = post?.author?.name || 'Anonymous';
+  const avatarUrl = post?.author?.avatar?.url || '/images/placeholder.jpg';
+  const title = post?.title || 'No Title';
+  const body = post?.body || 'No Description Available';
 
-/**
- * Attach event listeners to the dynamically created buttons.
- *
- * - Edit Button: Redirects to the post edit page.
- * - Delete Button: Deletes the post after user confirmation.
- */
-function attachEventListeners() {
-  // Edit Post Button
-  const editButton = document.getElementById('edit-post-button');
-  if (editButton) {
-    editButton.addEventListener('click', () => {
-      window.location.href = `/post/edit/?id=${postId}`;
-    });
-  }
+  return `
+    <!-- Avatar + name ABOVE the image -->
+    <div class="px-5 sm:px-6 pt-4 mb-2">
+      <div class="flex items-center gap-3">
+        <img
+          src="${avatarUrl}"
+          alt="${authorName}'s avatar"
+          width="36" height="36"
+          class="w-9 h-9 rounded-full object-cover"
+          loading="lazy" decoding="async"
+        />
+        <p class="text-sm font-semibold text-gray-700">${authorName}</p>
+      </div>
+    </div>
+
+    <!-- Square image -->
+    <img
+      id="post-image"
+      src="${mediaUrl}"
+      alt="${mediaAlt}"
+      width="600" height="600"
+      class="mx-auto w-full max-w-[600px] aspect-[1/1] object-cover rounded-sm"
+      loading="eager" fetchpriority="high" decoding="async"
+      style="visibility:hidden"
+    />
+
+    <!-- Title + body -->
+    <div class="px-5 sm:px-6 py-4">
+      <h2 class="text-xl font-bold text-gray-900 mb-2">${title}</h2>
+      <p class="text-gray-700 leading-relaxed">${body}</p>
+    </div>
+  `;
 }
 
-// Delete Post Button
-const deleteButton = document.getElementById('delete-post-button');
-if (deleteButton) {
-  deleteButton.addEventListener('click', async () => {
+/**
+ * Insert Edit/Delete buttons (container already has side+bottom padding via HTML)
+ */
+function renderButtons() {
+  if (!buttonsContainer) return;
+  buttonsContainer.innerHTML = `
+    <button id="edit-post-button"
+      class="px-3 py-1 bg-[#59D1AD] text-black rounded hover:bg-[#47c39a] font-semibold text-sm">
+      Edit Post
+    </button>
+    <button id="delete-post-button"
+      class="px-3 py-1 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 text-sm font-semibold">
+      Delete Post
+    </button>
+  `;
+}
+
+/** Wire up the buttons after they exist */
+function attachButtonHandlers() {
+  const editBtn = document.getElementById('edit-post-button');
+  const delBtn = document.getElementById('delete-post-button');
+
+  editBtn?.addEventListener('click', () => {
+    window.location.href = `/post/edit/?id=${postId}`;
+  });
+
+  delBtn?.addEventListener('click', async () => {
     const confirmed = await showModal(
       'Are you sure you want to delete this post?',
       'Delete',
       'Cancel'
     );
+    if (!confirmed) return;
 
-    if (confirmed) {
-      try {
-        const isDeleted = await deletePost(postId);
-        if (isDeleted) {
-          showAlert('success', 'Post deleted successfully!');
-          setTimeout(() => {
-            window.location.href = '/profile/';
-          }, 1500);
-        } else {
-          throw new Error('API did not confirm post deletion.');
-        }
-      } catch (error) {
-        console.error('Error deleting post:', error);
-        showAlert('error', 'Failed to delete post. Please try again.');
+    try {
+      const ok = await deletePost(postId);
+      if (ok) {
+        showAlert('success', 'Post deleted successfully!');
+        setTimeout(() => (window.location.href = '/profile/'), 1200);
+      } else {
+        throw new Error('API did not confirm post deletion.');
       }
+    } catch (err) {
+      console.error('Delete failed:', err);
+      showAlert('error', 'Failed to delete post. Please try again.');
     }
   });
 }
 
-// Execute the function to fetch and render the post
+/**
+ * Fetch the post and render it with a skeleton-first strategy.
+ * Ensures skeleton is visible immediately, then swaps to the real content,
+ * and only shows the image once it has loaded to avoid flashes.
+ * @returns {Promise<void>}
+ */
+async function fetchAndRenderPost() {
+  if (!postWrap || !postContainer) return;
+
+  postWrap.classList.add('min-h-[880px]');
+
+  // 1) Inject skeleton and reveal wrapper so nothing looks empty
+  postContainer.innerHTML = postSkeleton();
+  postWrap.classList.remove('invisible'); // show immediately
+  if (buttonsContainer) buttonsContainer.innerHTML = '';
+
+  try {
+    const { data: post } = await readPost(postId);
+
+    // 2) Render real content
+    postContainer.innerHTML = postHtml(post);
+    renderButtons();
+
+    // 3) Avoid flash by revealing the image only when it’s loaded
+    const img = /** @type {HTMLImageElement|null} */ (
+      document.getElementById('post-image')
+    );
+    if (img) {
+      if (img.complete) {
+        img.style.visibility = 'visible';
+      } else {
+        img.addEventListener('load', () => (img.style.visibility = 'visible'), {
+          once: true,
+        });
+        img.addEventListener(
+          'error',
+          () => (img.style.visibility = 'visible'),
+          { once: true }
+        );
+      }
+    }
+
+    // 4) Wire up buttons
+    attachButtonHandlers();
+  } catch (error) {
+    console.error('Error fetching post:', error);
+    showAlert('error', 'Failed to load the post. Please try again.');
+    setTimeout(() => (window.location.href = '/'), 1500);
+  } finally {
+    postWrap.classList.remove('min-h-[880px]');
+  }
+}
 fetchAndRenderPost();

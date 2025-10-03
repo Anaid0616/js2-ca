@@ -24,39 +24,49 @@
   </head>
 
   <body class="font-bodyfont">
-    <header class="sticky top-0 z-50"></header>
+    <header class="sticky top-0 z-50 h-16 sm:h-20"></header>
 
-    <main>
+    <main class="pb-16 sm:pb-0">
       <!-- Posts Container -->
-      <div class="max-w-screen-sm mx-auto p-5">
+      <div
+        id="posts-block"
+        class="max-w-screen-sm mx-auto p-5"
+        style="visibility: hidden"
+      >
         <div
           id="alert-container"
           class="absolute top-0 left-1/2 transform -translate-x-1/2 mt-2 z-50"
         ></div>
+
+        <h2 id="posts-heading" class="text-xl font-bold col-span-full ml-5">
+          Posts for you
+        </h2>
+
         <div
           id="posts-container"
           class="max-w-screen-md mx-auto space-y-6 p-5 sm:space-y-8"
-        >
-          <h2 class="text-xl font-bold col-span-full">All Posts</h2>
-          <!-- Skeleton Loader -->
-        </div>
+        ></div>
       </div>
 
       <!-- Pagination -->
       <div
         id="pagination"
-        class="flex justify-center items-center space-x-4 p-5"
+        class="w-full h-16 flex justify-center items-center gap-4 p-4 min-h-[56px] invisible"
       >
         <button
           id="prev-page"
-          class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+          class="w-16 h-10 bg-gray-300 rounded hover:bg-gray-400"
         >
-          Previous
+          Prev.
         </button>
-        <span id="current-page" class="text-lg font-bold">Page 1</span>
+
+        <span id="current-page" class="w-24 text-center font-bold tabular-nums">
+          Page 1
+        </span>
+
         <button
           id="next-page"
-          class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+          class="w-16 h-10 bg-gray-300 rounded hover:bg-gray-400"
         >
           Next
         </button>

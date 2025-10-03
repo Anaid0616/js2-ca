@@ -2,74 +2,99 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
       content="Explore the profile page - showcase your unique collection of stunning visuals, creative posts, and personal stories. Connect, follow, and engage with others journey today!"
     />
     <title>Profile | Pixly</title>
+
     <link rel="stylesheet" href="../src/css/style.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
       rel="stylesheet"
     />
     <script type="module" src="../src/app.mjs"></script>
-    <!-- Favicon -->
+
+    <!-- Favicons -->
     <link rel="icon" href="../images/favicon.ico" type="image/x-icon" />
     <link rel="icon" sizes="16x16" href="../images/favicon-16x16.png" />
     <link rel="icon" sizes="32x32" href="../images/favicon-32x32.png" />
     <link rel="apple-touch-icon" href="../images/apple-touch-icon.png" />
   </head>
-  <body>
-    <header class="sticky top-0 z-50"></header>
 
-    <main>
-      <div
-        id="user-info"
-        class="max-w-screen-lg mx-auto p-5 sm:flex items-center justify-between gap-4"
-      >
-        <!-- User Avatar and Info -->
-        <div class="flex items-center gap-4">
-          <!-- User Avatar -->
+  <body>
+    <header class="sticky top-0 z-50 h-16 sm:h-20"></header>
+
+    <main class="pb-16 sm:pb-0">
+      <!-- Profile Header Block -->
+      <section id="user-info" class="max-w-screen-lg mx-auto p-5">
+        <!-- SKELETON: visible by default -->
+        <div
+          id="profile-skeleton"
+          class="animate-pulse grid grid-cols-1 sm:grid-cols-[auto,1fr,auto] items-center gap-4"
+        >
+          <div
+            class="w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full bg-gray-200"
+          ></div>
+          <div class="space-y-2">
+            <div class="h-6 w-40 bg-gray-200 rounded"></div>
+            <div class="h-4 w-56 bg-gray-200 rounded"></div>
+          </div>
+          <div
+            class="justify-self-start sm:justify-self-end w-32 h-9 bg-gray-200 rounded"
+          ></div>
+        </div>
+
+        <!-- REAL CONTENT: hidden until JS fills it -->
+        <div
+          id="profile-real"
+          class="hidden grid grid-cols-1 sm:grid-cols-[auto,1fr,auto] items-center gap-4"
+        >
+          <!-- Avatar -->
           <img
             id="user-avatar"
-            alt="User Avatar"
+            alt="User avatar"
+            width="160"
+            height="160"
+            loading="eager"
+            decoding="async"
             class="w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full object-cover"
           />
 
-          <!-- User Info -->
-          <div>
-            <h1 class="text-lg font-bold sm:text-xl md:text-2xl" id="user-name">User Name</h1>
-            <p class="text-gray-600 text-base md:text-lg text-gray-600" id="user-bio">This is the user bio.</p>
+          <!-- Text -->
+          <div class="min-w-0">
+            <h1
+              id="user-name"
+              class="text-lg font-bold sm:text-xl md:text-2xl truncate"
+            ></h1>
+            <p id="user-bio" class="text-gray-600 text-base md:text-lg"></p>
           </div>
+
+          <!-- Update button: right on desktop, drops below on mobile -->
+          <button
+            id="toggle-profile-update-button"
+            class="justify-self-start sm:justify-self-end mt-4 sm:mt-0 text-sm px-3 py-1.5 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 font-semibold"
+            type="button"
+          >
+            Update Profile
+          </button>
         </div>
+      </section>
 
-        <!-- Update Profile Button -->
-        <button
-          id="toggle-profile-update-button"
-          class="text-sm px-3 py-1.5 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 font-semibold mt-6 sm:mt-0"
-        >
-          Update Profile
-        </button>
-      </div>
-
+      <!-- Alerts -->
       <div
         id="alert-container"
         class="absolute top-0 left-1/2 transform -translate-x-1/2 mt-2 z-50"
       ></div>
 
-      <div id="update-profile" style="display: none">
-        <!-- Initially hidden -->
+      <!-- Update form (hidden until toggled) -->
+      <section id="update-profile" style="display: none">
         <form
           class="max-w-lg mx-auto flex flex-col gap-4"
           name="updateProfileForm"
         >
           <fieldset class="flex flex-col gap-4">
-            <div class="relative">
-              <!-- Rest of your content -->
-            </div>
-
             <label for="avatar">Avatar URL:</label>
             <input
               type="text"
@@ -89,47 +114,51 @@
 
             <button
               type="submit"
-              class="px-4 py-2 bg-[#FF7F50] text-black rounded hover:bg-[#47c39a] font-semibold"
+              class="px-4 py-2 bg-[#FF7F50] text-black rounded hover:bg-[#47c39a] font-semibold h-10 w-24 mb-4"
             >
               Update
             </button>
           </fieldset>
           <div class="feedback-container hidden"></div>
         </form>
-      </div>
+      </section>
 
-      <div id="user-posts" class="max-w-screen-lg mx-auto p-5">
+      <!-- Posts grid + pagination (unchanged from your version) -->
+      <section id="user-posts" class="max-w-screen-lg mx-auto p-5">
         <h2
-          class="text-lg font-semibold text-gray-700 mb-4 border-t-2 border-gray-200 pt-4"
+          class="text-lg font-bold text-gray-700 mb-4 border-t-2 border-gray-200 pt-4"
         >
           My posts
         </h2>
 
-     <div
-  id="user-posts-container"
-  class="grid grid-cols-2 sm:grid-cols-3 gap-4"
->
-</div>
+        <div
+          id="user-posts-container"
+          class="grid grid-cols-2 sm:grid-cols-3 gap-4"
+        ></div>
 
-      
-      <div
-        id="pagination"
-        class="flex justify-center items-center space-x-4 p-5"
-      >
-        <button
-          id="prev-page"
-          class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+        <div
+          id="pagination"
+          class="w-full h-16 flex justify-center items-center gap-4 p-4 min-h-[56px] invisible"
         >
-          Previous
-        </button>
-        <span id="current-page" class="text-lg font-bold">Page 1</span>
-        <button
-          id="next-page"
-          class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-        >
-          Next
-        </button>
-      </div>
+          <button
+            id="prev-page"
+            class="w-16 h-10 bg-gray-300 rounded hover:bg-gray-400"
+          >
+            Prev.
+          </button>
+          <span
+            id="current-page"
+            class="w-24 text-center font-bold tabular-nums"
+            >Page 1</span
+          >
+          <button
+            id="next-page"
+            class="w-16 h-10 bg-gray-300 rounded hover:bg-gray-400"
+          >
+            Next
+          </button>
+        </div>
+      </section>
     </main>
 
     <footer></footer>
