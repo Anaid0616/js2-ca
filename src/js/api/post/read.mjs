@@ -2,16 +2,27 @@ import { API_SOCIAL_POSTS } from '../constants.mjs';
 import { doFetch } from '../../utilities/doFetch.mjs';
 
 /**
- * Reads a single post by its ID.
+ * Read a single post by id
  *
- * @param {string|number} id - The ID of the post to read.
- * @returns {Promise<object>} The response data.
- * @throws {Error} If the API request fails.
+ * @param {string|number} id
+ * @param {{author?: boolean, comments?: boolean, reactions?: boolean}} [opts]
+ *  - author: include _author object (default: true for backward-compat)
+ *  - comments: include comments array
+ *  - reactions: include reactions array
+ * @returns {Promise<{data:any, meta?:any}>}
  */
-export async function readPost(id) {
-  const url = `${API_SOCIAL_POSTS}/${id}?_author=true`;
+export async function readPost(id, opts = {}) {
+  const { author = true, comments = false, reactions = false } = opts;
+
+  const params = new URLSearchParams();
+  if (author) params.set('_author', 'true');
+  if (comments) params.set('_comments', 'true');
+  if (reactions) params.set('_reactions', 'true');
+
+  const qs = params.toString();
+  const url = `${API_SOCIAL_POSTS}/${id}${qs ? `?${qs}` : ''}`;
+
   try {
-    // Use doFetch with `GET` method and auth headers
     return await doFetch(url, { method: 'GET' }, true);
   } catch (error) {
     console.error('Error in readPost:', error);

@@ -3,15 +3,21 @@ import { showModal } from '../../utilities/modal.mjs';
 import { readPost } from '../../api/post/read';
 import { deletePost } from '../../api/post/delete';
 import { showAlert } from '../../utilities/alert.mjs';
+import { postDetailSkeletonHTML } from '../../utilities/skeletons.mjs';
+import { reactionsHtml, mountReactions } from '@/js/ui/post/reactions.mjs';
+import {
+  commentsHtml,
+  renderInitialComments,
+  mountComments,
+} from '@/js/ui/post/comments.mjs';
 
 // Require auth
 authGuard();
 
-/** @type {HTMLElement|null} */
+const me = JSON.parse(localStorage.getItem('user'));
+
 const postWrap = document.getElementById('post-wrap');
-/** @type {HTMLElement|null} */
 const postContainer = document.querySelector('.post');
-/** @type {HTMLElement|null} */
 const buttonsContainer = document.querySelector('.post-buttons');
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -28,31 +34,9 @@ if (!postId) {
  * Keeping paddings here so the skeleton lines up perfectly.
  * @returns {string}
  */
+
 function postSkeleton() {
-  return `
-    <div class="animate-pulse">
-      <!-- Avatar + name -->
-      <div class="px-5 sm:px-6 pt-4 mb-3">
-        <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-full bg-gray-300"></div>
-          <div class="h-4 w-32 bg-gray-300 rounded"></div>
-        </div>
-      </div>
-
-      <!-- Square image -->
-      <div class="w-full max-w-[600px] mx-auto aspect-[1/1] bg-gray-300 rounded-sm"></div>
-
-      <!-- Title + body -->
-      <div class="px-5 sm:px-6 pt-4 pb-2">
-        <div class="h-6 w-48 bg-gray-300 rounded mb-3"></div>
-        <div class="space-y-3">
-          <div class="h-4 w-full bg-gray-300 rounded"></div>
-          <div class="h-4 w-5/6 bg-gray-300 rounded"></div>
-          <div class="h-4 w-4/6 bg-gray-300 rounded"></div>
-        </div>
-      </div>
-    </div>
-  `;
+  return postDetailSkeletonHTML();
 }
 
 /**
@@ -66,22 +50,19 @@ function postHtml(post) {
   const mediaAlt = post?.media?.alt || 'Post image';
   const authorName = post?.author?.name || 'Anonymous';
   const avatarUrl = post?.author?.avatar?.url || '/images/placeholder.jpg';
+  const authorHref = `/profile/?name=${encodeURIComponent(authorName)}`;
   const title = post?.title || 'No Title';
   const body = post?.body || 'No Description Available';
 
   return `
-    <!-- Avatar + name ABOVE the image -->
-    <div class="px-5 sm:px-6 pt-4 mb-2">
-      <div class="flex items-center gap-3">
-        <img
-          src="${avatarUrl}"
-          alt="${authorName}'s avatar"
-          width="36" height="36"
-          class="w-9 h-9 rounded-full object-cover"
-          loading="lazy" decoding="async"
-        />
-        <p class="text-sm font-semibold text-gray-700">${authorName}</p>
-      </div>
+    <div class="px-4 sm:px-5">
+   <div class="my-4">
+    <a href="${authorHref}" class="flex items-center gap-3 hover:opacity-90">
+      <img src="${avatarUrl}" alt="${authorName}'s avatar"
+           width="36" height="36" class="w-9 h-9 rounded-full object-cover" />
+      <p class="text-sm font-semibold text-gray-700">${authorName}</p>
+    </a>
+  </div>
     </div>
 
     <!-- Square image -->
@@ -124,6 +105,7 @@ function renderButtons() {
 function attachButtonHandlers() {
   const editBtn = document.getElementById('edit-post-button');
   const delBtn = document.getElementById('delete-post-button');
+  if (!editBtn || !delBtn) return;
 
   editBtn?.addEventListener('click', () => {
     window.location.href = `/post/edit/?id=${postId}`;
@@ -169,16 +151,53 @@ async function fetchAndRenderPost() {
   if (buttonsContainer) buttonsContainer.innerHTML = '';
 
   try {
-    const { data: post } = await readPost(postId);
+    const { data: post } = await readPost(postId, {
+      author: true,
+      comments: true,
+      reactions: true,
+    });
 
     // 2) Render real content
     postContainer.innerHTML = postHtml(post);
-    renderButtons();
 
-    // 3) Avoid flash by revealing the image only when it’s loaded
-    const img = /** @type {HTMLImageElement|null} */ (
-      document.getElementById('post-image')
+    // --- Only Edit/Delete on own posts ---
+    const mine =
+      !!me?.name &&
+      !!post?.author?.name &&
+      me.name.trim().toLowerCase() === post.author.name.trim().toLowerCase();
+
+    if (mine) {
+      renderButtons();
+      attachButtonHandlers();
+    } else if (buttonsContainer) {
+      buttonsContainer.innerHTML = '';
+      buttonsContainer.classList.add('hidden');
+    }
+
+    // 2b) Comments and reactions
+    postContainer.insertAdjacentHTML(
+      'beforeend',
+      reactionsHtml(post?.reactions)
     );
+    postContainer.insertAdjacentHTML('beforeend', commentsHtml());
+    renderInitialComments(post?.comments);
+
+    // 2c) handlers
+    const refresh = async () => {
+      // re-fetch just reactions (light) to update counts + reactors
+      const { data: refreshed } = await readPost(postId, { reactions: true });
+      const old = document.getElementById('reactions');
+      if (old) {
+        old.outerHTML = reactionsHtml(refreshed?.reactions);
+        mountReactions(postId, refresh);
+      }
+    };
+
+    mountReactions(postId, refresh);
+    mountComments(postId);
+
+    // 3) Show img
+    const img = document.getElementById('post-image');
     if (img) {
       if (img.complete) {
         img.style.visibility = 'visible';
@@ -193,9 +212,6 @@ async function fetchAndRenderPost() {
         );
       }
     }
-
-    // 4) Wire up buttons
-    attachButtonHandlers();
   } catch (error) {
     console.error('Error fetching post:', error);
     showAlert('error', 'Failed to load the post. Please try again.');

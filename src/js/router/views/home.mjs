@@ -2,6 +2,10 @@ import { authGuard } from '../../utilities/authGuard.mjs';
 import { setLogoutListener } from '../../ui/global/logout.mjs';
 import { readPosts } from '../../api/post/read.mjs';
 import { loadHTMLHeader } from '../../ui/global/sharedHeader.mjs';
+import {
+  feedPostCardSkeletonHTML,
+  renderGridSkeleton,
+} from '../../utilities/skeletons.mjs';
 
 loadHTMLHeader();
 
@@ -46,54 +50,32 @@ async function fetchAndDisplayPosts(page = 1) {
     postsContainer.classList.add('min-h-[900px]');
     postsContainer.setAttribute('aria-busy', 'true');
 
-    // Render skeleton loaders before fetching the posts
-    postsContainer.innerHTML = `
-${Array.from({ length: 12 })
-  .map(
-    () => `
-  <div class="post bg-white shadow rounded-sm overflow-hidden">
-
-    <div class="px-4 pt-4 mb-4">
-      <div class="h-4 w-32 bg-gray-200 rounded animate-pulse"></div>
-    </div>
-    <div class="mx-auto w-full max-w-[600px] aspect-[1/1] bg-gray-200 animate-pulse"></div>
-
-    <div class="p-4">
-      <div class="h-5 bg-gray-200 rounded w-3/4 mb-2 animate-pulse"></div>
-      <div class="h-4 bg-gray-200 rounded w-1/2 animate-pulse"></div>
-    </div>
-  </div>
-`
-  )
-  .join('')}
-`;
-
+    // Skeleton
+    postsContainer.innerHTML = feedPostCardSkeletonHTML(12);
     block.style.visibility = 'visible';
 
-    // Fetch posts from the API
+    // Fetch posts
     const response = await readPosts(24, page);
     const posts = response.data;
 
-    // Fallback image URL
     const fallbackImageUrl = '/images/placeholder.jpg';
 
-    // Filter out posts with missing or invalid image URLs
+    // Filter out posts with missing/invalid image URLs
     const validPosts = [];
     for (const post of posts) {
       if (post.media && post.media.url) {
         const isValid = await isValidImageUrl(post.media.url);
         if (isValid) validPosts.push(post);
       }
-      if (validPosts.length >= 12) break; // Stop after collecting 12 valid posts
+      if (validPosts.length >= 12) break;
     }
 
-    // Handle cases where no valid posts are found
     if (validPosts.length === 0) {
       postsContainer.innerHTML = `<p>No posts available.</p>`;
       return;
     }
 
-    // Render exactly 12 valid posts
+    // Render exactly 12 valid posts (with avatar + alts)
     postsContainer.innerHTML = validPosts
       .slice(0, 12)
       .map((post, i) => {
@@ -102,50 +84,62 @@ ${Array.from({ length: 12 })
         const fetchAttr = isLcp ? 'fetchpriority="high"' : '';
 
         const authorName = post.author?.name || 'Anonymous';
+        const authorHref = `/profile/?name=${encodeURIComponent(authorName)}`;
+
+        const avatarUrl = post.author?.avatar?.url || '/images/placeholder.jpg';
+        const avatarAlt = `${authorName}'s avatar`;
+
         const mediaUrl = post.media?.url || fallbackImageUrl;
-        const mediaAlt = post.media?.alt || 'Post Image';
+        const mediaAlt = post.media?.alt || 'Post image';
+
         const postTitle = post.title || 'Untitled Post';
         const postBody = post.body || '';
 
         return `
-        
-        <div class="post bg-white shadow rounded-sm overflow-hidden">
-           <!-- Username -->
-          <div class="px-4 pt-4 text-sm font-semibold text-gray-700 mb-4">
-            ${authorName}
-          </div>
-          
- <a href="/post/?id=${post.id}" class="block hover:opacity-90">
-      <img
-  src="${mediaUrl}"                    
-  srcset="
-    ${mediaUrl}?w=320 320w,
-    ${mediaUrl}?w=480 480w,
-    ${mediaUrl}?w=600 600w
-  "
-  sizes="(max-width: 640px) 100vw, 600px"
-  width="600" height="600"
-  class="mx-auto w-full max-w-[600px] aspect-[1/1] object-cover"
-  loading="eager" fetchpriority="high" decoding="async"
-/>
-            <div class="p-4">
-              <h3 class="text-lg font-bold mb-2">${postTitle}</h3>
-              <p class="text-gray-600">${postBody}</p>
+          <div class="post bg-white shadow rounded-sm overflow-hidden">
+            <!-- Avatar + username row -->
+            <div class="px-4 pt-4 mb-4 flex items-center gap-3 text-sm font-semibold text-gray-700">
+              <a href="${authorHref}" class="inline-flex items-center gap-3 group">
+                <img
+                  src="${avatarUrl}"
+                  alt="${avatarAlt}"
+                  width="36" height="36"
+                  class="w-9 h-9 rounded-full object-cover"
+                  loading="lazy" decoding="async"
+                />
+                <span class="group-hover:underline">${authorName}</span>
+              </a>
             </div>
-          </a>
-        </div>
-      `;
+
+            <!-- Image + text -->
+            <a href="/post/?id=${post.id}" class="block hover:opacity-90">
+              <img
+                src="${mediaUrl}"
+                alt="${mediaAlt}"
+                srcset="
+                  ${mediaUrl}?w=320 320w,
+                  ${mediaUrl}?w=480 480w,
+                  ${mediaUrl}?w=600 600w
+                "
+                sizes="(max-width: 640px) 100vw, 600px"
+                width="600" height="600"
+                class="mx-auto w-full max-w-[600px] aspect-[1/1] object-cover"
+                loading="${loading}" ${fetchAttr} decoding="async"
+              />
+              <div class="p-4">
+                <h2 class="text-lg font-bold mb-2">${postTitle}</h2>
+                <p class="text-gray-600">${postBody}</p>
+              </div>
+            </a>
+          </div>
+        `;
       })
       .join('');
 
-    // Update pagination display
+    // Pagination UI
     currentPageDisplay.textContent = `Page ${page}`;
-    // make the pagination visible
     pagination?.classList.remove('invisible');
-
-    // disable Prev button on first page
     prevButton.disabled = page <= 1;
-    // disable Next button if fewer than 24 posts were fetched
     nextButton.disabled = posts.length < 24;
   } catch (error) {
     console.error('Error fetching posts:', error);
