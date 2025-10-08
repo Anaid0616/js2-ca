@@ -7,7 +7,11 @@ export function headers() {
     headers.append('X-Noroff-API-Key', API_KEY);
   }
 
-  const token = localStorage.getItem('token'); // Retrieve the token from local storage
+  const token =
+    typeof localStorage !== 'undefined' && localStorage?.getItem
+      ? localStorage.getItem('token')
+      : null;
+
   if (token) {
     headers.append('Authorization', `Bearer ${token}`); // Add the token to headers
   }

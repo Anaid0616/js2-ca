@@ -5,6 +5,8 @@ import { doFetch } from '../utilities/doFetch.mjs';
  * @function initializeFormHandler
  */
 export function initializeFormHandler() {
+  if (typeof document === 'undefined') return;
+
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('form').forEach((form) => {
       form.addEventListener('submit', async (event) => {

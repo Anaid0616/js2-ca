@@ -1,15 +1,19 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { updatePost } from "../update";
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+vi.mock('../../utilities/formHandler.mjs', () => ({
+  initializeFormHandler: vi.fn(),
+}));
+
+import { updatePost } from '../update';
 
 global.fetch = vi.fn();
 
-describe("updatePost", () => {
+describe('updatePost', () => {
   beforeEach(() => {
     fetch.mockClear();
   });
 
-  it("should update a post with required fields and default optional fields", async () => {
-    const mockResponse = { id: 1, title: "Updated Post" };
+  it('should update a post with required fields and default optional fields', async () => {
+    const mockResponse = { id: 1, title: 'Updated Post' };
 
     fetch.mockResolvedValueOnce({
       ok: true,
@@ -17,7 +21,7 @@ describe("updatePost", () => {
     });
 
     const postData = {
-      title: "Updated Post",
+      title: 'Updated Post',
     };
 
     const result = await updatePost(1, postData);
@@ -25,8 +29,8 @@ describe("updatePost", () => {
     expect(result).toEqual(mockResponse);
   });
 
-  it("should update a post with all provided fields", async () => {
-    const mockResponse = { id: 2, title: "Updated Post with media" };
+  it('should update a post with all provided fields', async () => {
+    const mockResponse = { id: 2, title: 'Updated Post with media' };
 
     fetch.mockResolvedValueOnce({
       ok: true,
@@ -34,12 +38,12 @@ describe("updatePost", () => {
     });
 
     const postData = {
-      title: "Updated Post with media",
-      body: "This is an updated body",
-      tags: ["tag1", "tag2"],
+      title: 'Updated Post with media',
+      body: 'This is an updated body',
+      tags: ['tag1', 'tag2'],
       media: {
-        url: "https://url.com/image.jpg",
-        alt: "Updated image",
+        url: 'https://url.com/image.jpg',
+        alt: 'Updated image',
       },
     };
 
@@ -48,13 +52,13 @@ describe("updatePost", () => {
     expect(result).toEqual(mockResponse);
   });
 
-  it("should throw an error if the API request fails", async () => {
+  it('should throw an error if the API request fails', async () => {
     fetch.mockResolvedValueOnce({
       ok: false,
     });
 
     const postData = {
-      title: "Failing Post",
+      title: 'Failing Post',
     };
 
     await expect(updatePost(3, postData)).rejects.toThrow();

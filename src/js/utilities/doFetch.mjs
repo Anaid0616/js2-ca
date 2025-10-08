@@ -1,36 +1,38 @@
+// src/js/utilities/doFetch.mjs
 import { headers } from '../api/headers.mjs';
 
 /**
- * A reusable fetch function.
- *
- * @param {string} url - The API endpoint URL.
- * @param {Object} options - Fetch options such as method, body, etc.
- * @param {boolean} [useAuth=true] - Whether to include authentication-related headers.
- * @returns {Promise<any>} A promise that resolves to the response data.
- * @throws {Error} An error if the request fails.
+ * Reusable fetch with optional auth headers.
+ * - Throws on non-2xx (using server `message` if available).
+ * - Safely handles 204 No Content.
  */
 export async function doFetch(url, options = {}, useAuth = true) {
-  try {
-    // Set up headers, optionally including auth headers
-    const customHeaders = useAuth
-      ? headers()
-      : new Headers({ 'Content-Type': 'application/json' });
+  const customHeaders = useAuth
+    ? headers()
+    : new Headers({ 'Content-Type': 'application/json' });
 
-    const fetchOptions = {
-      ...options,
-      headers: customHeaders,
-    };
+  const fetchOptions = { headers: customHeaders, ...options };
 
-    const response = await fetch(url, fetchOptions);
+  const response = await fetch(url, fetchOptions);
 
-    // Handle empty responses (like 204)
-    if (response.status === 204) {
-      return response; // No content to parse
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error('Error in doFetch:', error);
-    throw error;
+  // 204: nothing to parse
+  if (response.status === 204) {
+    return null;
   }
+
+  // Try to parse JSON even on error responses
+  let data = null;
+  try {
+    data = await response.json();
+  } catch {
+    // ignore parse errors
+  }
+
+  if (!response.ok) {
+    const msg =
+      (data && data.message) || `Request failed (HTTP ${response.status})`;
+    throw new Error(msg);
+  }
+
+  return data;
 }

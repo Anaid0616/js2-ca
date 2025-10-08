@@ -1,5 +1,5 @@
 // src/js/router/views/home.mjs
-import { setLogoutListener } from '../../ui/global/logout.mjs';
+
 import { readPosts } from '../../api/post/read.mjs';
 import { feedPostCardSkeletonHTML } from '../../utilities/skeletons.mjs';
 import { authGuard } from '../../utilities/authGuard.mjs';
@@ -8,7 +8,6 @@ import { h } from '../../utilities/dom.mjs';
 
 authGuard();
 loadHTMLHeader();
-setLogoutListener();
 
 /** Current page for pagination. */
 let currentPage = 1;

@@ -4,11 +4,9 @@ import { updatePost } from '../../api/post/update.mjs';
 import { showAlert } from '../../utilities/alert.mjs';
 
 import { loadHTMLHeader } from '../../ui/global/sharedHeader.mjs';
-import { setLogoutListener } from '../../ui/global/logout.mjs';
 
 loadHTMLHeader();
 authGuard();
-setLogoutListener();
 
 /**
  * Extract the post ID from the URL query parameters.

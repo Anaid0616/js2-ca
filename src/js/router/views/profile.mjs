@@ -1,7 +1,7 @@
 // src/js/router/views/profile.mjs
 import { authGuard } from '../../utilities/authGuard.mjs';
 import { loadHTMLHeader } from '../../ui/global/sharedHeader.mjs';
-import { setLogoutListener } from '../../ui/global/logout.mjs';
+
 import { API_SOCIAL_PROFILES } from '../../api/constants.mjs';
 import { doFetch } from '../../utilities/doFetch.mjs';
 import { showAlert } from '../../utilities/alert.mjs';
@@ -19,7 +19,6 @@ import {
 // ---- boot ----
 loadHTMLHeader();
 authGuard();
-setLogoutListener();
 
 /** Pagination state */
 let currentPage = 1;

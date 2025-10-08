@@ -1,27 +1,48 @@
-import { onLogout } from "../logout";
-import { describe, test, expect, beforeEach, vi } from "vitest";
+// logout.test.js
+import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
 
-describe("onLogout", () => {
+// Mock the alert so we don't show real toasts
+vi.mock('../../utilities/alert.mjs', () => ({
+  showAlert: vi.fn(),
+}));
+
+import { logout as onLogout } from '../logout.mjs';
+
+describe('onLogout', () => {
+  let originalLocation;
+
   beforeEach(() => {
-    const localStorageMock = (() => {
-      let store = {};
-      return {
-        getItem: (key) => store[key] || null,
-        setItem: (key, value) => (store[key] = value),
-        removeItem: (key) => delete store[key],
-        clear: () => (store = {}),
-      };
-    })();
+    // You already run jsdom; it provides localStorage.
+    // Seed storage
+    localStorage.setItem('token', 'mockedToken');
+    localStorage.setItem('user', JSON.stringify({ id: 1 }));
 
-    Object.defineProperty(global, "localStorage", {
-      value: localStorageMock,
-    });
-    localStorage.setItem("token", "mockedToken");
+    // Make location writable: delete and reassign
+    originalLocation = window.location;
+    delete window.location;
+    window.location = { ...originalLocation, href: '' };
+
+    vi.useFakeTimers();
   });
 
-  test("removes token from localStorage", () => {
-    expect(localStorage.getItem("token")).toBe("mockedToken");
+  afterEach(() => {
+    vi.useRealTimers();
+    localStorage.clear();
+    // Restore the real location
+    delete window.location;
+    window.location = originalLocation;
+    vi.clearAllMocks();
+  });
+
+  test('removes token and user from localStorage', () => {
     onLogout();
-    expect(localStorage.getItem("token")).toBeFalsy();
+    expect(localStorage.getItem('token')).toBeNull();
+    expect(localStorage.getItem('user')).toBeNull();
+  });
+
+  test('redirects to /auth/login/ after 3s', () => {
+    onLogout();
+    vi.advanceTimersByTime(3000);
+    expect(window.location.href).toBe('/auth/login/');
   });
 });
