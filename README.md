@@ -112,12 +112,19 @@ npm run preview
 ## File Structure
 
 src/
+
   api/           # API calls (auth, posts, profiles)
+  
   ui/            # UI modules (CRUD, reactions, comments, header)
+  
   router/views/  # Page entry scripts
+  
   utilities/     # helpers (doFetch, authGuard, skeletons, dom)
+  
 public/
+
   images/        # logos, placeholders, shared header HTML
+  
 index.html       # main entry
 
 ---
