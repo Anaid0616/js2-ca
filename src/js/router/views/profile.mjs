@@ -1,17 +1,25 @@
 // src/js/router/views/profile.mjs
 import { authGuard } from '../../utilities/authGuard.mjs';
 import { loadHTMLHeader } from '../../ui/global/sharedHeader.mjs';
+import { setLogoutListener } from '../../ui/global/logout.mjs';
 import { API_SOCIAL_PROFILES } from '../../api/constants.mjs';
 import { doFetch } from '../../utilities/doFetch.mjs';
 import { showAlert } from '../../utilities/alert.mjs';
 import {
+  profileHeaderSkeletonHTML,
   profilePostCardSkeletonHTML,
   renderGridSkeleton,
 } from '../../utilities/skeletons.mjs';
+import { followButtonHtml, mountFollow } from '@/js/ui/profile/follow.mjs';
+import {
+  countsRowHtml,
+  mountCountsDropdowns,
+} from '@/js/ui/profile/counts.mjs';
 
 // ---- boot ----
 loadHTMLHeader();
 authGuard();
+setLogoutListener();
 
 /** Pagination state */
 let currentPage = 1;
@@ -20,15 +28,7 @@ const pageSize = 12;
 
 // ---- DOM refs ----
 const userInfoBlock = document.getElementById('user-info');
-const profileSkeleton = document.getElementById('profile-skeleton');
-const profileReal = document.getElementById('profile-real');
-const avatarEl = document.getElementById('user-avatar');
-const nameEl = document.getElementById('user-name');
-const bioEl = document.getElementById('user-bio');
-const updateBtn = document.getElementById('toggle-profile-update-button');
-
 const postsContainer = document.getElementById('user-posts-container');
-
 const paginationEl = document.getElementById('pagination');
 const prevBtn = document.getElementById('prev-page');
 const nextBtn = document.getElementById('next-page');
@@ -51,45 +51,91 @@ if (!targetName) {
   // window.location.href = '/';
 }
 
-// ---------------- Skeleton helpers ----------------
-function showHeaderSkeleton() {
-  profileSkeleton.classList.remove('hidden');
-  profileReal.classList.add('hidden');
+/**
+ * Render the profile header skeleton into #user-info.
+ * Keeps layout stable to avoid CLS.
+ */
+function renderHeaderSkeleton() {
+  userInfoBlock.innerHTML = profileHeaderSkeletonHTML();
 }
-function showHeaderReal() {
-  profileSkeleton.classList.add('hidden');
-  profileReal.classList.remove('hidden');
+
+/**
+ * Build the final header HTML (avatar + name + bio + action slot).
+ * @param {{avatar?:{url?:string,alt?:string}, name?:string, bio?:string}} data
+ * @returns {string}
+ */
+function headerHtml(data, followers, following) {
+  const avatarUrl = data?.avatar?.url || '/images/placeholder.jpg';
+  const avatarAlt = data?.avatar?.alt || data?.name || 'User avatar';
+  const displayName = data?.name || targetName || 'User';
+  const bioText = data?.bio ?? '';
+
+  return `
+    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+      <div class="flex items-center gap-4">
+       <img
+  id="user-avatar"
+  src="${avatarUrl}"
+  alt="${avatarAlt}"
+  width="160" height="160"
+  class="w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full object-cover my-2"
+  loading="eager"
+  decoding="async"
+  fetchpriority="low"
+/>
+        <div>
+          <h1 id="user-name" class="text-lg font-bold sm:text-xl md:text-2xl">${displayName}</h1>
+           ${countsRowHtml(followers, following)}
+            <p id="user-bio" class="text-gray-600 text-base md:text-lg">${bioText}</p>
+        </div>
+      </div>
+
+      <!-- Action slot: Update (self) or Follow button (others) -->
+      <div id="profile-action-slot" class="w-full sm:w-auto order-2 sm:order-none sm:ml-auto"></div>
+    </div>
+  `;
 }
 
 // ---------------- Profile header ----------------
+
 /**
  * Fetch and render the selected user's profile (avatar, name, bio).
- * Shows the built-in skeleton while loading.
+ * Shows a skeleton while loading and then replaces it with the final header.
  */
 async function fetchAndRenderProfileHeader() {
-  showHeaderSkeleton();
+  renderHeaderSkeleton();
 
   try {
-    const profile = await doFetch(`${API_SOCIAL_PROFILES}/${targetName}`, {
-      method: 'GET',
-    });
+    const profile = await doFetch(
+      `${API_SOCIAL_PROFILES}/${encodeURIComponent(
+        targetName
+      )}?_following=true&_followers=true`,
+      { method: 'GET' }
+    );
 
-    const data = profile?.data;
-    const avatarUrl = data?.avatar?.url || '/images/placeholder.jpg';
-    const avatarAlt = data?.avatar?.alt || data?.name || 'User avatar';
-    const displayName = data?.name || targetName || 'User';
-    const bioText = data?.bio ?? '';
+    const data = profile?.data || {};
+    const isFollowing = !!data._following;
+    const followers = Array.isArray(data.followers) ? data.followers : [];
+    const following = Array.isArray(data.following) ? data.following : [];
 
-    // Populate existing DOM
-    avatarEl.src = avatarUrl;
-    avatarEl.alt = avatarAlt;
-    nameEl.textContent = displayName;
-    bioEl.textContent = bioText;
+    document.getElementById('profile-spacer')?.remove();
+    // Render final header
+    userInfoBlock.innerHTML = headerHtml(data, followers, following);
+    mountCountsDropdowns(userInfoBlock);
 
-    // Show/hide update button depending on self
+    // Mount action (self: Update; others: Follow)
+    const actionSlot = document.getElementById('profile-action-slot');
+    if (!actionSlot) return;
+
     if (isSelf) {
-      updateBtn?.classList.remove('hidden');
-      // Wire toggle for the update form if present
+      actionSlot.innerHTML = `
+        <button
+          id="toggle-profile-update-button"
+          class="text-sm px-3 py-1.5 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 font-semibold"
+          type="button">
+          Update Profile
+        </button>`;
+      const updateBtn = document.getElementById('toggle-profile-update-button');
       const form = document.getElementById('update-profile');
       updateBtn?.addEventListener('click', () => {
         if (!form) return;
@@ -98,20 +144,21 @@ async function fetchAndRenderProfileHeader() {
         updateBtn.textContent = show ? 'Cancel Update' : 'Update Profile';
       });
     } else {
-      updateBtn?.classList.add('hidden');
+      actionSlot.innerHTML = followButtonHtml(isFollowing);
+      mountFollow(targetName, isFollowing);
     }
-
-    showHeaderReal();
   } catch (err) {
     console.error('Failed to load profile header:', err);
     showAlert('error', 'Could not load profile.');
-    // Keep skeleton hidden to avoid duplicate visuals
-    showHeaderReal();
+    // Keep skeleton or show a minimal fallback if you prefer
   }
 }
 
 // ---------------- Posts + pagination ----------------
-/** Render post cards grid */
+/**
+ * Render the posts grid (no username row).
+ * @param {Array<Object>} posts
+ */
 function renderPosts(posts) {
   postsContainer.innerHTML = posts
     .map((post, idx) => {
@@ -127,13 +174,21 @@ function renderPosts(posts) {
       return `
         <div class="post bg-white shadow rounded-sm overflow-hidden">
           <a href="/post/?id=${post.id}" class="block hover:opacity-90">
-            <img
-              src="${mediaUrl}"
-              alt="${mediaAlt}"
-              width="600" height="600"
-              class="w-full aspect-square object-cover"
-              loading="${loading}" ${fetchAttr}
-            />
+       <img
+  src="${mediaUrl}"
+  srcset="
+    ${mediaUrl}?w=320 320w,
+    ${mediaUrl}?w=480 480w,
+    ${mediaUrl}?w=600 600w
+  "
+  sizes="(max-width: 640px) 50vw, 33vw"
+  alt="${mediaAlt}"
+  width="600" height="600"
+  class="w-full aspect-square object-cover"
+  loading="${loading}" ${fetchAttr}
+  decoding="async"
+/>
+
             <div class="p-4">
               <h3 class="text-lg font-bold mb-2">${title}</h3>
               <p class="text-gray-700">${body}</p>
@@ -148,11 +203,10 @@ function renderPosts(posts) {
 /**
  * Fetch and display the target user's posts with pagination.
  * Hides pagination if only one page.
+ * @param {number} [page=1]
  */
 async function fetchAndDisplayUserPosts(page = 1) {
-  // Reserve space so pagination doesn’t jump
   postsContainer.classList.add('min-h-[900px]');
-  // Hide pagination until we know we need it
   paginationEl.classList.add('invisible');
 
   // Skeleton while fetching
@@ -160,13 +214,14 @@ async function fetchAndDisplayUserPosts(page = 1) {
 
   try {
     const res = await doFetch(
-      `${API_SOCIAL_PROFILES}/${targetName}/posts?limit=${pageSize}&page=${page}`,
+      `${API_SOCIAL_PROFILES}/${encodeURIComponent(
+        targetName
+      )}/posts?limit=${pageSize}&page=${page}`,
       { method: 'GET' }
     );
 
     const posts = Array.isArray(res?.data) ? res.data : [];
 
-    // No posts
     if (posts.length === 0) {
       postsContainer.innerHTML = `<p class="text-gray-600">No posts yet.</p>`;
       paginationEl.classList.add('invisible');
@@ -175,22 +230,16 @@ async function fetchAndDisplayUserPosts(page = 1) {
 
     renderPosts(posts);
 
-    // Determine if there is more than one page
-    // If API meta is unavailable, fallback to simple length check.
-    const hasNextPage = posts.length === pageSize; // if page is "full", assume next exists
+    // Simple pagination logic without relying on meta
+    const hasNextPage = posts.length === pageSize;
     const hasPrevPage = page > 1;
 
     pageIndicator.textContent = `Page ${page}`;
     prevBtn.disabled = !hasPrevPage;
     nextBtn.disabled = !hasNextPage;
 
-    // Only show pagination if there is more than one page
-    const shouldShowPagination = hasPrevPage || hasNextPage;
-    if (shouldShowPagination) {
-      paginationEl.classList.remove('invisible');
-    } else {
-      paginationEl.classList.add('invisible');
-    }
+    const shouldShow = hasPrevPage || hasNextPage;
+    paginationEl.classList.toggle('invisible', !shouldShow);
   } catch (err) {
     console.error('Error fetching user posts:', err);
     postsContainer.innerHTML =

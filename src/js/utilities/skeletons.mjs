@@ -4,18 +4,35 @@
  * Profile header (avatar + name + bio) skeleton
  * – matches your final spacing so CLS stays low.
  */
+// src/js/ui/skeletons.mjs
+// src/js/ui/skeletons.mjs
 export function profileHeaderSkeletonHTML() {
   return `
     <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
-      <div class="flex items-center gap-4 animate-pulse">
-        <div class="w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full bg-gray-200"></div>
-        <div>
-          <div class="h-6 sm:h-7 w-40 sm:w-48 bg-gray-200 rounded mb-2"></div>
-          <div class="h-4 sm:h-5 w-56 sm:w-72 bg-gray-200 rounded"></div>
+      <!-- LEFT: avatar + (name → counts → bio) column -->
+      <div class="flex items-start gap-4 flex-1 min-w-0">
+        <!-- Avatar -->
+        <div class="w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full bg-gray-200 animate-pulse"></div>
+
+        <!-- Right-of-avatar column -->
+        <div class="flex-1 min-w-0">
+          <!-- Name (title) -->
+          <div class="h-6 sm:h-7 w-40 sm:w-48 bg-gray-200 rounded animate-pulse mb-2"></div>
+
+          <!-- Counts row: Followers / Following (under the name) -->
+          <div class="flex flex-wrap items-center gap-2 mb-2">
+            <div class="h-8 sm:h-9 w-28 rounded border border-gray-200 bg-gray-200 animate-pulse"></div>
+            <div class="h-8 sm:h-9 w-28 rounded border border-gray-200 bg-gray-200 animate-pulse"></div>
+          </div>
+
+          <!-- Bio (below counts) -->
+          <div class="h-4 sm:h-5 w-56 sm:w-72 bg-gray-200 rounded animate-pulse"></div>
         </div>
       </div>
-      <div class="w-full sm:w-auto order-2 sm:order-none">
-        <div class="h-10 w-32 bg-gray-200 rounded animate-pulse hidden sm:block"></div>
+
+      <!-- RIGHT: action button (Update / Follow) -->
+      <div class="w-full sm:w-auto sm:ml-auto">
+        <div class="h-9 sm:h-10 w-32 rounded bg-gray-200 animate-pulse"></div>
       </div>
     </div>
   `;
@@ -48,7 +65,7 @@ export function feedPostCardSkeletonHTML() {
         <div class="h-4 w-32 bg-gray-200 rounded animate-pulse"></div>
       </div>
       <div class="mx-auto w-full max-w-[600px] aspect-[1/1] bg-gray-200 animate-pulse"></div>
-      <div class="p-4">
+      <div class="py-4">
         <div class="h-5 bg-gray-200 rounded w-3/4 mb-2 animate-pulse"></div>
         <div class="h-4 bg-gray-200 rounded w-1/2 animate-pulse"></div>
       </div>

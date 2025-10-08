@@ -10,7 +10,11 @@ import {
   renderInitialComments,
   mountComments,
 } from '@/js/ui/post/comments.mjs';
+import { setLogoutListener } from '../../ui/global/logout.mjs';
+import { loadHTMLHeader } from '../../ui/global/sharedHeader.mjs';
 
+loadHTMLHeader();
+setLogoutListener();
 // Require auth
 authGuard();
 

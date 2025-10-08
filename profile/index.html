@@ -29,57 +29,10 @@
     <main class="pb-16 sm:pb-0">
       <!-- Profile Header Block -->
       <section id="user-info" class="max-w-screen-lg mx-auto p-5">
-        <!-- SKELETON: visible by default -->
         <div
-          id="profile-skeleton"
-          class="animate-pulse grid grid-cols-1 sm:grid-cols-[auto,1fr,auto] items-center gap-4"
-        >
-          <div
-            class="w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full bg-gray-200"
-          ></div>
-          <div class="space-y-2">
-            <div class="h-6 w-40 bg-gray-200 rounded"></div>
-            <div class="h-4 w-56 bg-gray-200 rounded"></div>
-          </div>
-          <div
-            class="justify-self-start sm:justify-self-end w-32 h-9 bg-gray-200 rounded"
-          ></div>
-        </div>
-
-        <!-- Profile info -->
-        <div
-          id="profile-real"
-          class="hidden grid grid-cols-1 sm:grid-cols-[auto,1fr,auto] items-center gap-4"
-        >
-          <!-- Avatar -->
-          <img
-            id="user-avatar"
-            alt="User avatar"
-            width="160"
-            height="160"
-            loading="eager"
-            decoding="async"
-            class="w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full object-cover"
-          />
-
-          <!-- Text -->
-          <div class="min-w-0">
-            <h1
-              id="user-name"
-              class="text-lg font-bold sm:text-xl md:text-2xl truncate"
-            ></h1>
-            <p id="user-bio" class="text-gray-600 text-base md:text-lg"></p>
-          </div>
-
-          <!-- Update button: right on desktop, drops below on mobile -->
-          <button
-            id="toggle-profile-update-button"
-            class="justify-self-start sm:justify-self-end mt-4 sm:mt-0 text-sm px-3 py-1.5 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 font-semibold"
-            type="button"
-          >
-            Update Profile
-          </button>
-        </div>
+          id="profile-spacer"
+          class="pointer-events-none select-none h-[140px] sm:h-[160px] md:h-[190px]"
+        ></div>
       </section>
 
       <!-- Alerts -->
@@ -124,7 +77,7 @@
       </section>
 
       <!-- Posts grid + pagination (unchanged from your version) -->
-      <section id="user-posts" class="max-w-screen-lg mx-auto p-5">
+      <section id="user-posts" class="max-w-screen-lg mx-auto px-5">
         <h2
           class="text-lg md:text-xl font-bold text-gray-700 mb-4 border-t-2 border-gray-200 pt-4"
         >
@@ -162,11 +115,5 @@
     </main>
 
     <footer></footer>
-
-    <!-- Load shared header dynamically -->
-    <script type="module">
-      import { loadHTMLHeader } from '@/js/ui/global/sharedHeader.mjs';
-      loadHTMLHeader();
-    </script>
   </body>
 </html>
