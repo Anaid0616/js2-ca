@@ -1,20 +1,20 @@
 // src/js/router/views/profile.mjs
-import { authGuard } from '../../utilities/authGuard.mjs';
-import { loadHTMLHeader } from '../../ui/global/sharedHeader.mjs';
+import { authGuard } from "../../utilities/authGuard.mjs";
+import { loadHTMLHeader } from "../../ui/global/sharedHeader.mjs";
 
-import { API_SOCIAL_PROFILES } from '../../api/constants.mjs';
-import { doFetch } from '../../utilities/doFetch.mjs';
-import { showAlert } from '../../utilities/alert.mjs';
+import { API_SOCIAL_PROFILES } from "../../api/constants.mjs";
+import { doFetch } from "../../utilities/doFetch.mjs";
+import { showAlert } from "../../utilities/alert.mjs";
 import {
   profileHeaderSkeletonHTML,
   profilePostCardSkeletonHTML,
   renderGridSkeleton,
-} from '../../utilities/skeletons.mjs';
-import { followButtonHtml, mountFollow } from '@/js/ui/profile/follow.mjs';
+} from "../../utilities/skeletons.mjs";
+import { followButtonHtml, mountFollow } from "@/js/ui/profile/follow.mjs";
 import {
   countsRowHtml,
   mountCountsDropdowns,
-} from '@/js/ui/profile/counts.mjs';
+} from "@/js/ui/profile/counts.mjs";
 
 // ---- boot ----
 loadHTMLHeader();
@@ -26,17 +26,17 @@ let currentPage = 1;
 const pageSize = 12;
 
 // ---- DOM refs ----
-const userInfoBlock = document.getElementById('user-info');
-const postsContainer = document.getElementById('user-posts-container');
-const paginationEl = document.getElementById('pagination');
-const prevBtn = document.getElementById('prev-page');
-const nextBtn = document.getElementById('next-page');
-const pageIndicator = document.getElementById('current-page');
+const userInfoBlock = document.getElementById("user-info");
+const postsContainer = document.getElementById("user-posts-container");
+const paginationEl = document.getElementById("pagination");
+const prevBtn = document.getElementById("prev-page");
+const nextBtn = document.getElementById("next-page");
+const pageIndicator = document.getElementById("current-page");
 
 // ---- which profile are we viewing? ----
 const qs = new URLSearchParams(window.location.search);
-const viewedName = qs.get('name');
-const me = JSON.parse(localStorage.getItem('user'));
+const viewedName = qs.get("name");
+const me = JSON.parse(localStorage.getItem("user"));
 const myName = me?.name || null;
 /** Target username (fallback to self) */
 const targetName = viewedName || myName;
@@ -45,7 +45,7 @@ const isSelf =
   !!myName && !!targetName && targetName.toLowerCase() === myName.toLowerCase();
 
 if (!targetName) {
-  showAlert('error', 'No profile name provided.');
+  showAlert("error", "No profile name provided.");
   // Optionally redirect
   // window.location.href = '/';
 }
@@ -64,10 +64,10 @@ function renderHeaderSkeleton() {
  * @returns {string}
  */
 function headerHtml(data, followers, following) {
-  const avatarUrl = data?.avatar?.url || '/images/placeholder.jpg';
-  const avatarAlt = data?.avatar?.alt || data?.name || 'User avatar';
-  const displayName = data?.name || targetName || 'User';
-  const bioText = data?.bio ?? '';
+  const avatarUrl = data?.avatar?.url || "/images/placeholder.jpg";
+  const avatarAlt = data?.avatar?.alt || data?.name || "User avatar";
+  const displayName = data?.name || targetName || "User";
+  const bioText = data?.bio ?? "";
 
   return `
     <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
@@ -107,9 +107,9 @@ async function fetchAndRenderProfileHeader() {
   try {
     const profile = await doFetch(
       `${API_SOCIAL_PROFILES}/${encodeURIComponent(
-        targetName
+        targetName,
       )}?_following=true&_followers=true`,
-      { method: 'GET' }
+      { method: "GET" },
     );
 
     const data = profile?.data || {};
@@ -117,13 +117,13 @@ async function fetchAndRenderProfileHeader() {
     const followers = Array.isArray(data.followers) ? data.followers : [];
     const following = Array.isArray(data.following) ? data.following : [];
 
-    document.getElementById('profile-spacer')?.remove();
+    document.getElementById("profile-spacer")?.remove();
     // Render final header
     userInfoBlock.innerHTML = headerHtml(data, followers, following);
     mountCountsDropdowns(userInfoBlock);
 
     // Mount action (self: Update; others: Follow)
-    const actionSlot = document.getElementById('profile-action-slot');
+    const actionSlot = document.getElementById("profile-action-slot");
     if (!actionSlot) return;
 
     if (isSelf) {
@@ -134,21 +134,21 @@ async function fetchAndRenderProfileHeader() {
           type="button">
           Update Profile
         </button>`;
-      const updateBtn = document.getElementById('toggle-profile-update-button');
-      const form = document.getElementById('update-profile');
-      updateBtn?.addEventListener('click', () => {
+      const updateBtn = document.getElementById("toggle-profile-update-button");
+      const form = document.getElementById("update-profile");
+      updateBtn?.addEventListener("click", () => {
         if (!form) return;
-        const show = form.style.display !== 'block';
-        form.style.display = show ? 'block' : 'none';
-        updateBtn.textContent = show ? 'Cancel Update' : 'Update Profile';
+        const show = form.style.display !== "block";
+        form.style.display = show ? "block" : "none";
+        updateBtn.textContent = show ? "Cancel Update" : "Update Profile";
       });
     } else {
       actionSlot.innerHTML = followButtonHtml(isFollowing);
       mountFollow(targetName, isFollowing);
     }
   } catch (err) {
-    console.error('Failed to load profile header:', err);
-    showAlert('error', 'Could not load profile.');
+    console.error("Failed to load profile header:", err);
+    showAlert("error", "Could not load profile.");
     // Keep skeleton or show a minimal fallback if you prefer
   }
 }
@@ -161,14 +161,14 @@ async function fetchAndRenderProfileHeader() {
 function renderPosts(posts) {
   postsContainer.innerHTML = posts
     .map((post, idx) => {
-      const mediaUrl = post?.media?.url || '/images/placeholder.jpg';
-      const mediaAlt = post?.media?.alt || 'Post image';
-      const title = post?.title || 'Untitled Post';
-      const body = post?.body || '';
+      const mediaUrl = post?.media?.url || "/images/placeholder.jpg";
+      const mediaAlt = post?.media?.alt || "Post image";
+      const title = post?.title || "Untitled Post";
+      const body = post?.body || "";
 
       const isLcp = currentPage === 1 && idx === 0;
-      const loading = isLcp ? 'eager' : 'lazy';
-      const fetchAttr = isLcp ? 'fetchpriority="high"' : '';
+      const loading = isLcp ? "eager" : "lazy";
+      const fetchAttr = isLcp ? 'fetchpriority="high"' : "";
 
       return `
         <div class="post bg-white shadow rounded-sm overflow-hidden">
@@ -196,7 +196,7 @@ function renderPosts(posts) {
         </div>
       `;
     })
-    .join('');
+    .join("");
 }
 
 /**
@@ -205,8 +205,8 @@ function renderPosts(posts) {
  * @param {number} [page=1]
  */
 async function fetchAndDisplayUserPosts(page = 1) {
-  postsContainer.classList.add('min-h-[900px]');
-  paginationEl.classList.add('invisible');
+  postsContainer.classList.add("min-h-[900px]");
+  paginationEl.classList.add("invisible");
 
   // Skeleton while fetching
   renderGridSkeleton(postsContainer, 6, profilePostCardSkeletonHTML);
@@ -214,16 +214,16 @@ async function fetchAndDisplayUserPosts(page = 1) {
   try {
     const res = await doFetch(
       `${API_SOCIAL_PROFILES}/${encodeURIComponent(
-        targetName
+        targetName,
       )}/posts?limit=${pageSize}&page=${page}`,
-      { method: 'GET' }
+      { method: "GET" },
     );
 
     const posts = Array.isArray(res?.data) ? res.data : [];
 
     if (posts.length === 0) {
       postsContainer.innerHTML = `<p class="text-gray-600">No posts yet.</p>`;
-      paginationEl.classList.add('invisible');
+      paginationEl.classList.add("invisible");
       return;
     }
 
@@ -238,26 +238,26 @@ async function fetchAndDisplayUserPosts(page = 1) {
     nextBtn.disabled = !hasNextPage;
 
     const shouldShow = hasPrevPage || hasNextPage;
-    paginationEl.classList.toggle('invisible', !shouldShow);
+    paginationEl.classList.toggle("invisible", !shouldShow);
   } catch (err) {
-    console.error('Error fetching user posts:', err);
+    console.error("Error fetching user posts:", err);
     postsContainer.innerHTML =
       '<p class="text-red-600">Error loading posts. Please try again.</p>';
-    paginationEl.classList.add('invisible');
+    paginationEl.classList.add("invisible");
   } finally {
-    postsContainer.classList.remove('min-h-[900px]');
+    postsContainer.classList.remove("min-h-[900px]");
   }
 }
 
 // ---------------- Pagination bindings ----------------
-prevBtn?.addEventListener('click', () => {
+prevBtn?.addEventListener("click", () => {
   if (currentPage > 1) {
     currentPage -= 1;
     fetchAndDisplayUserPosts(currentPage);
   }
 });
 
-nextBtn?.addEventListener('click', () => {
+nextBtn?.addEventListener("click", () => {
   currentPage += 1;
   fetchAndDisplayUserPosts(currentPage);
 });

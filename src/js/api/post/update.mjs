@@ -1,7 +1,7 @@
-import { API_SOCIAL_POSTS } from '../constants.mjs';
-import { doFetch } from '../../utilities/doFetch.mjs';
+import { API_SOCIAL_POSTS } from "../constants.mjs";
+import { doFetch } from "../../utilities/doFetch.mjs";
 // Import the form handler
-import { initializeFormHandler } from '../../utilities/formHandler.mjs';
+import { initializeFormHandler } from "../../utilities/formHandler.mjs";
 
 // Call the function to attach the form submission logic
 initializeFormHandler();
@@ -26,14 +26,14 @@ export async function updatePost(id, { title, body, tags, media }) {
 
   try {
     const options = {
-      method: 'PUT',
+      method: "PUT",
       body: JSON.stringify(payload), // Attach payload
     };
 
     // Use `doFetch` to update the post
     return await doFetch(`${API_SOCIAL_POSTS}/${id}`, options);
   } catch (error) {
-    console.error('Error updating post:', error);
+    console.error("Error updating post:", error);
     throw error; // Re-throw error for further handling
   }
 }

@@ -8,14 +8,14 @@
  */
 export async function showModal(
   message,
-  confirmText = 'Confirm',
-  cancelText = 'Cancel'
+  confirmText = "Confirm",
+  cancelText = "Cancel",
 ) {
   return new Promise((resolve) => {
     // Create modal container
-    const modalContainer = document.createElement('div');
+    const modalContainer = document.createElement("div");
     modalContainer.className =
-      'fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50';
+      "fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50";
 
     // Create modal content
     modalContainer.innerHTML = `
@@ -43,15 +43,15 @@ export async function showModal(
     document.body.appendChild(modalContainer);
 
     // Add event listeners
-    const confirmButton = modalContainer.querySelector('#modal-confirm');
-    const cancelButton = modalContainer.querySelector('#modal-cancel');
+    const confirmButton = modalContainer.querySelector("#modal-confirm");
+    const cancelButton = modalContainer.querySelector("#modal-cancel");
 
-    confirmButton.addEventListener('click', () => {
+    confirmButton.addEventListener("click", () => {
       resolve(true); // User confirmed
       modalContainer.remove(); // Remove modal
     });
 
-    cancelButton.addEventListener('click', () => {
+    cancelButton.addEventListener("click", () => {
       resolve(false); // User canceled
       modalContainer.remove(); // Remove modal
     });

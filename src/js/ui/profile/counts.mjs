@@ -11,8 +11,8 @@
 export function countsRowHtml(followers = [], following = []) {
   return `
     <div class="mt-3 flex flex-wrap items-center">
-      ${peopleDropdownHtml('followers', 'Followers', followers)}
-      ${peopleDropdownHtml('following', 'Following', following)}
+      ${peopleDropdownHtml("followers", "Followers", followers)}
+      ${peopleDropdownHtml("following", "Following", following)}
     </div>
   `;
 }
@@ -27,30 +27,30 @@ export function countsRowHtml(followers = [], following = []) {
 export function mountCountsDropdowns(root = document) {
   const pairs = [
     {
-      btn: root.querySelector('#followers-btn'),
-      menu: root.querySelector('#followers-menu'),
+      btn: root.querySelector("#followers-btn"),
+      menu: root.querySelector("#followers-menu"),
     },
     {
-      btn: root.querySelector('#following-btn'),
-      menu: root.querySelector('#following-menu'),
+      btn: root.querySelector("#following-btn"),
+      menu: root.querySelector("#following-menu"),
     },
   ].filter((p) => p.btn && p.menu);
 
   const closeAll = () => {
-    pairs.forEach(({ menu }) => menu.classList.add('hidden'));
+    pairs.forEach(({ menu }) => menu.classList.add("hidden"));
   };
 
   // Toggle each menu and close the other
   pairs.forEach(({ btn, menu }) => {
-    btn.addEventListener('click', (e) => {
+    btn.addEventListener("click", (e) => {
       e.stopPropagation();
-      pairs.forEach(({ menu: m }) => m !== menu && m.classList.add('hidden'));
-      menu.classList.toggle('hidden');
+      pairs.forEach(({ menu: m }) => m !== menu && m.classList.add("hidden"));
+      menu.classList.toggle("hidden");
     });
   });
 
   // Click-away to close
-  document.addEventListener('click', closeAll, { once: true, capture: true });
+  document.addEventListener("click", closeAll, { once: true, capture: true });
 }
 
 /* ---------------- internal helpers ---------------- */
@@ -71,9 +71,9 @@ function peopleDropdownHtml(idBase, label, people) {
                   ${p.name}
                 </a>
               </li>
-            `
+            `,
           )
-          .join('');
+          .join("");
 
   return `
     <div class="relative inline-block">

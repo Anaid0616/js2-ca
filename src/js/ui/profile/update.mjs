@@ -1,6 +1,6 @@
-import { updateProfile } from '../../api/profile/update.mjs';
-import { fetchAndDisplayProfile } from '../../router/views/profileUser.mjs';
-import { showAlert } from '../../utilities/alert.mjs';
+import { updateProfile } from "../../api/profile/update.mjs";
+import { fetchAndDisplayProfile } from "../../router/views/profileUser.mjs";
+import { showAlert } from "../../utilities/alert.mjs";
 
 export async function onUpdateProfile(event) {
   event.preventDefault(); // Prevent default form submission
@@ -11,9 +11,9 @@ export async function onUpdateProfile(event) {
   const bio = form.bio.value.trim();
 
   // Get the current user's data from localStorage
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(localStorage.getItem("user"));
   if (!user || !user.name) {
-    showAlert('error', 'User not logged in. Cannot update profile.');
+    showAlert("error", "User not logged in. Cannot update profile.");
     return;
   }
 
@@ -35,24 +35,24 @@ export async function onUpdateProfile(event) {
       avatar: updatedProfile.data.avatar || user.avatar,
       bio: updatedProfile.data.bio || user.bio,
     };
-    localStorage.setItem('user', JSON.stringify(updatedUserData));
+    localStorage.setItem("user", JSON.stringify(updatedUserData));
 
     // Dynamically update the DOM using fetchAndDisplayProfile
     await fetchAndDisplayProfile();
 
-    showAlert('success', 'Profile updated successfully!');
+    showAlert("success", "Profile updated successfully!");
   } catch (error) {
-    console.error('Error updating profile:', error);
-    showAlert('error', 'Failed to update profile. Please try again.');
+    console.error("Error updating profile:", error);
+    showAlert("error", "Failed to update profile. Please try again.");
   }
 }
 
 // Add event listener to the profile update form
 const updateProfileForm = document.querySelector(
-  "form[name='updateProfileForm']"
+  "form[name='updateProfileForm']",
 );
 if (updateProfileForm) {
-  updateProfileForm.addEventListener('submit', onUpdateProfile);
+  updateProfileForm.addEventListener("submit", onUpdateProfile);
 } else {
-  console.error('Update profile form not found in DOM.');
+  console.error("Update profile form not found in DOM.");
 }

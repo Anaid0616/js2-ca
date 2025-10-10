@@ -6,25 +6,24 @@
 </head>
 
 <body>
-<header class="h-20 flex items-center justify-between bg-gray-100 border-b border-gray-300 px-2">
-  <a href="/" class="flex items-center w-[192px] h-[48px]">
-    <img
-      src="/images/pixlys.png"
-      alt="Pixly logo"
-      class="block w-full h-full object-contain shrink-0"
-      width="192"
-      height="48"
-      loading="eager"
-      decoding="async"
-      fetchpriority="high"
-    />
-  </a>
-
-
-
+  <header
+    class="min-h-20 h-20 flex items-center justify-between bg-gray-100 border-b border-gray-300 px-2"
+  >
+    <!-- Logo -->
+    <a href="/" class="flex items-center flex-none max-w-[100px]">
+      <img
+        src="/images/pixlys.png"
+        alt="Pixly Logo"
+        class="block h-14 md:h-16 w-auto shrink-0 object-contain"
+        width="256"
+        height="64"
+      />
+    </a>
 
     <!-- Top Navigation (Visible on Larger Screens) -->
-     <nav class="h-10 w-[240px] opacity-0 pointer-events-none sm:opacity-100 sm:pointer-events-auto sm:flex sm:justify-center sm:gap-10">
+    <nav
+      class="h-10 w-[240px] opacity-0 pointer-events-none sm:opacity-100 sm:pointer-events-auto sm:flex sm:justify-center sm:gap-10"
+    >
       <!-- Home -->
       <a
         href="/"
@@ -78,7 +77,7 @@
         href="/post/create/"
         class="flex flex-col items-center text-gray-700 hover:text-[#47c39a]"
         aria-label="Create a new Post"
-  title="Create"
+        title="Create"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -96,25 +95,24 @@
         </svg>
         <span class="text-sm">Create</span>
       </a>
-
-     
-      </div>
     </nav>
 
     <!-- Logout Button (Always in Header) -->
     <div class="w-28 flex justify-end">
-    <button id="logout-button"
-      class="bg-[#59D1AD] text-black px-4 py-2 rounded hover:bg-[#47c39a] font-semibold">
-      Logout
-    </button>
-  </div>
+      <button
+        id="logout-button"
+        class="bg-[#59D1AD] text-black px-4 py-2 rounded hover:bg-[#47c39a] font-semibold"
+      >
+        Logout
+      </button>
+    </div>
   </header>
 </body>
 
 <!-- Bottom Navigation (Visible on Smaller Screens Only) -->
-<nav class="fixed bottom-0 left-0 right-0 h-16 bg-gray-100 border-t border-gray-300 p-4
-            flex justify-around sm:hidden">
-            
+<nav
+  class="fixed bottom-0 left-0 right-0 h-16 bg-gray-100 border-t border-gray-300 p-4 flex justify-around sm:hidden"
+>
   <!-- Home -->
   <a
     href="/"
@@ -168,7 +166,7 @@
     href="/post/create/"
     class="flex flex-col items-center text-gray-700 hover:text-[#47c39a]"
     aria-label="Create a new Post"
-  title="Create"
+    title="Create"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -186,6 +184,4 @@
     </svg>
     <span class="text-sm hidden sm:block">Create</span>
   </a>
-
- 
 </nav>

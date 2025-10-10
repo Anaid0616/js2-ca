@@ -1,5 +1,5 @@
-import { API_SOCIAL_PROFILES } from '../constants.mjs';
-import { doFetch } from '../../utilities/doFetch.mjs';
+import { API_SOCIAL_PROFILES } from "../constants.mjs";
+import { doFetch } from "../../utilities/doFetch.mjs";
 
 /**
  * Fetch the profile data for a specific user.
@@ -22,13 +22,13 @@ import { doFetch } from '../../utilities/doFetch.mjs';
 export async function readProfile(username) {
   try {
     const options = {
-      method: 'GET', // Set HTTP method
+      method: "GET", // Set HTTP method
     };
 
     // Use `doFetch` to send the request
     return await doFetch(`${API_SOCIAL_PROFILES}/${username}`, options);
   } catch (error) {
-    console.error('Error reading profile:', error);
+    console.error("Error reading profile:", error);
     throw error; // Re-throw error for further handling
   }
 }

@@ -1,7 +1,7 @@
-import { API_SOCIAL_PROFILES } from '../constants.mjs';
-import { doFetch } from '../../utilities/doFetch.mjs';
+import { API_SOCIAL_PROFILES } from "../constants.mjs";
+import { doFetch } from "../../utilities/doFetch.mjs";
 // Import the form handler
-import { initializeFormHandler } from '../../utilities/formHandler.mjs';
+import { initializeFormHandler } from "../../utilities/formHandler.mjs";
 
 // Call the function to attach the form submission logic
 initializeFormHandler();
@@ -28,22 +28,22 @@ initializeFormHandler();
 export async function updateProfile(username, data) {
   try {
     const options = {
-      method: 'PUT', // Set HTTP method
+      method: "PUT", // Set HTTP method
       body: JSON.stringify(data), // Pass the updated data
     };
 
     // Use `doFetch` to send the request
     const response = await doFetch(
       `${API_SOCIAL_PROFILES}/${username}`,
-      options
+      options,
     );
 
-    console.log('API Response Status:', response.status);
-    console.log('API Response JSON:', response);
+    console.log("API Response Status:", response.status);
+    console.log("API Response JSON:", response);
 
     return response; // Return the response to the caller
   } catch (error) {
-    console.error('Error updating profile:', error);
+    console.error("Error updating profile:", error);
     throw error; // Propagate the error to the UI layer
   }
 }

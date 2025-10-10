@@ -1,9 +1,9 @@
-import { doFetch } from '@/js/utilities/doFetch.mjs';
-import { API_SOCIAL_POSTS } from '@/js/api/constants.mjs';
-import { showAlert } from '@/js/utilities/alert.mjs';
+import { doFetch } from "@/js/utilities/doFetch.mjs";
+import { API_SOCIAL_POSTS } from "@/js/api/constants.mjs";
+import { showAlert } from "@/js/utilities/alert.mjs";
 
 /** Emojis to display */
-const REACTION_SET = ['👍', '❤️', '🔥'];
+const REACTION_SET = ["👍", "❤️", "🔥"];
 
 /**
  * Build the reactions bar (emoji + count + popover with reactors)
@@ -16,7 +16,7 @@ export function reactionsHtml(reactions = []) {
 
   reactions.forEach((r) => {
     if (!r?.symbol) return;
-    if (typeof r.count === 'number') counts[r.symbol] = r.count;
+    if (typeof r.count === "number") counts[r.symbol] = r.count;
     if (Array.isArray(r.reactors)) reactorsMap[r.symbol] = r.reactors;
   });
 
@@ -33,7 +33,7 @@ export function reactionsHtml(reactions = []) {
               ${name}
             </a></li>`;
               })
-              .join('')
+              .join("")
           : '<li class="text-gray-500">No reactions yet</li>';
 
         const popId = `reactors-pop-${i}`;
@@ -57,7 +57,7 @@ export function reactionsHtml(reactions = []) {
             </div>
           </div>
         `;
-      }).join('')}
+      }).join("")}
     </div>
   `;
 }
@@ -70,57 +70,57 @@ export function reactionsHtml(reactions = []) {
  * @param {() => Promise<void>} [onUpdated]  // e.g. re-fetch the post and re-render reactions
  */
 export function mountReactions(postId, onUpdated) {
-  const root = document.getElementById('reactions');
+  const root = document.getElementById("reactions");
   if (!root) return;
 
   // close popovers when clicking outside
   function closeAll() {
     root
       .querySelectorAll('[id^="reactors-pop-"]')
-      .forEach((el) => el.classList.add('hidden'));
+      .forEach((el) => el.classList.add("hidden"));
     root
-      .querySelectorAll('[data-popover]')
-      .forEach((btn) => btn.setAttribute('aria-expanded', 'false'));
+      .querySelectorAll("[data-popover]")
+      .forEach((btn) => btn.setAttribute("aria-expanded", "false"));
   }
 
-  document.addEventListener('click', (ev) => {
+  document.addEventListener("click", (ev) => {
     if (!root.contains(ev.target)) closeAll();
   });
 
-  root.addEventListener('click', async (e) => {
+  root.addEventListener("click", async (e) => {
     const el = e.target;
 
     // toggle reaction
-    const reactBtn = el.closest('[data-react]');
+    const reactBtn = el.closest("[data-react]");
     if (reactBtn) {
-      const sym = reactBtn.getAttribute('data-react');
+      const sym = reactBtn.getAttribute("data-react");
       if (!sym) return;
       try {
         await doFetch(
           `${API_SOCIAL_POSTS}/${postId}/react/${encodeURIComponent(sym)}`,
           {
-            method: 'PUT',
-          }
+            method: "PUT",
+          },
         );
         if (onUpdated) await onUpdated();
       } catch (err) {
-        console.error('Reaction failed:', err);
-        showAlert('error', 'Could not update reaction.');
+        console.error("Reaction failed:", err);
+        showAlert("error", "Could not update reaction.");
       }
       return;
     }
 
     // toggle popover
-    const popBtn = el.closest('[data-popover]');
+    const popBtn = el.closest("[data-popover]");
     if (popBtn) {
-      const popId = popBtn.getAttribute('data-popover');
+      const popId = popBtn.getAttribute("data-popover");
       const pop = popId && root.querySelector(`#${popId}`);
       if (!pop) return;
 
-      const willOpen = pop.classList.contains('hidden');
+      const willOpen = pop.classList.contains("hidden");
       closeAll();
-      pop.classList.toggle('hidden', !willOpen);
-      popBtn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+      pop.classList.toggle("hidden", !willOpen);
+      popBtn.setAttribute("aria-expanded", willOpen ? "true" : "false");
     }
   });
 }

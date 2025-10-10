@@ -1,7 +1,7 @@
 // Comments UI + logic (create + list + delete)
-import { doFetch } from '@/js/utilities/doFetch.mjs';
-import { API_SOCIAL_POSTS } from '@/js/api/constants.mjs';
-import { showAlert } from '@/js/utilities/alert.mjs';
+import { doFetch } from "@/js/utilities/doFetch.mjs";
+import { API_SOCIAL_POSTS } from "@/js/api/constants.mjs";
+import { showAlert } from "@/js/utilities/alert.mjs";
 
 /**
  * Render the comment form and list container
@@ -31,14 +31,14 @@ export function commentsHtml() {
  * @param {Array<{id:number, body:string, owner:string, created:string}>} [comments=[]]
  */
 export function renderInitialComments(comments = []) {
-  const wrap = document.getElementById('comments');
+  const wrap = document.getElementById("comments");
   if (!wrap) return;
-  wrap.innerHTML = comments.map((c) => commentItemHtml(c)).join('');
+  wrap.innerHTML = comments.map((c) => commentItemHtml(c)).join("");
 }
 
 /** Build one comment item */
 function commentItemHtml(c) {
-  const me = JSON.parse(localStorage.getItem('user'));
+  const me = JSON.parse(localStorage.getItem("user"));
   const mine =
     !!me?.name &&
     !!c?.owner &&
@@ -58,7 +58,7 @@ function commentItemHtml(c) {
         mine
           ? `<button class="text-xs px-2 py-1 rounded border border-gray-300 hover:bg-gray-50"
                      data-delete-comment="${c.id}">Delete</button>`
-          : ''
+          : ""
       }
     </div>
   `;
@@ -69,57 +69,57 @@ function commentItemHtml(c) {
  * @param {string|number} postId
  */
 export function mountComments(postId) {
-  const form = document.getElementById('comment-form');
-  const input = document.getElementById('comment-input');
-  const list = document.getElementById('comments');
+  const form = document.getElementById("comment-form");
+  const input = document.getElementById("comment-input");
+  const list = document.getElementById("comments");
 
   // Create
-  form?.addEventListener('submit', async (e) => {
+  form?.addEventListener("submit", async (e) => {
     e.preventDefault();
     const text = input?.value?.trim();
     if (!text) return;
 
     try {
       const res = await doFetch(`${API_SOCIAL_POSTS}/${postId}/comment`, {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify({ body: text }),
       });
       const c = res?.data;
       if (!c || !list) return;
 
-      list.insertAdjacentHTML('afterbegin', commentItemHtml(c));
-      input.value = '';
+      list.insertAdjacentHTML("afterbegin", commentItemHtml(c));
+      input.value = "";
     } catch (err) {
-      console.error('Comment failed:', err);
-      showAlert('error', 'Could not post comment.');
+      console.error("Comment failed:", err);
+      showAlert("error", "Could not post comment.");
     }
   });
 
   // Delete (event delegation)
-  list?.addEventListener('click', async (e) => {
-    const btn = e.target.closest('[data-delete-comment]');
+  list?.addEventListener("click", async (e) => {
+    const btn = e.target.closest("[data-delete-comment]");
     if (!btn) return;
-    const cid = btn.getAttribute('data-delete-comment');
+    const cid = btn.getAttribute("data-delete-comment");
     if (!cid) return;
 
     try {
       await doFetch(`${API_SOCIAL_POSTS}/${postId}/comment/${cid}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
       // remove from DOM
-      const host = btn.closest('[data-comment-id]');
+      const host = btn.closest("[data-comment-id]");
       host?.remove();
     } catch (err) {
-      console.error('Delete comment failed:', err);
-      showAlert('error', 'Could not delete comment.');
+      console.error("Delete comment failed:", err);
+      showAlert("error", "Could not delete comment.");
     }
   });
 }
 
 /** Simple HTML escape for comment body */
-function escapeHtml(s = '') {
+function escapeHtml(s = "") {
   return s
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;');
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
 }

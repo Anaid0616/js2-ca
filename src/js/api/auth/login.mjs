@@ -1,7 +1,7 @@
-import { API_AUTH_LOGIN } from '../constants.mjs';
-import { doFetch } from '../../utilities/doFetch.mjs';
+import { API_AUTH_LOGIN } from "../constants.mjs";
+import { doFetch } from "../../utilities/doFetch.mjs";
 // Import the form handler
-import { initializeFormHandler } from '../../utilities/formHandler.mjs';
+import { initializeFormHandler } from "../../utilities/formHandler.mjs";
 
 // Call the function to attach the form submission logic
 initializeFormHandler();
@@ -17,14 +17,14 @@ initializeFormHandler();
  */
 export async function login({ email, password }) {
   const options = {
-    method: 'POST',
+    method: "POST",
     body: JSON.stringify({ email, password }),
   };
 
   try {
     return await doFetch(API_AUTH_LOGIN, options, false); // Pass `false` for no auth headers
   } catch (error) {
-    console.error('Error during login:', error);
+    console.error("Error during login:", error);
     throw error;
   }
 }

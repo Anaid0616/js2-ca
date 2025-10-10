@@ -13,8 +13,8 @@
  * // Redirects to login page if user is not logged in.
  */
 export function authGuard() {
-  const user = localStorage.getItem('user');
+  const user = localStorage.getItem("user");
   if (!user) {
-    window.location.href = '/auth/login/';
+    window.location.href = "/auth/login/";
   }
 }

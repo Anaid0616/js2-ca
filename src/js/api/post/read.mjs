@@ -1,5 +1,5 @@
-import { API_SOCIAL_POSTS } from '../constants.mjs';
-import { doFetch } from '../../utilities/doFetch.mjs';
+import { API_SOCIAL_POSTS } from "../constants.mjs";
+import { doFetch } from "../../utilities/doFetch.mjs";
 
 /**
  * Read a single post by id
@@ -15,17 +15,17 @@ export async function readPost(id, opts = {}) {
   const { author = true, comments = false, reactions = false } = opts;
 
   const params = new URLSearchParams();
-  if (author) params.set('_author', 'true');
-  if (comments) params.set('_comments', 'true');
-  if (reactions) params.set('_reactions', 'true');
+  if (author) params.set("_author", "true");
+  if (comments) params.set("_comments", "true");
+  if (reactions) params.set("_reactions", "true");
 
   const qs = params.toString();
-  const url = `${API_SOCIAL_POSTS}/${id}${qs ? `?${qs}` : ''}`;
+  const url = `${API_SOCIAL_POSTS}/${id}${qs ? `?${qs}` : ""}`;
 
   try {
-    return await doFetch(url, { method: 'GET' }, true);
+    return await doFetch(url, { method: "GET" }, true);
   } catch (error) {
-    console.error('Error in readPost:', error);
+    console.error("Error in readPost:", error);
     throw error;
   }
 }
@@ -42,9 +42,9 @@ export async function readPosts(limit = 12, page = 1) {
   const url = `${API_SOCIAL_POSTS}?limit=${limit}&page=${page}&_author=true`;
   try {
     // Use doFetch with `GET` method and auth headers
-    return await doFetch(url, { method: 'GET' }, true);
+    return await doFetch(url, { method: "GET" }, true);
   } catch (error) {
-    console.error('Error reading posts:', error);
+    console.error("Error reading posts:", error);
     throw error;
   }
 }
@@ -62,9 +62,9 @@ export async function readPostsByUser(username, limit = 12, page = 1) {
   const url = `${API_SOCIAL_POSTS}?_author=true&author=${username}&limit=${limit}&page=${page}`;
   try {
     // Use doFetch with `GET` method and auth headers
-    return await doFetch(url, { method: 'GET' }, true);
+    return await doFetch(url, { method: "GET" }, true);
   } catch (error) {
-    console.error('Error reading user posts:', error);
+    console.error("Error reading user posts:", error);
     throw error;
   }
 }

@@ -12,7 +12,7 @@ describe("API Functions", () => {
       Promise.resolve({
         ok: true,
         json: () => Promise.resolve(mockData),
-      })
+      }),
     );
 
     const data = await readPost(1);
@@ -23,7 +23,7 @@ describe("API Functions", () => {
     global.fetch = vi.fn(() =>
       Promise.resolve({
         ok: false,
-      })
+      }),
     );
 
     await expect(readPost(1)).rejects.toThrow();
@@ -35,7 +35,7 @@ describe("API Functions", () => {
       Promise.resolve({
         ok: true,
         json: () => Promise.resolve(mockData),
-      })
+      }),
     );
 
     const data = await readPosts(12, 1);
@@ -46,7 +46,7 @@ describe("API Functions", () => {
     global.fetch = vi.fn(() =>
       Promise.resolve({
         ok: false,
-      })
+      }),
     );
 
     await expect(readPosts(12, 1)).rejects.toThrow();
@@ -58,7 +58,7 @@ describe("API Functions", () => {
       Promise.resolve({
         ok: true,
         json: () => Promise.resolve(mockData),
-      })
+      }),
     );
 
     const data = await readPostsByUser("testuser", 12, 1);
@@ -69,7 +69,7 @@ describe("API Functions", () => {
     global.fetch = vi.fn(() =>
       Promise.resolve({
         ok: false,
-      })
+      }),
     );
 
     await expect(readPostsByUser("testuser", 12, 1)).rejects.toThrow();

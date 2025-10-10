@@ -1,5 +1,5 @@
-import { API_SOCIAL_PROFILES } from '../../api/constants.mjs';
-import { doFetch } from '../../utilities/doFetch.mjs';
+import { API_SOCIAL_PROFILES } from "../../api/constants.mjs";
+import { doFetch } from "../../utilities/doFetch.mjs";
 
 /**
  * Safe getter for DOM nodes.
@@ -17,18 +17,18 @@ function $(sel) {
  * @param {{name?: string, bio?: string, avatar?: { url?: string }}} data
  */
 function paintProfile(data = {}) {
-  const nameEl = $('#user-name');
-  const bioEl = $('#user-bio');
-  const avatarEl = $('#user-avatar');
+  const nameEl = $("#user-name");
+  const bioEl = $("#user-bio");
+  const avatarEl = $("#user-avatar");
 
-  if (nameEl) nameEl.textContent = data.name || 'Unknown user';
-  if (bioEl) bioEl.textContent = data.bio || '';
+  if (nameEl) nameEl.textContent = data.name || "Unknown user";
+  if (bioEl) bioEl.textContent = data.bio || "";
 
   if (avatarEl) {
     // Hide avatar until the image has either loaded or errored
-    avatarEl.style.visibility = 'hidden';
-    avatarEl.src = data?.avatar?.url || '/images/placeholder.jpg';
-    avatarEl.alt = data?.name ? `${data.name}'s avatar` : 'User avatar';
+    avatarEl.style.visibility = "hidden";
+    avatarEl.src = data?.avatar?.url || "/images/placeholder.jpg";
+    avatarEl.alt = data?.name ? `${data.name}'s avatar` : "User avatar";
   }
 }
 
@@ -37,15 +37,15 @@ function paintProfile(data = {}) {
  * Also make sure the avatar is visible once the image is ready.
  */
 function revealProfile() {
-  const skeleton = $('#profile-skeleton');
-  const real = $('#profile-real');
-  const avatarEl = $('#user-avatar');
+  const skeleton = $("#profile-skeleton");
+  const real = $("#profile-real");
+  const avatarEl = $("#user-avatar");
 
-  if (skeleton) skeleton.classList.add('hidden');
-  if (real) real.classList.remove('hidden');
+  if (skeleton) skeleton.classList.add("hidden");
+  if (real) real.classList.remove("hidden");
 
   if (avatarEl) {
-    avatarEl.style.visibility = 'visible';
+    avatarEl.style.visibility = "visible";
   }
 }
 
@@ -53,7 +53,7 @@ function revealProfile() {
  * Attach a one-time "load or error" listener to the avatar to control reveal timing.
  */
 function revealWhenAvatarReady() {
-  const avatarEl = $('#user-avatar');
+  const avatarEl = $("#user-avatar");
   if (!avatarEl) {
     // No avatar element; just reveal.
     revealProfile();
@@ -67,8 +67,8 @@ function revealWhenAvatarReady() {
   }
 
   const once = { once: true };
-  avatarEl.addEventListener('load', revealProfile, once);
-  avatarEl.addEventListener('error', revealProfile, once);
+  avatarEl.addEventListener("load", revealProfile, once);
+  avatarEl.addEventListener("error", revealProfile, once);
 }
 
 /**
@@ -93,10 +93,10 @@ function revealWhenAvatarReady() {
  */
 export async function fetchAndDisplayProfile() {
   // 1) Require login
-  const cachedUser = JSON.parse(localStorage.getItem('user'));
+  const cachedUser = JSON.parse(localStorage.getItem("user"));
   if (!cachedUser?.name) {
-    alert('You must be logged in to view this page.');
-    window.location.href = '/auth/login/';
+    alert("You must be logged in to view this page.");
+    window.location.href = "/auth/login/";
     return;
   }
 
@@ -119,13 +119,13 @@ export async function fetchAndDisplayProfile() {
     const res = await doFetch(
       `${API_SOCIAL_PROFILES}/${encodeURIComponent(username)}`,
       {
-        method: 'GET',
-      }
+        method: "GET",
+      },
     );
 
     // The API generally returns { data: {...} }
     const profile = res?.data;
-    if (!profile) throw new Error('Missing profile data');
+    if (!profile) throw new Error("Missing profile data");
 
     // 4) Repaint with fresh API data, keep avatar hidden until image event
     paintProfile(profile);
@@ -138,9 +138,9 @@ export async function fetchAndDisplayProfile() {
       avatar: profile.avatar ?? cachedUser.avatar,
       bio: profile.bio ?? cachedUser.bio,
     };
-    localStorage.setItem('user', JSON.stringify(merged));
+    localStorage.setItem("user", JSON.stringify(merged));
   } catch (err) {
-    console.error('Error fetching user profile:', err);
+    console.error("Error fetching user profile:", err);
     // Keep skeleton visible; you can optionally show a toast here
   }
 }

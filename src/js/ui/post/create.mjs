@@ -1,7 +1,7 @@
-import { createPost } from '../../api/post/create';
-import { showAlert } from '../../utilities/alert.mjs';
+import { createPost } from "../../api/post/create";
+import { showAlert } from "../../utilities/alert.mjs";
 // Import the form handler
-import { initializeFormHandler } from '../../utilities/formHandler.mjs';
+import { initializeFormHandler } from "../../utilities/formHandler.mjs";
 
 // Call the function to attach the form submission logic
 initializeFormHandler();
@@ -26,7 +26,7 @@ export async function onCreatePost(event) {
   const form = event.target;
   const title = form.title.value;
   const body = form.body.value;
-  const tags = form.tags.value.split(',').map((tag) => tag.trim()); // Split tags into an array
+  const tags = form.tags.value.split(",").map((tag) => tag.trim()); // Split tags into an array
   const mediaUrl = form.mediaUrl.value;
   const mediaAlt = form.mediaAlt.value;
 
@@ -42,16 +42,16 @@ export async function onCreatePost(event) {
 
     // Ensure ID exists in the response
     if (newPost && newPost.data && newPost.data.id) {
-      showAlert('success', 'Post created successfully!');
+      showAlert("success", "Post created successfully!");
 
       setTimeout(() => {
         window.location.href = `/post/?id=${newPost.data.id}`; // Redirect to the new post page
       }, 1500);
     } else {
-      throw new Error('API Response does not contain post ID.');
+      throw new Error("API Response does not contain post ID.");
     }
   } catch (error) {
-    console.error('Error creating post:', error);
-    showAlert('error', 'Error creating post. Please try again.');
+    console.error("Error creating post:", error);
+    showAlert("error", "Error creating post. Please try again.");
   }
 }

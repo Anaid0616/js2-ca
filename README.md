@@ -29,7 +29,6 @@ A functional, responsive Vanilla JS + Vite + Tailwind social media app built dur
 
 ---
 
-
 ## Description
 
 Goal: build a client-side app against the Noroff Social API with Register/Login and Create/Read/Update/Delete for the user’s own posts. The app stores the JWT in localStorage and uses a clean, responsive UI built with Tailwind.
@@ -88,6 +87,7 @@ npm run dev
 ```
 
 ### (optional) Build/Preview:
+
 ```bash
 npm run build
 npm run preview
@@ -113,19 +113,19 @@ npm run preview
 
 src/
 
-  api/           # API calls (auth, posts, profiles)
-  
-  ui/            # UI modules (CRUD, reactions, comments, header)
-  
-  router/views/  # Page entry scripts
-  
-  utilities/     # helpers (doFetch, authGuard, skeletons, dom)
-  
+api/ # API calls (auth, posts, profiles)
+
+ui/ # UI modules (CRUD, reactions, comments, header)
+
+router/views/ # Page entry scripts
+
+utilities/ # helpers (doFetch, authGuard, skeletons, dom)
+
 public/
 
-  images/        # logos, placeholders, shared header HTML
-  
-index.html       # main entry
+images/ # logos, placeholders, shared header HTML
+
+index.html # main entry
 
 ---
 

@@ -1,7 +1,7 @@
-import { API_AUTH_REGISTER } from '../constants.mjs';
-import { doFetch } from '../../utilities/doFetch.mjs';
+import { API_AUTH_REGISTER } from "../constants.mjs";
+import { doFetch } from "../../utilities/doFetch.mjs";
 // Import the form handler
-import { initializeFormHandler } from '../../utilities/formHandler.mjs';
+import { initializeFormHandler } from "../../utilities/formHandler.mjs";
 
 // Call the function to attach the form submission logic
 initializeFormHandler();
@@ -29,7 +29,7 @@ initializeFormHandler();
 export async function register({ name, email, password, bio, avatar, banner }) {
   try {
     const options = {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify({
         name,
         email,
@@ -45,7 +45,7 @@ export async function register({ name, email, password, bio, avatar, banner }) {
 
     return response; // Resolve the response as JSON
   } catch (error) {
-    console.error('Error during registration:', error);
+    console.error("Error during registration:", error);
     throw error; // Propagate the error for the caller to handle
   }
 }

@@ -1,5 +1,5 @@
-import { API_SOCIAL_POSTS } from '../constants.mjs';
-import { doFetch } from '../../utilities/doFetch.mjs';
+import { API_SOCIAL_POSTS } from "../constants.mjs";
+import { doFetch } from "../../utilities/doFetch.mjs";
 
 /**
  * Creates a new post by sending the data to the API.
@@ -30,10 +30,10 @@ import { doFetch } from '../../utilities/doFetch.mjs';
  *   console.error("Failed to create post:", error);
  * }
  */
-export async function createPost({ title, body = '', tags = [], media = {} }) {
+export async function createPost({ title, body = "", tags = [], media = {} }) {
   try {
     const options = {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify({ title, body, tags, media }),
     };
 
@@ -43,7 +43,7 @@ export async function createPost({ title, body = '', tags = [], media = {} }) {
     // Return the response if successful
     return response;
   } catch (error) {
-    console.error('Error creating post:', error);
+    console.error("Error creating post:", error);
     throw error; // Re-throw error for further handling
   }
 }

@@ -1,34 +1,34 @@
-import { authGuard } from '../../utilities/authGuard.mjs';
-import { showModal } from '../../utilities/modal.mjs';
-import { readPost } from '../../api/post/read';
-import { deletePost } from '../../api/post/delete';
-import { showAlert } from '../../utilities/alert.mjs';
-import { postDetailSkeletonHTML } from '../../utilities/skeletons.mjs';
-import { reactionsHtml, mountReactions } from '@/js/ui/post/reactions.mjs';
+import { authGuard } from "../../utilities/authGuard.mjs";
+import { showModal } from "../../utilities/modal.mjs";
+import { readPost } from "../../api/post/read";
+import { deletePost } from "../../api/post/delete";
+import { showAlert } from "../../utilities/alert.mjs";
+import { postDetailSkeletonHTML } from "../../utilities/skeletons.mjs";
+import { reactionsHtml, mountReactions } from "@/js/ui/post/reactions.mjs";
 import {
   commentsHtml,
   renderInitialComments,
   mountComments,
-} from '@/js/ui/post/comments.mjs';
+} from "@/js/ui/post/comments.mjs";
 
-import { loadHTMLHeader } from '../../ui/global/sharedHeader.mjs';
+import { loadHTMLHeader } from "../../ui/global/sharedHeader.mjs";
 
 loadHTMLHeader();
 // Require auth
 authGuard();
 
-const me = JSON.parse(localStorage.getItem('user'));
+const me = JSON.parse(localStorage.getItem("user"));
 
-const postWrap = document.getElementById('post-wrap');
-const postContainer = document.querySelector('.post');
-const buttonsContainer = document.querySelector('.post-buttons');
+const postWrap = document.getElementById("post-wrap");
+const postContainer = document.querySelector(".post");
+const buttonsContainer = document.querySelector(".post-buttons");
 
 const urlParams = new URLSearchParams(window.location.search);
-const postId = urlParams.get('id');
+const postId = urlParams.get("id");
 
 if (!postId) {
-  showAlert('error', 'No post ID provided. Redirecting to home page.');
-  setTimeout(() => (window.location.href = '/'), 1500);
+  showAlert("error", "No post ID provided. Redirecting to home page.");
+  setTimeout(() => (window.location.href = "/"), 1500);
 }
 
 /**
@@ -49,13 +49,13 @@ function postSkeleton() {
  * @returns {string}
  */
 function postHtml(post) {
-  const mediaUrl = post?.media?.url || '/images/placeholder.jpg';
-  const mediaAlt = post?.media?.alt || 'Post image';
-  const authorName = post?.author?.name || 'Anonymous';
-  const avatarUrl = post?.author?.avatar?.url || '/images/placeholder.jpg';
+  const mediaUrl = post?.media?.url || "/images/placeholder.jpg";
+  const mediaAlt = post?.media?.alt || "Post image";
+  const authorName = post?.author?.name || "Anonymous";
+  const avatarUrl = post?.author?.avatar?.url || "/images/placeholder.jpg";
   const authorHref = `/profile/?name=${encodeURIComponent(authorName)}`;
-  const title = post?.title || 'No Title';
-  const body = post?.body || 'No Description Available';
+  const title = post?.title || "No Title";
+  const body = post?.body || "No Description Available";
 
   return `
     <div class="px-4 sm:px-5">
@@ -106,33 +106,33 @@ function renderButtons() {
 
 /** Wire up the buttons after they exist */
 function attachButtonHandlers() {
-  const editBtn = document.getElementById('edit-post-button');
-  const delBtn = document.getElementById('delete-post-button');
+  const editBtn = document.getElementById("edit-post-button");
+  const delBtn = document.getElementById("delete-post-button");
   if (!editBtn || !delBtn) return;
 
-  editBtn?.addEventListener('click', () => {
+  editBtn?.addEventListener("click", () => {
     window.location.href = `/post/edit/?id=${postId}`;
   });
 
-  delBtn?.addEventListener('click', async () => {
+  delBtn?.addEventListener("click", async () => {
     const confirmed = await showModal(
-      'Are you sure you want to delete this post?',
-      'Delete',
-      'Cancel'
+      "Are you sure you want to delete this post?",
+      "Delete",
+      "Cancel",
     );
     if (!confirmed) return;
 
     try {
       const ok = await deletePost(postId);
       if (ok) {
-        showAlert('success', 'Post deleted successfully!');
-        setTimeout(() => (window.location.href = '/profile/'), 1200);
+        showAlert("success", "Post deleted successfully!");
+        setTimeout(() => (window.location.href = "/profile/"), 1200);
       } else {
-        throw new Error('API did not confirm post deletion.');
+        throw new Error("API did not confirm post deletion.");
       }
     } catch (err) {
-      console.error('Delete failed:', err);
-      showAlert('error', 'Failed to delete post. Please try again.');
+      console.error("Delete failed:", err);
+      showAlert("error", "Failed to delete post. Please try again.");
     }
   });
 }
@@ -146,12 +146,12 @@ function attachButtonHandlers() {
 async function fetchAndRenderPost() {
   if (!postWrap || !postContainer) return;
 
-  postWrap.classList.add('min-h-[880px]');
+  postWrap.classList.add("min-h-[880px]");
 
   // 1) Inject skeleton and reveal wrapper so nothing looks empty
   postContainer.innerHTML = postSkeleton();
-  postWrap.classList.remove('invisible'); // show immediately
-  if (buttonsContainer) buttonsContainer.innerHTML = '';
+  postWrap.classList.remove("invisible"); // show immediately
+  if (buttonsContainer) buttonsContainer.innerHTML = "";
 
   try {
     const { data: post } = await readPost(postId, {
@@ -173,23 +173,23 @@ async function fetchAndRenderPost() {
       renderButtons();
       attachButtonHandlers();
     } else if (buttonsContainer) {
-      buttonsContainer.innerHTML = '';
-      buttonsContainer.classList.add('hidden');
+      buttonsContainer.innerHTML = "";
+      buttonsContainer.classList.add("hidden");
     }
 
     // 2b) Comments and reactions
     postContainer.insertAdjacentHTML(
-      'beforeend',
-      reactionsHtml(post?.reactions)
+      "beforeend",
+      reactionsHtml(post?.reactions),
     );
-    postContainer.insertAdjacentHTML('beforeend', commentsHtml());
+    postContainer.insertAdjacentHTML("beforeend", commentsHtml());
     renderInitialComments(post?.comments);
 
     // 2c) handlers
     const refresh = async () => {
       // re-fetch just reactions (light) to update counts + reactors
       const { data: refreshed } = await readPost(postId, { reactions: true });
-      const old = document.getElementById('reactions');
+      const old = document.getElementById("reactions");
       if (old) {
         old.outerHTML = reactionsHtml(refreshed?.reactions);
         mountReactions(postId, refresh);
@@ -200,27 +200,27 @@ async function fetchAndRenderPost() {
     mountComments(postId);
 
     // 3) Show img
-    const img = document.getElementById('post-image');
+    const img = document.getElementById("post-image");
     if (img) {
       if (img.complete) {
-        img.style.visibility = 'visible';
+        img.style.visibility = "visible";
       } else {
-        img.addEventListener('load', () => (img.style.visibility = 'visible'), {
+        img.addEventListener("load", () => (img.style.visibility = "visible"), {
           once: true,
         });
         img.addEventListener(
-          'error',
-          () => (img.style.visibility = 'visible'),
-          { once: true }
+          "error",
+          () => (img.style.visibility = "visible"),
+          { once: true },
         );
       }
     }
   } catch (error) {
-    console.error('Error fetching post:', error);
-    showAlert('error', 'Failed to load the post. Please try again.');
-    setTimeout(() => (window.location.href = '/'), 1500);
+    console.error("Error fetching post:", error);
+    showAlert("error", "Failed to load the post. Please try again.");
+    setTimeout(() => (window.location.href = "/"), 1500);
   } finally {
-    postWrap.classList.remove('min-h-[880px]');
+    postWrap.classList.remove("min-h-[880px]");
   }
 }
 fetchAndRenderPost();

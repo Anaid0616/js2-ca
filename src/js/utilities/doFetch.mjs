@@ -1,5 +1,5 @@
 // src/js/utilities/doFetch.mjs
-import { headers } from '../api/headers.mjs';
+import { headers } from "../api/headers.mjs";
 
 /**
  * Reusable fetch with optional auth headers.
@@ -9,7 +9,7 @@ import { headers } from '../api/headers.mjs';
 export async function doFetch(url, options = {}, useAuth = true) {
   const customHeaders = useAuth
     ? headers()
-    : new Headers({ 'Content-Type': 'application/json' });
+    : new Headers({ "Content-Type": "application/json" });
 
   const fetchOptions = { headers: customHeaders, ...options };
 

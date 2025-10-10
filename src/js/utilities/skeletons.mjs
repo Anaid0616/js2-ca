@@ -80,7 +80,7 @@ export function feedPostCardSkeletonHTML() {
  * @param {() => string} template
  */
 export function renderGridSkeleton(container, n, template) {
-  container.innerHTML = Array.from({ length: n }, () => template()).join('');
+  container.innerHTML = Array.from({ length: n }, () => template()).join("");
 }
 
 /**

@@ -1,9 +1,9 @@
-import { authGuard } from '../../utilities/authGuard.mjs';
-import { readPost } from '../../api/post/read.mjs';
-import { updatePost } from '../../api/post/update.mjs';
-import { showAlert } from '../../utilities/alert.mjs';
+import { authGuard } from "../../utilities/authGuard.mjs";
+import { readPost } from "../../api/post/read.mjs";
+import { updatePost } from "../../api/post/update.mjs";
+import { showAlert } from "../../utilities/alert.mjs";
 
-import { loadHTMLHeader } from '../../ui/global/sharedHeader.mjs';
+import { loadHTMLHeader } from "../../ui/global/sharedHeader.mjs";
 
 loadHTMLHeader();
 authGuard();
@@ -12,11 +12,11 @@ authGuard();
  * Extract the post ID from the URL query parameters.
  * @type {string | null}
  */
-const postId = new URLSearchParams(window.location.search).get('id');
+const postId = new URLSearchParams(window.location.search).get("id");
 if (!postId) {
-  showAlert('error', 'No post ID found. Redirecting to home page.');
+  showAlert("error", "No post ID found. Redirecting to home page.");
   setTimeout(() => {
-    window.location.href = '/';
+    window.location.href = "/";
   }, 1500);
 }
 
@@ -25,17 +25,17 @@ if (!postId) {
  * HTML form element for editing a post.
  * @type {HTMLFormElement}
  */
-const form = document.getElementById('edit-post-form');
+const form = document.getElementById("edit-post-form");
 
 /**
  * HTML input elements for editing the post fields.
  * @type {HTMLInputElement}
  */
-const titleInput = document.getElementById('edit-title');
-const bodyInput = document.getElementById('edit-body');
-const tagsInput = document.getElementById('edit-tags');
-const mediaUrlInput = document.getElementById('edit-media-url');
-const mediaAltInput = document.getElementById('edit-media-alt');
+const titleInput = document.getElementById("edit-title");
+const bodyInput = document.getElementById("edit-body");
+const tagsInput = document.getElementById("edit-tags");
+const mediaUrlInput = document.getElementById("edit-media-url");
+const mediaAltInput = document.getElementById("edit-media-alt");
 
 /**
  * Loads the post data and populates the form fields.
@@ -50,34 +50,34 @@ async function loadPostData() {
 
     // Check if data exists
     if (!response || !response.data) {
-      throw new Error('Post data not found.');
+      throw new Error("Post data not found.");
     }
 
     const { data: post } = response;
 
     // Populate the form fields with fetched post data
-    titleInput.value = post.title || '';
-    bodyInput.value = post.body || '';
-    tagsInput.value = post.tags?.join(', ') || ''; // Join array of tags into a comma-separated string
-    mediaUrlInput.value = post.media?.url || '';
-    mediaAltInput.value = post.media?.alt || '';
+    titleInput.value = post.title || "";
+    bodyInput.value = post.body || "";
+    tagsInput.value = post.tags?.join(", ") || ""; // Join array of tags into a comma-separated string
+    mediaUrlInput.value = post.media?.url || "";
+    mediaAltInput.value = post.media?.alt || "";
   } catch (error) {
-    console.error('Error loading post data:', error);
-    showAlert('error', 'Failed to load post data. Redirecting to home page.');
+    console.error("Error loading post data:", error);
+    showAlert("error", "Failed to load post data. Redirecting to home page.");
     setTimeout(() => {
-      window.location.href = '/';
+      window.location.href = "/";
     }, 1500);
   }
 }
 
 // Save the updated post data
-form.addEventListener('submit', async (event) => {
+form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const updatedPost = {
     title: titleInput.value,
     body: bodyInput.value,
-    tags: tagsInput.value.split(',').map((tag) => tag.trim()), // Convert string back to array
+    tags: tagsInput.value.split(",").map((tag) => tag.trim()), // Convert string back to array
     media: {
       url: mediaUrlInput.value,
       alt: mediaAltInput.value,
@@ -87,13 +87,13 @@ form.addEventListener('submit', async (event) => {
   try {
     const updated = await updatePost(postId, updatedPost);
 
-    showAlert('success', 'Post updated successfully!');
+    showAlert("success", "Post updated successfully!");
     setTimeout(() => {
       window.location.href = `/post/?id=${postId}`;
     }, 1500); // Redirect after 1.5 seconds to give time for the alert to be seen
   } catch (error) {
-    console.error('Error updating post:', error);
-    showAlert('error', 'Failed to update post. Please try again.');
+    console.error("Error updating post:", error);
+    showAlert("error", "Failed to update post. Please try again.");
   }
 });
 

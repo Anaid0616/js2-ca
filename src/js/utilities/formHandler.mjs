@@ -1,71 +1,71 @@
-import { doFetch } from '../utilities/doFetch.mjs';
+import { doFetch } from "../utilities/doFetch.mjs";
 
 /**
  * Initializes form handlers for forms with specific `name` attributes.
  * @function initializeFormHandler
  */
 export function initializeFormHandler() {
-  if (typeof document === 'undefined') return;
+  if (typeof document === "undefined") return;
 
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('form').forEach((form) => {
-      form.addEventListener('submit', async (event) => {
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("form").forEach((form) => {
+      form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
         const formData = new FormData(event.target);
-        const formName = form.getAttribute('name'); // Form name attribute
-        const feedbackContainer = form.querySelector('.feedback-container'); // Feedback element in form
-        const fieldset = form.querySelector('fieldset'); // The fieldset to disable during submission
+        const formName = form.getAttribute("name"); // Form name attribute
+        const feedbackContainer = form.querySelector(".feedback-container"); // Feedback element in form
+        const fieldset = form.querySelector("fieldset"); // The fieldset to disable during submission
 
         // Clear feedback
-        feedbackContainer.textContent = '';
-        feedbackContainer.classList.add('hidden');
+        feedbackContainer.textContent = "";
+        feedbackContainer.classList.add("hidden");
 
         try {
           // Disable the fieldset during API submission
           fieldset.disabled = true;
 
-          if (formName === 'register') {
+          if (formName === "register") {
             await doFetch(
-              '/api/auth/register',
-              { method: 'POST', body: formData },
-              false
+              "/api/auth/register",
+              { method: "POST", body: formData },
+              false,
             );
-          } else if (formName === 'login') {
+          } else if (formName === "login") {
             await doFetch(
-              '/api/auth/login',
-              { method: 'POST', body: formData },
-              false
+              "/api/auth/login",
+              { method: "POST", body: formData },
+              false,
             );
-          } else if (formName === 'updateProfileForm') {
-            const user = JSON.parse(localStorage.getItem('user'));
+          } else if (formName === "updateProfileForm") {
+            const user = JSON.parse(localStorage.getItem("user"));
             const username = user.name;
             await doFetch(`/api/profile/update/${username}`, {
-              method: 'PUT',
+              method: "PUT",
               body: formData,
             });
-          } else if (formName === 'createPost') {
-            await doFetch('/api/post/create', {
-              method: 'POST',
+          } else if (formName === "createPost") {
+            await doFetch("/api/post/create", {
+              method: "POST",
               body: formData,
             });
-          } else if (formName === 'editPost') {
-            const postId = formData.get('id');
+          } else if (formName === "editPost") {
+            const postId = formData.get("id");
             await doFetch(`/api/post/update/${postId}`, {
-              method: 'PUT',
+              method: "PUT",
               body: formData,
             });
           }
 
           // Show success feedback
-          feedbackContainer.textContent = 'Success!';
-          feedbackContainer.classList.remove('hidden');
-          feedbackContainer.classList.add('text-green-600');
+          feedbackContainer.textContent = "Success!";
+          feedbackContainer.classList.remove("hidden");
+          feedbackContainer.classList.add("text-green-600");
         } catch (error) {
           // Show error feedback
           feedbackContainer.textContent = `Error: ${error.message}`;
-          feedbackContainer.classList.remove('hidden');
-          feedbackContainer.classList.add('text-red-600');
+          feedbackContainer.classList.remove("hidden");
+          feedbackContainer.classList.add("text-red-600");
         } finally {
           // Re-enable the fieldset after API call finishes
           fieldset.disabled = false;
